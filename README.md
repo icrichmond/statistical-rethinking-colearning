@@ -1,56 +1,88 @@
-Statistical Rethinking colearning 2022
+statistical-rethinking-colearning-2023
 ================
 
--   [Schedule](#schedule)
--   [Resources](#resources)
--   [Installation](#installation)
--   [Project structure](#project-structure)
--   [Thanks](#thanks)
--   [Code of Conduct](#code-of-conduct)
+- <a href="#schedule" id="toc-schedule">Schedule</a>
+  - <a href="#lectures" id="toc-lectures">Lectures</a>
+  - <a href="#homework" id="toc-homework">Homework</a>
+- <a href="#participant-notes-and-homework-solutions"
+  id="toc-participant-notes-and-homework-solutions">Participant notes and
+  homework solutions</a>
+- <a href="#resources" id="toc-resources">Resources</a>
+- <a href="#installation" id="toc-installation">Installation</a>
+- <a href="#code-of-conduct" id="toc-code-of-conduct">Code of Conduct</a>
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ------------------------------------------------------------------------
 
-This repository contains resources and information for a colearning
-group meeting regularly to discuss lectures and homework assignments
-from the [Statistical Rethinking
-2022](https://github.com/rmcelreath/stat_rethinking_2022) course.
+Second round of [Statistical
+Rethinking](https://xcelab.net/rm/statistical-rethinking/) colearning,
+this time with 2023
+[lectures](https://www.youtube.com/playlist?list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus)
+and
+[homework](https://github.com/rmcelreath/stat_rethinking_2023/tree/main/homework).
+
+The first round of Statistical Rethinking colearning (2022) is available
+[here](https://github.com/robitalec/statistical-rethinking-colearning-2022).
 
 ## Schedule
 
-Adjusting from Richard’s schedule for our pace. Note these are meeting
-dates indicating when lectures, readings and homework are **assigned**,
-to be discussed on/completed by the next meeting.
+### Lectures
 
-| Meeting date | Lectures                                                                                                                                                                       | Reading               | Homework   |
-|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|------------|
-| 2022-01-13   | [(1) The Golem of Prague](https://youtu.be/cclUd_HoRlo), [(2) Bayesian Inference](https://www.youtube.com/watch?v=guTdrfycW2Q&list=PLDcUM9US4XdMROZ57-OIRtIK0aOynbgZN&index=2) | Chapters 1, 2 and 3   | Homework 1 |
-|              | \(3\) Basic Regression, (4) Categories & Curves                                                                                                                                | Chapter 4             |            |
-|              | \(5\) Confounding, (6) Even Worse Confounding                                                                                                                                  | Chapters 5 and 6      |            |
-|              | \(7\) Overfitting, (8) Interactions                                                                                                                                            | Chapters 7 and 8      |            |
-|              | \(9\) Markov chain Monte Carlo, (10) Binomial GLMs                                                                                                                             | Chapters 9, 10 and 11 |            |
-|              | \(11\) Poisson GLMs, (12) Ordered Categories                                                                                                                                   | Chapters 11 and 12    |            |
-|              | \(13\) Multilevel Models, (14) Multi-Multilevel Models                                                                                                                         | Chapter 13            |            |
-|              | \(15\) Varying Slopes, (16) Gaussian Processes                                                                                                                                 | Chapter 14            |            |
-|              | \(17\) Measurement Error, (18) Missing Data                                                                                                                                    | Chapter 15            |            |
-|              | \(19\) Beyond GLMs: State-space Models, ODEs, (19) Horoscopes                                                                                                                  | Chapters 16 and 17    |            |
+| Meeting date | Reading               | Lectures                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|:-------------|:----------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 26 January   | Chapters 1, 2 and 3   | \[1\] \<[Science Before Statistics](https://www.youtube.com/watch?v=FdnMWdICdRs&list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus&index=1)\> \<[Slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-2023-lecture-01)\> <br> \[2\] \<[Garden of Forking Data](https://www.youtube.com/watch?v=R1vcdhPBlXA&list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus&index=2)\> \<[Slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-2023-lecture-02)\> |
+|              | Chapter 4             | \[3\] \<[Geocentric Models](https://www.youtube.com/watch?v=tNOu-SEacNU&list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus&index=3)\> \<[Slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-2023-lecture-03)\> <br> \[4\] \<[Categories and Curves](https://www.youtube.com/watch?v=F0N4b7K_iYQ&list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus&index=4)\> \<[Slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-2023-lecture-04)\>          |
+|              | Chapters 5 and 6      | \[5\] \<[Elemental Confounds](https://www.youtube.com/watch?v=mBEA7PKDmiY&list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus&index=5)\> \<[Slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-2023-lecture-05)\> <br> \[6\] \<[Good and Bad Controls](https://www.youtube.com/watch?v=uanZZLlzKHw&list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus&index=6)\> \<[Slides](https://speakerdeck.com/rmcelreath/statistical-rethinking-2023-lecture-06)\>        |
+|              | Chapters 7 and 8      | \[7\] Overfitting <br> \[8\] Interactions                                                                                                                                                                                                                                                                                                                                                                                                               |
+|              | Chapters 9, 10 and 11 | \[9\] Markov chain Monte Carlo <br> \[10\] Binomial GLMs                                                                                                                                                                                                                                                                                                                                                                                                |
+|              | Chapters 11 and 12    | \[11\] Poisson GLMs <br> \[12\] Ordered Categories                                                                                                                                                                                                                                                                                                                                                                                                      |
+|              | Chapter 13            | \[13\] Multilevel Models <br> \[14\] Multi-Multilevel Models                                                                                                                                                                                                                                                                                                                                                                                            |
+|              | Chapter 14            | \[15\] Varying Slopes <br> \[16\] Gaussian Processes                                                                                                                                                                                                                                                                                                                                                                                                    |
+|              | Chapter 15            | \[17\] Measurement Error <br> \[18\] Missing Data                                                                                                                                                                                                                                                                                                                                                                                                       |
+|              | Chapters 16 and 17    | \[19\] Beyond GLMs: State-space Models, ODEs <br> \[20\] Horoscopes                                                                                                                                                                                                                                                                                                                                                                                     |
+
+### Homework
+
+| Meeting date | Homework                                                                                        | Solutions                                                                                               |
+|:-------------|:------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------|
+| 2 February   | [Homework 1](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week01.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week01-solutions.pdf) |
+|              | [Homework 2](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week02.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week02-solutions.pdf) |
+|              | [Homework 3](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week03.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week03-solutions.pdf) |
+|              | [Homework 4](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week04.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week04-solutions.pdf) |
+|              | [Homework 5](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week05.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week05-solutions.pdf) |
+|              | [Homework 6](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week06.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week06-solutions.pdf) |
+|              | [Homework 7](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week07.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week07-solutions.pdf) |
+|              | [Homework 8](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week08.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week08-solutions.pdf) |
+|              | [Homework 9](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week09.pdf)  | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week09-solutions.pdf) |
+|              | [Homework 10](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week10.pdf) | [Solutions](https://github.com/rmcelreath/stat_rethinking_2023/blob/main/homework/week10-solutions.pdf) |
+
+## Participant notes and homework solutions
+
+- [Alec](https://github.com/robitalec/statistical-rethinking-colearning-2023)
+  (this repo)
+- 
+- 
 
 ## Resources
 
--   Lectures:
-    <https://github.com/rmcelreath/stat_rethinking_2022#calendar--topical-outline>
--   Homework:
-    <https://github.com/rmcelreath/stat_rethinking_2022/tree/main/homework>
-
 Additional material using other packages or languages
 
--   Original R: <https://github.com/rmcelreath/rethinking/>
--   R + Tidyverse + ggplot2 + brms: <https://bookdown.org/content/4857/>
--   Python and PyMC3: Python/PyMC3
--   Julia and Turing: <https://github.com/StatisticalRethinkingJulia>
-    and <https://github.com/StatisticalRethinkingJulia/TuringModels.jl>
+- Original R: <https://github.com/rmcelreath/rethinking/>
+- R + Tidyverse + ggplot2 + brms: <https://bookdown.org/content/4857/>
+- Python and PyMC3: Python/PyMC3
+- Julia and Turing: <https://github.com/StatisticalRethinkingJulia> and
+  <https://github.com/StatisticalRethinkingJulia/TuringModels.jl>
 
 See Richard’s comments about these here:
-<https://github.com/rmcelreath/stat_rethinking_2022#original-r-flavor>
+<https://github.com/rmcelreath/stat_rethinking_2023#coding>
+
+2022 colearning:
+
+- Lectures:
+  <https://github.com/rmcelreath/stat_rethinking_2022#calendar--topical-outline>
+- Homework:
+  <https://github.com/rmcelreath/stat_rethinking_2022/tree/main/homework>
 
 Also, Alec’s notes and solutions of the 2019 material:
 <https://github.com/robitalec/statistical-rethinking> and
@@ -62,72 +94,22 @@ Package specific install directions. We’ll update these as we go!
 
 Rethinking
 
--   [`rethinking`](https://github.com/rmcelreath/rethinking#installation)
+- [`rethinking`](https://github.com/rmcelreath/rethinking#installation)
 
 Stan
 
--   [`cmdstanr`](https://mc-stan.org/cmdstanr/articles/cmdstanr.html)
--   [`RStan`](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
--   [`brms`](r/brms/#how-do-i-install-brms)
+- [`cmdstanr`](https://mc-stan.org/cmdstanr/articles/cmdstanr.html)
+- [`RStan`](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
+- [`brms`](r/brms/#how-do-i-install-brms)
 
 Targets
 
--   [`targets`](https://github.com/ropensci/targets/#installation)
--   [`stantargets`](https://github.com/ropensci/stantargets/#installation)
+- [`targets`](https://github.com/ropensci/targets/#installation)
+- [`stantargets`](https://github.com/ropensci/stantargets/#installation)
 
 V8, needed for the `dagitty` package
 
--   [`V8`](https://github.com/jeroen/v8#installation)
-
-## Project structure
-
-This repository is structured with a `homework/` folder for homework
-solutions, and `notes/` folder for notes. For folks joining in the
-colearning group, you are encouraged to make your own branch in this
-repository and share your notes and/or homework solutions.
-
-The `R/` folder can be used to store reusable functions useful across
-homework solutions and your own model situations.
-
-For example, the `dag_plot` function makes a DAG plot from a DAG:
-
-``` r
-library(ggplot2)
-library(ggdag)
-```
-
-    ## 
-    ## Attaching package: 'ggdag'
-
-    ## The following object is masked from 'package:stats':
-    ## 
-    ##     filter
-
-``` r
-library(dagitty)
-
-source('R/dag_plot.R')
-
-dag <- dagify(
-    Z ~ A + B,
-    B ~ A,
-    exposure = 'A',
-    outcome = 'Z'
-)
-
-dag_plot(dag)
-```
-
-![](graphics/readme_dag-1.png)<!-- -->
-
-## Thanks
-
-Many thanks to Richard McElreath for a continued emphasis on teaching
-Bayesian statistics and for providing this incredible resource of
-lectures and homework assignments free for everyone.
-
-Also thank you to the developers of R, Stan and innumerous R packages
-that allow us to pursue this interest.
+- [`V8`](https://github.com/jeroen/v8#installation)
 
 ## Code of Conduct
 
