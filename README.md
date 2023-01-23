@@ -1,4 +1,4 @@
-statistical-rethinking-colearning-2023
+Statistical Rethinking Colearning 2023
 ================
 
 - <a href="#schedule" id="toc-schedule">Schedule</a>
@@ -60,8 +60,7 @@ The first round of Statistical Rethinking colearning (2022) is available
 ## Participant notes and homework solutions
 
 - [Alec](https://github.com/robitalec/statistical-rethinking-colearning-2023)
-  (this repo)
-- 
+- [Bella](https://github.com/icrichmond/statistical-rethinking-colearning) (this repo)
 - 
 
 ## Resources
