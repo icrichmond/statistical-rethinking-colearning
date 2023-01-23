@@ -1,0 +1,8 @@
+---
+title: "Lecture 01 - The Golem of Prague"
+author: Isabella C. Richmond
+date: Jan 23, 2023
+format: html
+---
+
+## 
