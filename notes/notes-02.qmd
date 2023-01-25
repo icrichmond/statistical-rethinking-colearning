@@ -1,0 +1,11 @@
+---
+title: "Lecture 02 - The Garden of Forking Data"
+author: Isabella C. Richmond
+date: Jan 23, 2023
+format: html
+---
+
+## Rose / Thorn
+
+*Rose:* 
+*Thorn:* 
