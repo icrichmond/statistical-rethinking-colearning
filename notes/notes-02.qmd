@@ -7,5 +7,217 @@ format: html
 
 ## Rose / Thorn
 
-*Rose:* 
-*Thorn:* 
+*Rose:* remembering that posterior distributions are relative probabilities is a great foundation to move forward on
+
+*Thorn:* equations are harddd + baseR + installing `rstan` + misclassification ahh
+
+## Globe Example
+
+*estimand:* proportion of the globe covered in water - do people know what an estimand is?
+
+## Generative Model (globe)
+
+-   start with how the variables influence each other, i.e., causal model
+
+```{r}
+library(dagitty)
+library(rethinking)
+
+d <- dagitty("dag {
+                p -> W
+                p -> L
+                N -> W 
+                N -> L }")
+
+drawdag(d)
+
+```
+
+$$
+W,L = f(p,N)
+$$
+
+-   W and L are functions of *p* and N
+
+## Bayesian Data Analysis
+
+For each possible explanation of the sample,
+
+1.  count all the ways the sample could happen
+
+2.  explanations with more ways to produce the sample are more plausible
+
+## Garden of Forking Data
+
+-   relies on samples being independent
+
+-   relative differences between probabilities are dependent on sample size (differences will be smaller with smaller sample sizes because there is less evidence)
+
+-   normalizing to probability allows for interpretability and easier math
+
+-   collection of probabilities is a posterior distribution
+
+ADD CODE (minute 35):
+
+```{r}
+sample <- c("W", "L", "W", "W", "W", "L", "W", "L", "W")
+
+W <- sum(sample=="W")
+L <- sum(sample=="L")
+p <- c(0, 0.25, 0.5, 0.75, 1)
+ways <- sapply(p, function(q) (q*4)^W * ((1-q)*4)^L)
+prob <- ways/sum(ways)
+cbind(p, ways, prob)
+```
+
+## Testing
+
+-   have to test
+-   test using extreme values where you intuitively know the right answer
+
+```{r}
+sim_globe <- function(p = 0.7, N = 9){
+  
+  sample(c("W", "L"), size = N, prob=c(p, 1-p), replace = T)
+}
+
+sim_globe()
+
+sim_globe(p=1, N=11) 
+
+sum(sim_globe(p=0.5, N=1e4) == "W")/1e4
+
+```
+
+Function:
+
+```{r}
+library(crayon)
+
+make_bar <- function(q,size=20) {
+    n <- round(q*size)
+    s1 <- concat( rep("#",n) )
+    s2 <- concat( rep(" ",size-n) )
+    concat(s1,s2)
+}
+
+compute_posterior <- function(the_sample, poss = c(0,0.25,0.5,0.75,1)){
+  W <- sum(the_sample=="W")
+  L <- sum(the_sample=="L")
+  ways <- sapply(poss, function(q) (q*4)^W * ((1-q)*4)^L)
+  post <- ways/sum(ways)
+  bars <- sapply(post, function(q) make_bar(q))
+  data.frame(poss, ways, post = round(post,3), bars)
+}
+
+compute_posterior(sim_globe())
+```
+
+## Real Number Sampling
+
+-   more possibilities = less probability in each option/outcome
+
+    -   probability is spread out across many options
+
+-   normalizing to probability allows our equation to calculate infinite number of "sides"/outcomes
+
+    -   $$
+        p^W(1-p)^L
+        $$
+
+    -   *p* = probability
+
+    -   density = probability when we are assessing infinite number of possibilities
+
+-   shape of the posterior embodies sample size
+
+    -   no min sample size -\> just more uncertain posterior
+
+    -   posterior distribution embodies sample size
+
+-   no point estimates! estimate is entire posterior distribution
+
+    -   can use summary points from post dist for communication purposes
+
+-   intervals are merely indicators of the shape of the posterior distribution
+
+    -   no "true interval" i.e., 95% CI doesn't exist
+
+    -   interval is just distribution lower/upper bounds
+
+## Analyze Sample + Summarize
+
+```{r}
+post_samples <- rbeta(1e3, 6+1, 3+1)
+
+dens(post_samples, lwd = 4, col = 2, xlab = "prop water", adj = 0.1)
+
+curve(dbeta(x, 6+1, 3+1), add = T, lty = 2, lwd = 3)
+
+```
+
+-   posterior prediction = "what would we bet?"
+
+    -   how many W's do we expect to see in the next 10 tosses
+
+-   for each sample of post dist, we can create a predictive distribution, then posterior predictive
+
+    -   incorporates uncertainty from posterior distribution
+
+```{r}
+post_samples <- rbeta(1e4, 6+1, 3+1)
+
+pred_post <- sapply(post_samples, function(p) 
+sum(sim_globe(p, 10)=="W"))
+
+tab_post <- table(pred_post)
+
+for (i in 0:10) lines(c(i,i),c(0,tab_post[i+1]), lwd = 4, col = 4)
+
+```
+
+## Misclassification (Bonus Round)
+
+-   W\* is misclassified due to sampling error and measurement process
+
+    -   true W is unknown
+
+```{r}
+library(dagitty)
+library(rethinking)
+
+d <- dagitty("dag {
+                p -> W
+                N -> W
+                W -> Wm
+                M -> Wm
+             }")
+
+drawdag(d)
+```
+
+-   incorporate measurement error with **x** (error rate of 10%)
+
+```{r}
+
+sim_globe2 <- function(p = 0.7, N = 9, x = 0.1){
+  
+  true_sample <- sample(c("W", "L"), size = N, prob = c(p, 1-p), replace = T)
+  
+  obs_sample <- ifelse(runif(N) < x,
+                       ifelse(true_sample == "W", "L", "W"),
+                       true_sample)
+  
+  return(obs_sample)
+  
+}
+```
+
+-   how do you know the error rate?
+
+-   don't understand mechanism behind incorporating x but understand why x needs to be incorporated + consequences of not
+
+## TODO
+
+-   DAG coords
+-   Read misclassification in 3rd ed.
