@@ -127,9 +127,10 @@ Before, we were solving for *p* using $$ p^W(1-p)^L $$ Which was a beta distribu
 W <- 5
 p <- 0.7
 N_max <- 25
+lst <- seq(W, N_max, by = 1)
 
-# calculate binomial distribution for with lower bound = 5 and upper bound = 25 with p = 0.7
-x <- dbinom(W:N_max, N_max, p)
+# calculate binomial distribution for each N between lower bound (W) and upper bound (N_max) with p = 0.7
+x <- sapply(lst, function(x) dbinom(W, x, p))
 
 ggplot(data.frame(data = x, N = W:N_max), aes(x = N, y = x)) +
   geom_col() +
