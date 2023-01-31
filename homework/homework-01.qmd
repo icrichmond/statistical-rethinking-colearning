@@ -47,9 +47,41 @@ ggplot(data = posterior) +
 
 
 ```
+NOTE: Bonus answer in solutions is somewhat key to understanding next answer. This specific problem, where you have a continuous value bounded by 0,1 with an infinite number of *p*, follows a **beta distribution**. Because the beta distribution is defined, you can instead just use that mathematical equation to come to the same conclusion as above. 
+
+```{r}
+#| label: q1-beta
+#| echo: TRUE
+#| eval: TRUE
 
 
-#### Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method. 
+ggplot() +
+  stat_function(fun = function(x) dbeta(x, 4+1, 11+1), color = "black",
+                size = 1) +
+  theme_classic() + 
+  xlab("p") + 
+  ylab("")
+
+```
+
+#### Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.
+
+```{r}
+#| label: q2
+#| echo: TRUE
+#| eval: TRUE
+
+post_samples <- rbeta(5, 4+1, 11+1)
+
+#pred_post <- sapply(post_samples, function(p) 
+#sum(sim_globe(p, 10)=="W"))
+#
+#tab_post <- table(pred_post)
+#
+#for (i in 0:10) lines(c(i,i),c(0,tab_post[i+1]), lwd = 4, col = 4)
+
+
+```
 
 #### Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.
 
