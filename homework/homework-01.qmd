@@ -96,6 +96,7 @@ ggplot(pred_post_df, aes(as.factor(pred_post), Freq)) +
   xlab("number of W") + 
   ylab("count")
 ```
+NOTE: Can also use `rbinom()` function instead of `sim_globe()` since there are only two possible outcomes.
 
 #### Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.  
 
@@ -114,3 +115,5 @@ print(paste0("p = ", p_threeplus))
 ```
 
 #### Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don't know the number of land points L. Assume that *p* = 0.7 and compute the posterior distribution of the number of tosses *N*. Hint: Use the binomial distribution.
+
+
