@@ -1,0 +1,56 @@
+---
+title: "Homework - Week 01"
+author: "Isabella C. Richmond"
+format: html
+---
+
+```{r}
+#| label: setup
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+library(rethinking)
+library(ggplot2)
+```
+
+#### Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.
+
+```{r}
+#| label: q1
+#| echo: TRUE
+#| eval: TRUE
+
+# define how many tosses were W & L
+w <- 4
+l <- 11
+
+# define p, every 0.01 between 0,1 
+p <- seq(0, 1, by = 0.01)
+
+# function to compute posterior by every p
+compute_posterior <- function(W, L, poss){
+  ways <- sapply(poss, function(q) (q*4)^W * ((1-q)*4)^L)
+  post <- ways/sum(ways)
+  data.frame(poss, ways, post = round(post,3))
+}
+
+# compute posterior for our data
+posterior <- compute_posterior(w, l, p)
+
+# visualize posterior 
+ggplot(data = posterior) + 
+  geom_line(aes(poss, post)) + 
+  theme_classic() + 
+  xlab("proportion water") + 
+  ylab("probability")
+
+
+```
+
+
+#### Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method. 
+
+#### Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.
+
+#### Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don't know the number of land pints L. Assume that *p* = 0.7 and compute the posterior distribution of the number of tosses *N*. Hint: Use the binomial distribution.
