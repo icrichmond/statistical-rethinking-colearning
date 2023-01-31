@@ -116,4 +116,24 @@ print(paste0("p = ", p_threeplus))
 
 #### Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don't know the number of land points L. Assume that *p* = 0.7 and compute the posterior distribution of the number of tosses *N*. Hint: Use the binomial distribution.
 
+Before, we were solving for *p* using $$ p^W(1-p)^L $$ Which was a beta distribution because p was a continuous variable bound between 0,1. Now we want to solve for *N*, with W and *p*. We have a success/fail dataset, with a probability of success, therefore we use the binomial distribution. We need to calculate the probability of 0-5 *N*'s resulting in 5 successes (W).
 
+```{r}
+#| label: q4-optional
+#| echo: TRUE
+#| eval: TRUE
+
+W <- 5
+# N & L = unknown
+p <- 0.7
+
+# calculate binomial distribution for 0-5 with p = 0.7
+x <- dbinom(0:5, W, p)
+names(x) <- as.character(0:5)
+
+ggplot(data.frame(data = x, N = names(x)), aes(x = N, y = x)) +
+  geom_col() +
+  labs(y = "Probability", x = "N") + 
+  theme_classic()
+
+```
