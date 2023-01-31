@@ -218,7 +218,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"p = "</span>, p_threeplus))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "p = 0.177"</code></pre>
+<pre><code>[1] "p = 0.1796"</code></pre>
 </div>
 </div>
 </section>
@@ -226,15 +226,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 class="anchored" data-anchor-id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution.">Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don’t know the number of land points L. Assume that <em>p</em> = 0.7 and compute the posterior distribution of the number of tosses <em>N</em>. Hint: Use the binomial distribution.</h4>
 <p>Before, we were solving for <em>p</em> using <span class="math display">\[ p^W(1-p)^L \]</span> Which was a beta distribution because p was a continuous variable bound between 0,1. Now we want to solve for <em>N</em>, with W and <em>p</em>. We have a success/fail dataset, with a probability of success, therefore we use the binomial distribution. We need to calculate the probability of 0-5 <em>N</em>’s resulting in 5 successes (W).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># N &amp; L = unknown</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># N &amp; L = unknown</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate binomial distribution for 0-5 with p = 0.7</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, W, p)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>N_max <span class="ot">&lt;-</span> <span class="dv">25</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate binomial distribution for with lower bound = 5 and upper bound = 25 with p = 0.7</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(W<span class="sc">:</span>N_max, N_max, p)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">data =</span> x, <span class="at">N =</span> <span class="fu">names</span>(x)), <span class="fu">aes</span>(<span class="at">x =</span> N, <span class="at">y =</span> x)) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">data =</span> x, <span class="at">N =</span> W<span class="sc">:</span>N_max), <span class="fu">aes</span>(<span class="at">x =</span> N, <span class="at">y =</span> x)) <span class="sc">+</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Probability"</span>, <span class="at">x =</span> <span class="st">"N"</span>) <span class="sc">+</span> </span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
