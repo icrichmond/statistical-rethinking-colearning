@@ -1,6 +1,8 @@
 Statistical Rethinking Colearning 2023
 ================
 
+**NOTE:** website format taken from [Alec Robitaille](https://github.com/robitalec/statistical-rethinking-colearning-2023)
+
 - <a href="#schedule" id="toc-schedule">Schedule</a>
   - <a href="#lectures" id="toc-lectures">Lectures</a>
   - <a href="#homework" id="toc-homework">Homework</a>
