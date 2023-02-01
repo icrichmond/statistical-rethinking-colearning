@@ -98,3 +98,4 @@ po/*~
 
 ## Targets
 _targets/
+/.quarto/

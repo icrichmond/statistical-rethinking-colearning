@@ -172,7 +172,7 @@ sum(sim_globe(p, 10)=="W"))
 
 tab_post <- table(pred_post)
 
-for (i in 0:10) lines(c(i,i),c(0,tab_post[i+1]), lwd = 4, col = 4)
+#for (i in 0:10) lines(c(i,i),c(0,tab_post[i+1]), lwd = 4, col = 4)
 
 ```
 

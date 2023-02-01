@@ -1,0 +1,149 @@
+[
+  {
+    "objectID": "notes/notes-02.html",
+    "href": "notes/notes-02.html",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "",
+    "text": "Rose: remembering that posterior distributions are relative probabilities is a great foundation to move forward on\nThorn: equations are harddd + baseR + installing rstan + misclassification ahh"
+  },
+  {
+    "objectID": "notes/notes-02.html#globe-example",
+    "href": "notes/notes-02.html#globe-example",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Globe Example",
+    "text": "Globe Example\nestimand: proportion of the globe covered in water - do people know what an estimand is?"
+  },
+  {
+    "objectID": "notes/notes-02.html#generative-model-globe",
+    "href": "notes/notes-02.html#generative-model-globe",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Generative Model (globe)",
+    "text": "Generative Model (globe)\n\nstart with how the variables influence each other, i.e., causal model\n\n\nlibrary(dagitty)\nlibrary(rethinking)\n\nLe chargement a nécessité le package : rstan\n\n\nLe chargement a nécessité le package : StanHeaders\n\n\nLe chargement a nécessité le package : ggplot2\n\n\nrstan (Version 2.21.8, GitRev: 2e1f913d3ca3)\n\n\nFor execution on a local, multicore CPU with excess RAM we recommend calling\noptions(mc.cores = parallel::detectCores()).\nTo avoid recompilation of unchanged Stan programs, we recommend calling\nrstan_options(auto_write = TRUE)\n\n\nLe chargement a nécessité le package : cmdstanr\n\n\nThis is cmdstanr version 0.5.3\n\n\n- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr\n\n\n- CmdStan path: /home/icrichmond/.cmdstan/cmdstan-2.29.1\n\n\n- CmdStan version: 2.29.1\n\n\n\nA newer version of CmdStan is available. See ?install_cmdstan() to install it.\nTo disable this check set option or environment variable CMDSTANR_NO_VER_CHECK=TRUE.\n\n\nLe chargement a nécessité le package : parallel\n\n\nrethinking (Version 2.21)\n\n\n\nAttachement du package : 'rethinking'\n\n\nL'objet suivant est masqué depuis 'package:rstan':\n\n    stan\n\n\nL'objet suivant est masqué depuis 'package:stats':\n\n    rstudent\n\nd <- dagitty(\"dag {\n                p -> W\n                p -> L\n                N -> W \n                N -> L }\")\n\ndrawdag(d)\n\n\n\n\n\\[\nW,L = f(p,N)\n\\]\n\nW and L are functions of p and N"
+  },
+  {
+    "objectID": "notes/notes-02.html#bayesian-data-analysis",
+    "href": "notes/notes-02.html#bayesian-data-analysis",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Bayesian Data Analysis",
+    "text": "Bayesian Data Analysis\nFor each possible explanation of the sample,\n\ncount all the ways the sample could happen\nexplanations with more ways to produce the sample are more plausible"
+  },
+  {
+    "objectID": "notes/notes-02.html#garden-of-forking-data",
+    "href": "notes/notes-02.html#garden-of-forking-data",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Garden of Forking Data",
+    "text": "Garden of Forking Data\n\nrelies on samples being independent\nrelative differences between probabilities are dependent on sample size (differences will be smaller with smaller sample sizes because there is less evidence)\nnormalizing to probability allows for interpretability and easier math\ncollection of probabilities is a posterior distribution\n\nADD CODE (minute 35):\n\nsample <- c(\"W\", \"L\", \"W\", \"W\", \"W\", \"L\", \"W\", \"L\", \"W\")\n\nW <- sum(sample==\"W\")\nL <- sum(sample==\"L\")\np <- c(0, 0.25, 0.5, 0.75, 1)\nways <- sapply(p, function(q) (q*4)^W * ((1-q)*4)^L)\nprob <- ways/sum(ways)\ncbind(p, ways, prob)\n\n        p ways       prob\n[1,] 0.00    0 0.00000000\n[2,] 0.25   27 0.02129338\n[3,] 0.50  512 0.40378549\n[4,] 0.75  729 0.57492114\n[5,] 1.00    0 0.00000000"
+  },
+  {
+    "objectID": "notes/notes-02.html#testing",
+    "href": "notes/notes-02.html#testing",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Testing",
+    "text": "Testing\n\nhave to test\ntest using extreme values where you intuitively know the right answer\n\n\nsim_globe <- function(p = 0.7, N = 9){\n  \n  sample(c(\"W\", \"L\"), size = N, prob=c(p, 1-p), replace = T)\n}\n\nsim_globe()\n\n[1] \"L\" \"W\" \"W\" \"W\" \"L\" \"W\" \"W\" \"L\" \"W\"\n\nsim_globe(p=1, N=11) \n\n [1] \"W\" \"W\" \"W\" \"W\" \"W\" \"W\" \"W\" \"W\" \"W\" \"W\" \"W\"\n\nsum(sim_globe(p=0.5, N=1e4) == \"W\")/1e4\n\n[1] 0.5017\n\n\nFunction:\n\nlibrary(crayon)\n\n\nAttachement du package : 'crayon'\n\n\nL'objet suivant est masqué depuis 'package:ggplot2':\n\n    %+%\n\nmake_bar <- function(q,size=20) {\n    n <- round(q*size)\n    s1 <- concat( rep(\"#\",n) )\n    s2 <- concat( rep(\" \",size-n) )\n    concat(s1,s2)\n}\n\ncompute_posterior <- function(the_sample, poss = c(0,0.25,0.5,0.75,1)){\n  W <- sum(the_sample==\"W\")\n  L <- sum(the_sample==\"L\")\n  ways <- sapply(poss, function(q) (q*4)^W * ((1-q)*4)^L)\n  post <- ways/sum(ways)\n  bars <- sapply(post, function(q) make_bar(q))\n  data.frame(poss, ways, post = round(post,3), bars)\n}\n\ncompute_posterior(sim_globe())\n\n  poss ways  post                 bars\n1 0.00    0 0.000                     \n2 0.25   81 0.097 ##                  \n3 0.50  512 0.612 ############        \n4 0.75  243 0.291 ######              \n5 1.00    0 0.000"
+  },
+  {
+    "objectID": "notes/notes-02.html#real-number-sampling",
+    "href": "notes/notes-02.html#real-number-sampling",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Real Number Sampling",
+    "text": "Real Number Sampling\n\nmore possibilities = less probability in each option/outcome\n\nprobability is spread out across many options\n\nnormalizing to probability allows our equation to calculate infinite number of “sides”/outcomes\n\n\\[\np^W(1-p)^L\n\\]\np = probability\ndensity = probability when we are assessing infinite number of possibilities\n\nshape of the posterior embodies sample size\n\nno min sample size -> just more uncertain posterior\nposterior distribution embodies sample size\n\nno point estimates! estimate is entire posterior distribution\n\ncan use summary points from post dist for communication purposes\n\nintervals are merely indicators of the shape of the posterior distribution\n\nno “true interval” i.e., 95% CI doesn’t exist\ninterval is just distribution lower/upper bounds"
+  },
+  {
+    "objectID": "notes/notes-02.html#analyze-sample-summarize",
+    "href": "notes/notes-02.html#analyze-sample-summarize",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Analyze Sample + Summarize",
+    "text": "Analyze Sample + Summarize\n\npost_samples <- rbeta(1e3, 6+1, 3+1)\n\ndens(post_samples, lwd = 4, col = 2, xlab = \"prop water\", adj = 0.1)\n\ncurve(dbeta(x, 6+1, 3+1), add = T, lty = 2, lwd = 3)\n\n\n\n\n\nposterior prediction = “what would we bet?”\n\nhow many W’s do we expect to see in the next 10 tosses\n\nfor each sample of post dist, we can create a predictive distribution, then posterior predictive\n\nincorporates uncertainty from posterior distribution\n\n\n\npost_samples <- rbeta(1e4, 6+1, 3+1)\n\npred_post <- sapply(post_samples, function(p) \nsum(sim_globe(p, 10)==\"W\"))\n\ntab_post <- table(pred_post)\n\n#for (i in 0:10) lines(c(i,i),c(0,tab_post[i+1]), lwd = 4, col = 4)"
+  },
+  {
+    "objectID": "notes/notes-02.html#misclassification-bonus-round",
+    "href": "notes/notes-02.html#misclassification-bonus-round",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "Misclassification (Bonus Round)",
+    "text": "Misclassification (Bonus Round)\n\nW* is misclassified due to sampling error and measurement process\n\ntrue W is unknown\n\n\n\nlibrary(dagitty)\nlibrary(rethinking)\n\nd <- dagitty(\"dag {\n                p -> W\n                N -> W\n                W -> Wm\n                M -> Wm\n             }\")\n\ndrawdag(d)\n\n\n\n\n\nincorporate measurement error with x (error rate of 10%)\n\n\nsim_globe2 <- function(p = 0.7, N = 9, x = 0.1){\n  \n  true_sample <- sample(c(\"W\", \"L\"), size = N, prob = c(p, 1-p), replace = T)\n  \n  obs_sample <- ifelse(runif(N) < x,\n                       ifelse(true_sample == \"W\", \"L\", \"W\"),\n                       true_sample)\n  \n  return(obs_sample)\n  \n}\n\n\nhow do you know the error rate?\ndon’t understand mechanism behind incorporating x but understand why x needs to be incorporated + consequences of not"
+  },
+  {
+    "objectID": "notes/notes-02.html#todo",
+    "href": "notes/notes-02.html#todo",
+    "title": "Lecture 02 - The Garden of Forking Data",
+    "section": "TODO",
+    "text": "TODO\n\nDAG coords\nRead misclassification in 3rd ed."
+  },
+  {
+    "objectID": "notes/notes-01.html",
+    "href": "notes/notes-01.html",
+    "title": "Lecture 01 - The Golem of Prague",
+    "section": "",
+    "text": "Rose: excited for fewer examples + sensitivity analyses\nBONUS: I LOVE DAGS\nThorn: i am having a hard time imagining/extending my thinking re: causal imputation + unique null hypotheses (focus on causation)"
+  },
+  {
+    "objectID": "notes/notes-01.html#third-edition",
+    "href": "notes/notes-01.html#third-edition",
+    "title": "Lecture 01 - The Golem of Prague",
+    "section": "Third Edition",
+    "text": "Third Edition\n\npeach boxes instead of blue boxes"
+  },
+  {
+    "objectID": "notes/notes-01.html#causal-inference",
+    "href": "notes/notes-01.html#causal-inference",
+    "title": "Lecture 01 - The Golem of Prague",
+    "section": "Causal Inference",
+    "text": "Causal Inference\n\nstatistical models require scientific (causal) models\ncorrelation is a very limited measure of association\n\nassociation can occur without correlation\n\ncausal prediction = prediction of the consequences of an intervention (implications of changing one variable on another variable)\n\nknowing the cause of an action allows you to create predictions\n\ncausal imputation = knowing the cause of an action allows you to reconstruct possible outcomes (i.e., what if I had done something else?)"
+  },
+  {
+    "objectID": "notes/notes-01.html#dags",
+    "href": "notes/notes-01.html#dags",
+    "title": "Lecture 01 - The Golem of Prague",
+    "section": "DAGs",
+    "text": "DAGs\n\nabstract causal models: includes names of variables and their causal relationships\ntells you the consequences of an intervention\nfacilitates you asking scientific questions"
+  },
+  {
+    "objectID": "notes/notes-01.html#golems",
+    "href": "notes/notes-01.html#golems",
+    "title": "Lecture 01 - The Golem of Prague",
+    "section": "Golems",
+    "text": "Golems\n\nstatistical models = golems\noften not possible to design and outline a null hypothesis that is meaningful to reject in observational science\n\nwhat is a null ecological community?\n\nthink of good example/explanation for no null ecology/previous two slides\n\nread textbook section\nfocus on third example?\ntakeaway is that null hypothesis does not give you cause/process behind outcome\n\nwhat is your null? is it unique?"
+  },
+  {
+    "objectID": "notes/notes-01.html#todo",
+    "href": "notes/notes-01.html#todo",
+    "title": "Lecture 01 - The Golem of Prague",
+    "section": "TODO",
+    "text": "TODO\n\nread textbook section on null ecology\nagenda\ndiscuss code options"
+  },
+  {
+    "objectID": "notes/notes-listing.html",
+    "href": "notes/notes-listing.html",
+    "title": "Notes",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nDate\n\n\nAuthor\n\n\n\n\n\n\nLecture 01 - The Golem of Prague\n\n\nJan 23, 2023\n\n\nIsabella C. Richmond\n\n\n\n\nLecture 02 - The Garden of Forking Data\n\n\nJan 23, 2023\n\n\nIsabella C. Richmond\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistical Rethinking colearning 2023 - Bella",
+    "section": "",
+    "text": "Schedule\n\nLectures\nHomework\n\nParticipant notes and homework solutions\nResources\nInstallation\nCode of Conduct\n\n\n\nSecond round of Statistical Rethinking colearning, this time with 2023 lectures and homework.\nThe first round of Statistical Rethinking colearning (2022) is available here.\n\n\n\n\n\n\n\nMeeting date\nReading\nLectures\n\n\n\n\n26 January\nChapters 1, 2 and 3\n[1] <Science Before Statistics> <Slides>  [2] <Garden of Forking Data> <Slides>\n\n\n\nChapter 4\n[3] <Geocentric Models> <Slides>  [4] <Categories and Curves> <Slides>\n\n\n\nChapters 5 and 6\n[5] <Elemental Confounds> <Slides>  [6] <Good and Bad Controls> <Slides>\n\n\n\nChapters 7 and 8\n[7] Overfitting  [8] Interactions\n\n\n\nChapters 9, 10 and 11\n[9] Markov chain Monte Carlo  [10] Binomial GLMs\n\n\n\nChapters 11 and 12\n[11] Poisson GLMs  [12] Ordered Categories\n\n\n\nChapter 13\n[13] Multilevel Models  [14] Multi-Multilevel Models\n\n\n\nChapter 14\n[15] Varying Slopes  [16] Gaussian Processes\n\n\n\nChapter 15\n[17] Measurement Error  [18] Missing Data\n\n\n\nChapters 16 and 17\n[19] Beyond GLMs: State-space Models, ODEs  [20] Horoscopes\n\n\n\n\n\n\n\n\n\nMeeting date\nHomework\nSolutions\n\n\n\n\n2 February\nHomework 1\nSolutions\n\n\n\nHomework 2\nSolutions\n\n\n\nHomework 3\nSolutions\n\n\n\nHomework 4\nSolutions\n\n\n\nHomework 5\nSolutions\n\n\n\nHomework 6\nSolutions\n\n\n\nHomework 7\nSolutions\n\n\n\nHomework 8\nSolutions\n\n\n\nHomework 9\nSolutions\n\n\n\nHomework 10\nSolutions\n\n\n\n\n\n\n\n\nAlec\nBella (this repo)\n\n\n\n\n\nAdditional material using other packages or languages\n\nOriginal R: https://github.com/rmcelreath/rethinking/\nR + Tidyverse + ggplot2 + brms: https://bookdown.org/content/4857/\nPython and PyMC3: Python/PyMC3\nJulia and Turing: https://github.com/StatisticalRethinkingJulia and https://github.com/StatisticalRethinkingJulia/TuringModels.jl\n\nSee Richard’s comments about these here: https://github.com/rmcelreath/stat_rethinking_2023#coding\n2022 colearning:\n\nLectures: https://github.com/rmcelreath/stat_rethinking_2022#calendar--topical-outline\nHomework: https://github.com/rmcelreath/stat_rethinking_2022/tree/main/homework\n\nAlso, Alec’s notes and solutions of the 2019 material: https://github.com/robitalec/statistical-rethinking and https://www.statistical-rethinking.robitalec.ca/\n\n\n\nPackage specific install directions. We’ll update these as we go!\nRethinking\n\nrethinking\n\nStan\n\ncmdstanr\nRStan\nbrms\n\nTargets\n\ntargets\nstantargets\n\nV8, needed for the dagitty package\n\nV8\n\n\n\n\nPlease note that this project is released with a Code of Conduct. By participating in this project you agree to abide by its terms."
+  },
+  {
+    "objectID": "CODE_OF_CONDUCT.html",
+    "href": "CODE_OF_CONDUCT.html",
+    "title": "Statistical Rethinking colearning 2023 - Bella",
+    "section": "",
+    "text": "We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.\nWe pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.\n\n\n\nExamples of behavior that contributes to a positive environment for our community include:\n\nDemonstrating empathy and kindness toward other people\nBeing respectful of differing opinions, viewpoints, and experiences\nGiving and gracefully accepting constructive feedback\nAccepting responsibility and apologizing to those affected by our mistakes, and learning from the experience\nFocusing on what is best not just for us as individuals, but for the overall community\n\nExamples of unacceptable behavior include:\n\nThe use of sexualized language or imagery, and sexual attention or advances of any kind\nTrolling, insulting or derogatory comments, and personal or political attacks\nPublic or private harassment\nPublishing others’ private information, such as a physical or email address, without their explicit permission\nOther conduct which could reasonably be considered inappropriate in a professional setting\n\n\n\n\nCommunity leaders are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.\nCommunity leaders have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.\n\n\n\nThis Code of Conduct applies within all community spaces, and also applies when an individual is officially representing the community in public spaces. Examples of representing our community include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.\n\n\n\nInstances of abusive, harassing, or otherwise unacceptable behavior may be reported to Alec (robit.alec@gmail.com), or Isabella. All complaints will be reviewed and investigated promptly and fairly.\nAll community leaders are obligated to respect the privacy and security of the reporter of any incident.\n\n\n\nCommunity leaders will follow these Community Impact Guidelines in determining the consequences for any action they deem in violation of this Code of Conduct:\n\n\nCommunity Impact: Use of inappropriate language or other behavior deemed unprofessional or unwelcome in the community.\nConsequence: A private, written warning from community leaders, providing clarity around the nature of the violation and an explanation of why the behavior was inappropriate. A public apology may be requested.\n\n\n\nCommunity Impact: A violation through a single incident or series of actions.\nConsequence: A warning with consequences for continued behavior. No interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, for a specified period of time. This includes avoiding interactions in community spaces as well as external channels like social media. Violating these terms may lead to a temporary or permanent ban.\n\n\n\nCommunity Impact: A serious violation of community standards, including sustained inappropriate behavior.\nConsequence: A temporary ban from any sort of interaction or public communication with the community for a specified period of time. No public or private interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, is allowed during this period. Violating these terms may lead to a permanent ban.\n\n\n\nCommunity Impact: Demonstrating a pattern of violation of community standards, including sustained inappropriate behavior, harassment of an individual, or aggression toward or disparagement of classes of individuals.\nConsequence: A permanent ban from any sort of public interaction within the community.\n\n\n\n\nThis Code of Conduct is adapted from the Contributor Covenant, version 2.0, available at https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.\nCommunity Impact Guidelines were inspired by Mozilla’s code of conduct enforcement ladder.\nFor answers to common questions about this code of conduct, see the FAQ at https://www.contributor-covenant.org/faq. Translations are available at https://www.contributor-covenant.org/translations."
+  },
+  {
+    "objectID": "homework/homework-01.html",
+    "href": "homework/homework-01.html",
+    "title": "Homework - Week 01",
+    "section": "",
+    "text": "Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.\n\n# define how many tosses were W & L\nw <- 4\nl <- 11\n\n# define p, every 0.01 between 0,1 \np <- seq(0, 1, by = 0.01)\n\n# function to compute posterior by every p\ncompute_posterior <- function(W, L, poss){\n  ways <- sapply(poss, function(q) (q*4)^W * ((1-q)*4)^L)\n  post <- ways/sum(ways)\n  data.frame(poss, ways, post = round(post,3))\n}\n\n# compute posterior for our data\nposterior <- compute_posterior(w, l, p)\n\n# visualize posterior \nggplot(data = posterior) + \n  geom_line(aes(poss, post)) + \n  theme_classic() + \n  xlab(\"proportion water\") + \n  ylab(\"probability\")\n\n\n\n\nNOTE: Bonus answer in solutions is somewhat key to understanding next answer. This specific problem, where you have a continuous value bounded by 0,1 with an infinite number of p, follows a beta distribution. Because the beta distribution is defined, you can instead just use that mathematical equation to come to the same conclusion as above.\n\nggplot() +\n  stat_function(fun = function(x) dbeta(x, 4+1, 11+1), color = \"black\",\n                size = 1) +\n  theme_classic() + \n  xlab(\"p\") + \n  ylab(\"\")\n\n\n\n\n\n\nQuestion 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.\n\n# sample our posterior (beta distribution with 4 W, 11 L)\nn <- 1e4\npost_samples <- rbeta(n, 4+1, 11+1)\n\n# sim globe function\nsim_globe <- function(p, N){\n  \n  sample(c(\"W\", \"L\"), size = N, prob=c(p, 1-p), replace = T)\n\n}\n\n# simulate posterior predictive distribution for next 5 tosses of the globe\n# how many of the 5 tosses will = W? Tested 1e4 times\npred_post <- sapply(post_samples, function(p) sum(sim_globe(p, 5)==\"W\"))\n\n# create table that counts number of incidences of each option (i.e., how many times will 0 W appear, 1 W, 2 W, 3 W, 4 W, 5 W?)\ntab_post <- table(pred_post)\npred_post_df <- as.data.frame(tab_post)\n\nggplot(pred_post_df, aes(as.factor(pred_post), Freq)) + \n  geom_col() + \n  theme_classic() + \n  xlab(\"number of W\") + \n  ylab(\"count\")\n\n\n\n\nNOTE: Can also use rbinom() function instead of sim_globe() since there are only two possible outcomes.\n\n\nQuestion 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.\nWe know that \\[ p = \\frac{ways}{sum(ways)} \\] Therefore, count the incidences of 3, 4, 5 in posterior predictive distribution from 2 and divide by total number of ways (1e4)\n\np_threeplus <- (sum(pred_post_df[which(pred_post_df[,1]==3 | pred_post_df[,1]==4 | \n                                         pred_post_df[,1]==5),2]))/n\n\nprint(paste0(\"p = \", p_threeplus))\n\n[1] \"p = 0.1848\"\n\n\n\n\nQuestion 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don’t know the number of land points L. Assume that p = 0.7 and compute the posterior distribution of the number of tosses N. Hint: Use the binomial distribution.\nBefore, we were solving for p using \\[ p^W(1-p)^L \\] Which was a beta distribution because p was a continuous variable bound between 0,1. Now we want to solve for N, with W and p. We have a success/fail dataset, with a probability of success, therefore we use the binomial distribution. We need to calculate the probability of 0-5 N’s resulting in 5 successes (W).\n\n# N & L = unknown\nW <- 5\np <- 0.7\nN_max <- 25\nlst <- seq(W, N_max, by = 1)\n\n# calculate binomial distribution for each N between lower bound (W) and upper bound (N_max) with p = 0.7\nx <- sapply(lst, function(x) dbinom(W, x, p))\n\nggplot(data.frame(data = x, N = W:N_max), aes(x = N, y = x)) +\n  geom_col() +\n  labs(y = \"Probability\", x = \"N\") + \n  theme_classic()"
+  },
+  {
+    "objectID": "homework/homework-listing.html",
+    "href": "homework/homework-listing.html",
+    "title": "Homework",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nDate\n\n\nAuthor\n\n\n\n\n\n\nHomework - Week 01\n\n\n\n\nIsabella C. Richmond\n\n\n\n\n\n\nNo matching items"
+  }
+]
