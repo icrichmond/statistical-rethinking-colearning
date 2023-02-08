@@ -22,6 +22,8 @@ website:
             text: Lecture 01
           - href: notes/notes-02.qmd
             text: Lecture 02
+          - href: notes/notes-03.qmd
+            text: Lecture 03
 
 format:
   html:
