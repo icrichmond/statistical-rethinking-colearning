@@ -194,5 +194,61 @@
     "title": "Lecture 03 - Geocentric Models",
     "section": "TODO:",
     "text": "TODO:\n\nfigure out plot erroring"
+  },
+  {
+    "objectID": "notes/notes-04.html",
+    "href": "notes/notes-04.html",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "",
+    "text": "Rose: learning what GAMs are , thinking of age/time as a cause\nThorn: I haven’t taken time to fix the plot code from the lectures"
+  },
+  {
+    "objectID": "notes/notes-04.html#drawing-inferences",
+    "href": "notes/notes-04.html#drawing-inferences",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "Drawing Inferences",
+    "text": "Drawing Inferences\n\nlinear model can accomodate anything, thus we need to think carefully about our scientific model\ngenerative model + multiple estimands = multiple estimators\nquite often the estimate we want is not in a summary table because it depends on multiple unknowns, so we often need to do post-processing"
+  },
+  {
+    "objectID": "notes/notes-04.html#categories",
+    "href": "notes/notes-04.html#categories",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "Categories",
+    "text": "Categories\n\ncategories are discrete and non-linear\ndiscrete, unordered types\nwe want to stratify by category, to fit a separate line for each"
+  },
+  {
+    "objectID": "notes/notes-04.html#howell-data",
+    "href": "notes/notes-04.html#howell-data",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "Howell Data",
+    "text": "Howell Data\n\n\nLoading required package: rstan\n\n\nLoading required package: StanHeaders\n\n\nLoading required package: ggplot2\n\n\nrstan (Version 2.21.8, GitRev: 2e1f913d3ca3)\n\n\nFor execution on a local, multicore CPU with excess RAM we recommend calling\noptions(mc.cores = parallel::detectCores()).\nTo avoid recompilation of unchanged Stan programs, we recommend calling\nrstan_options(auto_write = TRUE)\n\n\nLoading required package: cmdstanr\n\n\nThis is cmdstanr version 0.5.3\n\n\n- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr\n\n\n- CmdStan path: /home/icrichmond/.cmdstan/cmdstan-2.31.0\n\n\n- CmdStan version: 2.31.0\n\n\nLoading required package: parallel\n\n\nrethinking (Version 2.21)\n\n\n\nAttaching package: 'rethinking'\n\n\nThe following object is masked from 'package:rstan':\n\n    stan\n\n\nThe following object is masked from 'package:stats':\n\n    rstudent\n\n\n\nhow are height, weight, and sex causally related?\n\n\nd <- dagitty(\"dag {\n                H -> W\n                S -> W\n                S -> H\n             }\")\n\ndrawdag(d)\n\n\n\n\n\nheight influences weight\nsex influences weight and height\nweight is influenced by height and sex\ninfluence of sex is both direct and indirect on weight\n\\(H = f_{H}(S)\\)\n\\(W = f_{W}(H,S)\\)\nUnobserved causes are ignorable unless they are shared between variables (common cause) = confound\n\n\nsim_HW <- function(S, b, a){\n  N <- length(S)\n  H <- ifelse(S==1, 150, 160) + rnorm(N, 0, 5)\n  W <- a[S] + b[S]*H + rnorm(N, 0, 5)\n  data.frame(S, H, W)\n}\n\nS <- rbern(100)+1\ndat <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))\nhead(dat)\n\n  S        H         W\n1 2 159.1391  96.44300\n2 2 167.9928  99.11262\n3 1 148.5467  77.71371\n4 2 166.2067 101.62710\n5 1 153.7069  66.90730\n6 1 158.3554  72.88327\n\n\n\nscientific questions:\n\ncausal effect of H on W?\ncausal effect of S on W?\ndirect causal effect of S on W?\n\nwe need to stratify by S to answer qs 2 and 3\ncoding categorical variables\n\nindicator variables (0/1)\nindex variables (1,2,3,4)\nindex variables are generally preferable\n\nindex variables\n\noften we want to give each index the same prior\n\ntotal causal effect of sex\n\n\nS <- rep(1, 100)\nsimF <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))\n\nS <- rep(2, 100)\nsimM <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))\n\n# effect of sex (male-female)\nmean(simM$W - simF$W)\n\n[1] 19.99589\n\n\n\nestimating model and synthetic example\n\n\nm_SW <- quap(alist(\n  W ~ dnorm(mu, sigma),\n  mu <- a[S],\n  a[S] ~ dnorm(60, 10),\n  sigma ~ dunif(0, 10)\n), data = dat)\nprecis(m_SW, depth = 2)\n\n           mean        sd      5.5%     94.5%\na[1]  74.136354 0.7704174 72.905078 75.367630\na[2]  95.123393 0.8349166 93.789035 96.457751\nsigma  5.677603 0.4018704  5.035336  6.319869\n\n\n\nanalyze the real sample\n\n\nd <- Howell1\nd <- d[ d$age >= 18,]\n\ndat <- list(\n  W = d$weight,\n  S = d$male + 1\n)\n\nm_SW <- quap(alist(\n  W ~ dnorm(mu, sigma), \n  mu <- a[S],\n  a[S] ~ dnorm(60, 10),\n  sigma ~ dunif(0, 10)\n), data = dat)\n\n\nposterior means and predictions\n\n\n# posterior mean W\npost <- extract.samples(m_SW)\ndens(post$a[,1])\n\n\n\n#dens(post$a[,2], add = T)\n\n# posterior W predictions\nW1 <- rnorm(1000, post$a[,1], post$sigma)\nW2 <- rnorm(1000, post$a[,2], post$sigma)\ndens(W1)\n\n\n\n#dens(W2, add = T)\n\n# contrast\nW_contrast <- W2 - W1\ndens(W_contrast)\n\n\n\n# proportion above zero\nsum(W_contrast > 0)/1000\n\n[1] 0.798\n\nsum(W_contrast < 0)/1000\n\n[1] 0.202\n\n\n\ncontrasting\n\nneed to compute the difference between the categories\nit is not legitimate to compare overlap in distributions\nwe must compute contrast distribution\n\n\n\nmu_contrast <- post$a[,2] - post$a[,1]\ndens(mu_contrast)\n\n\n\n\n\n“controlling” for the indirect effect of sex through height\n\n\nS <- rbern(100)+1\n# slopes are the same so there is no effect of height on weight through slope but men are on average 10 kg heavier (intercept 10)\nset.seed(12)\ndat <- sim_HW(S, b = c(0.5, 0.5), a = c(0, 10))\n\n\n\\(W_{i} \\sim Normal(\\mu _{i}, \\sigma)\\)\n\\(\\mu _{i} = \\alpha _{S[i]} + \\beta _{S[i]}(H_{i} - \\bar H)\\)\n\nThis equation centers the height \\((H_{i} - \\bar H)\\)\nCentering H means that alpha represents the average weight of a person with average height\n\\(\\alpha = [\\alpha _{1}, \\alpha _{2}]\\) , \\(\\beta = [\\beta _{1}, \\beta _{2}]\\)\n\nanalyze the sample\n\n\ndat <- list(W = d$weight, H = d$height, Hbar = mean(d$height), S = d$male + 1)\n\nm_SHW <- quap(alist(\n  W ~ dnorm(mu, sigma),\n  mu <- a[S] + b[S]*(H-Hbar),\n  a[S] ~ dnorm(60, 10),\n  b[S] ~ dunif(0, 1),\n  sigma ~ dunif(0, 10)\n), data = dat)\n\n\nwe need to compute the difference of expected weight at each height to get the actual estimate that we are looking for (for the direct effect of sex on weight)\n\n\nxseq <- seq(from=130, to=190, len=50)\n\nmuF <- link(m_SHW, data = list(S=rep(1,50), H=xseq, Hbar=mean(d$height)))\n#lines(xseq, apply(muF, 2, mean))\n\nmuM <- link(m_SHW, data = list(S=rep(2,50), H=xseq, Hbar = mean(d$height)))\n#lines(xseq, apply(muM, 2, mean))\n\nmu_contrast <- muF - muM\n\n#plot(NULL, xlim=range(xseq))\n#for (p in c(0.5, 0.6, 0.7, 0.8, 0.9, 0.99))\n#  shade(apply(mu_contrast, 2, PI, prob = p), xseq)\n#abline(h=0)\n\n\nnearly all of the causal effects of S acts through H\n\nwhen we block H, we see very little effect of sex on weight"
+  },
+  {
+    "objectID": "notes/notes-04.html#categorical-variables",
+    "href": "notes/notes-04.html#categorical-variables",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "Categorical Variables",
+    "text": "Categorical Variables\n\ncommon, easy to use with index coding\nuse samples to compute relevant contrasts\nalways summarize (mean, interval) as the last step\nwe want mean difference and not difference of means"
+  },
+  {
+    "objectID": "notes/notes-04.html#curves-from-lines",
+    "href": "notes/notes-04.html#curves-from-lines",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "Curves from Lines",
+    "text": "Curves from Lines\n\nmany non linear relationships\nlinear models can easily fit curves: 2 strategies\n\npolynomials (bad)\nsplines and GAMs (less bad)\n\npolynomial models\n\nstill linear because its an additive function of the parameters\ncreate strange symmetries and explosive uncertainty\nno local smoothing, only global smoothing\ndo not use\n\nsplines\n\ngreat for locally inferred function\nadd together a bunch of locally trained terms\ncan add as many locally trained terms as you want\neach term has a weight and slope and only affects its own region"
+  },
+  {
+    "objectID": "notes/notes-04.html#todo",
+    "href": "notes/notes-04.html#todo",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "TODO:",
+    "text": "TODO:\n\nfix weird plot erroring\ngo through and make sure code is right\nfinish full luxury Bayes"
+  },
+  {
+    "objectID": "notes/notes-04.html#full-luxury-bayes",
+    "href": "notes/notes-04.html#full-luxury-bayes",
+    "title": "Lecture 04 - Categories & Curves",
+    "section": "Full Luxury Bayes",
+    "text": "Full Luxury Bayes\n\ninstead of two models for two estimands, use one model for full causal model\n\n\nm_SHW_full <- quap(alist(\n  \n  # weight\n  W ~ dnorm(mu, sigma),\n  mu <- a[S] + b[S]*(H-Hbar),\n  a[S] ~ dnorm(60, 10),\n  b[S] ~ dunif(0, 1),\n  sigma ~ dunif(0, 10),\n  \n  # height\n  H ~ dnorm(nu, tau),\n  nu <- h[S],\n  h[S] ~ dnorm(160, 10),\n  tau ~ dunif(0, 10)\n  \n), data = dat)\n\n\ncan simulate interventions with this approach"
   }
 ]

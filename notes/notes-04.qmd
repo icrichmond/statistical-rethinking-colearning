@@ -1,0 +1,294 @@
+---
+title: "Lecture 04 - Categories & Curves"
+author: Isabella C. Richmond
+date: Feb 08, 2023
+format: html
+---
+
+## Rose / Thorn
+
+*Rose:* learning what GAMs are , thinking of age/time as a cause
+
+*Thorn:* I haven't taken time to fix the plot code from the lectures
+
+## Drawing Inferences
+
+-   linear model can accomodate anything, thus we need to think carefully about our scientific model
+-   generative model + multiple estimands = multiple estimators
+-   quite often the estimate we want is not in a summary table because it depends on multiple unknowns, so we often need to do post-processing
+
+## Categories
+
+-   categories are discrete and non-linear
+-   discrete, unordered types
+-   we want to stratify by category, to fit a separate line for each
+
+## Howell Data
+
+```{r, eval = T, echo = F}
+library(rethinking)
+library(dagitty)
+data(Howell1)
+```
+
+-   how are height, weight, and sex causally related?
+
+```{r}
+d <- dagitty("dag {
+                H -> W
+                S -> W
+                S -> H
+             }")
+
+drawdag(d)
+```
+
+-   height influences weight
+-   sex influences weight and height
+-   weight is influenced by height and sex
+-   influence of sex is both direct and indirect on weight
+-   $H = f_{H}(S)$
+-   $W = f_{W}(H,S)$
+-   Unobserved causes are ignorable unless they are shared between variables (common cause) = confound
+
+```{r}
+sim_HW <- function(S, b, a){
+  N <- length(S)
+  H <- ifelse(S==1, 150, 160) + rnorm(N, 0, 5)
+  W <- a[S] + b[S]*H + rnorm(N, 0, 5)
+  data.frame(S, H, W)
+}
+
+S <- rbern(100)+1
+dat <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))
+head(dat)
+```
+
+-   scientific questions:
+
+    -   causal effect of H on W?
+
+    -   causal effect of S on W?
+
+    -   direct causal effect of S on W?
+
+-   we need to stratify by S to answer qs 2 and 3
+
+-   coding categorical variables
+
+    -   indicator variables (0/1)
+
+    -   index variables (1,2,3,4)
+
+    -   index variables are generally preferable
+
+-   index variables
+
+    -   often we want to give each index the same prior
+
+-   total causal effect of sex
+
+```{r}
+S <- rep(1, 100)
+simF <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))
+
+S <- rep(2, 100)
+simM <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))
+
+# effect of sex (male-female)
+mean(simM$W - simF$W)
+```
+
+-   estimating model and synthetic example
+
+```{r}
+m_SW <- quap(alist(
+  W ~ dnorm(mu, sigma),
+  mu <- a[S],
+  a[S] ~ dnorm(60, 10),
+  sigma ~ dunif(0, 10)
+), data = dat)
+precis(m_SW, depth = 2)
+```
+
+-   analyze the real sample
+
+```{r}
+d <- Howell1
+d <- d[ d$age >= 18,]
+
+dat <- list(
+  W = d$weight,
+  S = d$male + 1
+)
+
+m_SW <- quap(alist(
+  W ~ dnorm(mu, sigma), 
+  mu <- a[S],
+  a[S] ~ dnorm(60, 10),
+  sigma ~ dunif(0, 10)
+), data = dat)
+```
+
+-   posterior means and predictions
+
+```{r}
+# posterior mean W
+post <- extract.samples(m_SW)
+dens(post$a[,1])
+#dens(post$a[,2], add = T)
+
+# posterior W predictions
+W1 <- rnorm(1000, post$a[,1], post$sigma)
+W2 <- rnorm(1000, post$a[,2], post$sigma)
+dens(W1)
+#dens(W2, add = T)
+
+# contrast
+W_contrast <- W2 - W1
+dens(W_contrast)
+
+# proportion above zero
+sum(W_contrast > 0)/1000
+sum(W_contrast < 0)/1000
+```
+
+-   contrasting
+
+    -   need to compute the difference between the categories
+
+    -   it is not legitimate to compare overlap in distributions
+
+    -   we must compute **contrast distribution**
+
+```{r}
+mu_contrast <- post$a[,2] - post$a[,1]
+dens(mu_contrast)
+```
+
+-   "controlling" for the indirect effect of sex through height
+
+```{r}
+S <- rbern(100)+1
+# slopes are the same so there is no effect of height on weight through slope but men are on average 10 kg heavier (intercept 10)
+set.seed(12)
+dat <- sim_HW(S, b = c(0.5, 0.5), a = c(0, 10))
+```
+
+-   $W_{i} \sim Normal(\mu _{i}, \sigma)$
+
+-   $\mu _{i} = \alpha _{S[i]} + \beta _{S[i]}(H_{i} - \bar H)$
+
+    -   This equation centers the height $(H_{i} - \bar H)$
+
+    -   Centering H means that alpha represents the average weight of a person with average height
+
+    -   $\alpha = [\alpha _{1}, \alpha _{2}]$ , $\beta = [\beta _{1}, \beta _{2}]$
+
+-   analyze the sample
+
+```{r}
+dat <- list(W = d$weight, H = d$height, Hbar = mean(d$height), S = d$male + 1)
+
+m_SHW <- quap(alist(
+  W ~ dnorm(mu, sigma),
+  mu <- a[S] + b[S]*(H-Hbar),
+  a[S] ~ dnorm(60, 10),
+  b[S] ~ dunif(0, 1),
+  sigma ~ dunif(0, 10)
+), data = dat)
+```
+
+-   we need to compute the difference of expected weight at each height to get the actual estimate that we are looking for (for the direct effect of sex on weight)
+
+```{r}
+xseq <- seq(from=130, to=190, len=50)
+
+muF <- link(m_SHW, data = list(S=rep(1,50), H=xseq, Hbar=mean(d$height)))
+#lines(xseq, apply(muF, 2, mean))
+
+muM <- link(m_SHW, data = list(S=rep(2,50), H=xseq, Hbar = mean(d$height)))
+#lines(xseq, apply(muM, 2, mean))
+
+mu_contrast <- muF - muM
+
+#plot(NULL, xlim=range(xseq))
+#for (p in c(0.5, 0.6, 0.7, 0.8, 0.9, 0.99))
+#  shade(apply(mu_contrast, 2, PI, prob = p), xseq)
+#abline(h=0)
+```
+
+-   nearly all of the causal effects of S acts through H
+
+    -   when we block H, we see very little effect of sex on weight
+
+## Categorical Variables
+
+-   common, easy to use with index coding
+
+-   use samples to compute relevant contrasts
+
+-   always summarize (mean, interval) as the last step
+
+-   **we want mean difference and not difference of means**
+
+## Curves from Lines
+
+-   many non linear relationships
+
+-   linear models can easily fit curves: 2 strategies
+
+    -   polynomials (bad)
+
+    -   splines and GAMs (less bad)
+
+-   polynomial models
+
+    -   still linear because its an additive function of the parameters
+
+    -   create strange symmetries and explosive uncertainty
+
+    -   no local smoothing, only global smoothing
+
+    -   do not use
+
+-   splines
+
+    -   great for locally inferred function
+
+    -   add together a bunch of locally trained terms
+
+    -   can add as many locally trained terms as you want
+
+    -   each term has a weight and slope and only affects its own region
+
+## Full Luxury Bayes
+
+-   instead of two models for two estimands, use one model for full causal model
+
+```{r, eval = F}
+m_SHW_full <- quap(alist(
+  
+  # weight
+  W ~ dnorm(mu, sigma),
+  mu <- a[S] + b[S]*(H-Hbar),
+  a[S] ~ dnorm(60, 10),
+  b[S] ~ dunif(0, 1),
+  sigma ~ dunif(0, 10),
+  
+  # height
+  H ~ dnorm(nu, tau),
+  nu <- h[S],
+  h[S] ~ dnorm(160, 10),
+  tau ~ dunif(0, 10)
+  
+), data = dat)
+```
+
+-   can simulate interventions with this approach
+
+## TODO:
+
+-   fix weird plot erroring
+-   go through and make sure code is right
+-   finish full luxury Bayes
