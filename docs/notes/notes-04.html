@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-1.2.237">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -295,16 +295,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Loading required package: StanHeaders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: ggplot2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>rstan (Version 2.21.8, GitRev: 2e1f913d3ca3)</code></pre>
+<pre><code>
+rstan version 2.26.13 (Stan version 2.26.1)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>For execution on a local, multicore CPU with excess RAM we recommend calling
 options(mc.cores = parallel::detectCores()).
 To avoid recompilation of unchanged Stan programs, we recommend calling
-rstan_options(auto_write = TRUE)</code></pre>
+rstan_options(auto_write = TRUE)
+For within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,
+change `threads_per_chain` option:
+rstan_options(threads_per_chain = 1)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: cmdstanr</code></pre>
@@ -316,7 +320,7 @@ rstan_options(auto_write = TRUE)</code></pre>
 <pre><code>- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>- CmdStan path: /home/icrichmond/.cmdstan/cmdstan-2.31.0</code></pre>
+<pre><code>- CmdStan path: C:/Users/I_RICHMO/Documents/.cmdstan/cmdstan-2.31.0</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>- CmdStan version: 2.31.0</code></pre>
@@ -378,13 +382,13 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_HW</span>(S, <span class="at">b=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.6</span>), <span class="at">a=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  S        H         W
-1 2 159.1391  96.44300
-2 2 167.9928  99.11262
-3 1 148.5467  77.71371
-4 2 166.2067 101.62710
-5 1 153.7069  66.90730
-6 1 158.3554  72.88327</code></pre>
+<pre><code>  S        H        W
+1 1 152.0637 79.00459
+2 2 162.9806 97.79403
+3 2 151.9215 83.30485
+4 2 157.1391 89.68807
+5 2 162.2995 86.54720
+6 2 155.7600 94.87465</code></pre>
 </div>
 </div>
 <ul>
@@ -417,25 +421,29 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 19.99589</code></pre>
+<pre><code>[1] 20.66221</code></pre>
 </div>
 </div>
 <ul>
 <li>estimating model and synthetic example</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m_SW <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[S],</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  a[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">60</span>, <span class="dv">10</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">rbern</span>(<span class="dv">100</span>)<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_HW</span>(S, <span class="at">b =</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">0.6</span>), <span class="at">a =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>m_SW <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[S],</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  a[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">60</span>, <span class="dv">10</span>),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-a[1]  74.136354 0.7704174 72.905078 75.367630
-a[2]  95.123393 0.8349166 93.789035 96.457751
-sigma  5.677603 0.4018704  5.035336  6.319869</code></pre>
+a[1]  76.105433 0.8929361 74.678348 77.532517
+a[2]  96.352090 0.8936933 94.923795 97.780384
+sigma  6.338011 0.4487305  5.620853  7.055169</code></pre>
 </div>
 </div>
 <ul>
@@ -487,11 +495,11 @@ sigma  5.677603 0.4018704  5.035336  6.319869</code></pre>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.798</code></pre>
+<pre><code>[1] 0.804</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.202</code></pre>
+<pre><code>[1] 0.196</code></pre>
 </div>
 </div>
 <ul>
@@ -529,15 +537,17 @@ sigma  5.677603 0.4018704  5.035336  6.319869</code></pre>
 <li><p>analyze the sample</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">W =</span> d<span class="sc">$</span>weight, <span class="at">H =</span> d<span class="sc">$</span>height, <span class="at">Hbar =</span> <span class="fu">mean</span>(d<span class="sc">$</span>height), <span class="at">S =</span> d<span class="sc">$</span>male <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>m_SHW <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[S] <span class="sc">+</span> b[S]<span class="sc">*</span>(H<span class="sc">-</span>Hbar),</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  a[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">60</span>, <span class="dv">10</span>),</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  b[S] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Howell1</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>age <span class="sc">&gt;=</span> <span class="dv">18</span>, ]</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">W =</span> d<span class="sc">$</span>weight, <span class="at">H =</span> d<span class="sc">$</span>height, <span class="at">Hbar =</span> <span class="fu">mean</span>(d<span class="sc">$</span>height), <span class="at">S =</span> d<span class="sc">$</span>male <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>m_SHW <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a[S] <span class="sc">+</span> b[S]<span class="sc">*</span>(H<span class="sc">-</span>Hbar),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  a[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">60</span>, <span class="dv">10</span>),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  b[S] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>we need to compute the difference of expected weight at each height to get the actual estimate that we are looking for (for the direct effect of sex on weight)</li>
@@ -603,6 +613,7 @@ sigma  5.677603 0.4018704  5.035336  6.319869</code></pre>
 <h2 class="anchored" data-anchor-id="full-luxury-bayes">Full Luxury Bayes</h2>
 <ul>
 <li>instead of two models for two estimands, use one model for full causal model</li>
+<li>can simulate interventions with this approach</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>m_SHW_full <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
@@ -620,18 +631,34 @@ sigma  5.677603 0.4018704  5.035336  6.319869</code></pre>
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  h[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">160</span>, <span class="dv">10</span>),</span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  tau <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
 <span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m_SHW_full)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>Hbar <span class="ot">&lt;-</span> dat<span class="sc">$</span>Hbar</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(post, {</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  H_S1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, h[,<span class="dv">1</span>], tau)</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  W_S1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, a[,<span class="dv">2</span>] <span class="sc">+</span> b[,<span class="dv">1</span>]<span class="sc">*</span>(H_S2<span class="sc">-</span>Hbar), sigma)</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>  W_do_S <span class="ot">&lt;&lt;-</span> W_S2 <span class="sc">-</span> W_S1</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a><span class="co"># automate</span></span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>HWsim <span class="ot">&lt;-</span> <span class="fu">sim</span>(m_SHW_full, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">S=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)), <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"H"</span>, <span class="st">"W"</span>))</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>W_do_S_auto <span class="ot">&lt;-</span> HWsim<span class="sc">$</span>W[,<span class="dv">2</span>] <span class="sc">-</span> HWsim<span class="sc">$</span>W[,<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>can simulate interventions with this approach</li>
+<li>you can either do one statistical model for each estimand OR one simulation for each estimand (full luxury Bayes)</li>
 </ul>
 </section>
 <section id="todo" class="level2">
 <h2 class="anchored" data-anchor-id="todo">TODO:</h2>
 <ul>
 <li>fix weird plot erroring</li>
-<li>go through and make sure code is right</li>
-<li>finish full luxury Bayes</li>
 </ul>
 
 
