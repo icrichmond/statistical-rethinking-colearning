@@ -30,6 +30,8 @@ website:
             text: Lecture 04
           - href: notes/notes-05.qmd
             text: Lecture 05
+          - href: notes/notes-06.qmd
+            text: Lecture 06
 
 format:
   html:

@@ -220,6 +220,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="../notes/notes-05.html" class="sidebar-item-text sidebar-link">Lecture 05</a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-06.html" class="sidebar-item-text sidebar-link">Lecture 06</a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -414,7 +419,7 @@ W,L = f(p,N)
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "W" "W" "W" "W" "W" "L" "W" "W" "L"</code></pre>
+<pre><code>[1] "W" "L" "W" "W" "W" "W" "L" "W" "L"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>(<span class="at">p=</span><span class="dv">1</span>, <span class="at">N=</span><span class="dv">11</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -422,7 +427,7 @@ W,L = f(p,N)
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">sim_globe</span>(<span class="at">p=</span><span class="fl">0.5</span>, <span class="at">N=</span><span class="fl">1e4</span>) <span class="sc">==</span> <span class="st">"W"</span>)<span class="sc">/</span><span class="fl">1e4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5049</code></pre>
+<pre><code>[1] 0.505</code></pre>
 </div>
 </div>
 <p>Function:</p>
