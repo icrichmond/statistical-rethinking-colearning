@@ -94,7 +94,7 @@ ggdag(dag) +
 N <- 200
 b_XY <- 0
 b_UY <- -1
-b_YZ <- -1
+b_UZ <- -1
 b_ZX <- 1
 
 set.seed(10)
@@ -159,7 +159,7 @@ f <- function(n=100,bXZ=1,bZY=1) {
     return( c(bX,bXZ) )
 }
 
-sim <- mcreplicate( 1e4 , f(bZY=0) , mc.cores=8 )
+sim <- mcreplicate( 1e4 , f(bZY=0), mc.cores = 1)
 
 dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(-1,0.8) , ylim=c(0,2.7)  )
 #dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
@@ -191,7 +191,7 @@ f <- function(n=100,bXY=1,bYZ=1) {
     return( c(bX,bXZ) )
 }
 
-sim <- mcreplicate( 1e4 , f() , mc.cores=8 )
+sim <- mcreplicate( 1e4 , f(), mc.cores = 1 )
 
 dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(0,1.5) , ylim=c(0,5)  )
 #dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
@@ -223,7 +223,7 @@ f <- function(n=100,bZX=1,bXY=1) {
     return( c(bX,bXZ) )
 }
 
-sim <- mcreplicate( 1e4 , f(n=50) , mc.cores=8 )
+sim <- mcreplicate( 1e4 , f(n=50), mc.cores = 1 )
 
 dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(0.5,1.5) , ylim=c(0,4.5)  )
 dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
@@ -257,7 +257,7 @@ f <- function(n=100,bZX=1,bXY=1) {
     return( c(bX,bXZ) )
 }
 
-sim <- mcreplicate( 1e4 , f(bXY=0) , mc.cores=8 )
+sim <- mcreplicate( 1e4 , f(bXY=0), mc.cores = 1)
 
 dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(-0.5,1) , ylim=c(0,5.5)  )
 #dens( sim[2,] , lwd=3 , col=2 , add=TRUE )

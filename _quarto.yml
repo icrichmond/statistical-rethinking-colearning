@@ -17,6 +17,8 @@ website:
             text: Homework 01
           - href: homework/homework-02.qmd
             text: Homework 02
+          - href: homework/homework-03.qmd
+            text: Homework 03
       - section: "Notes"
         href: notes/notes-listing.qmd
         contents:
