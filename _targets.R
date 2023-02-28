@@ -20,6 +20,7 @@ options(mc.cores = 2,
 
 # Data --------------------------------------------------------------------
 data(Howell1)
+data(foxes)
 
 
 # Targets: homework 2 -----------------------------------------------------
@@ -56,6 +57,29 @@ targets_h02 <- c(
                   set_prior("uniform(0, 10)", class = "b"),
                   set_prior("exponential(1)", class = "sigma")))
   )
+)
+
+
+# Targets: homework 3 -----------------------------------------------------
+targets_h03 <- c(
+  
+  tar_target(
+    f,
+    foxes %>% 
+      select(c(avgfood, area)) %>%
+      mutate(avgfood = standardize(avgfood), 
+             area = standardize(area))
+  ),
+  
+  tar_target(
+    h03_q1,
+    brm(formula = avgfood ~ area, data = f, family = gaussian(),
+        prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
+                  set_prior("normal(0, 0.5)", class = "b"), # uniform so it stays positive
+                  set_prior("exponential(1)", class = "sigma")))
+  )
+  
+  
 )
 
 

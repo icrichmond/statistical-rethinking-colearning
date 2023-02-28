@@ -24,9 +24,46 @@ ggdag(dag) +
 where *F* is `avgfood`, *G* is `groupsize`, *A* is `area`, and *W* is `weight`. Use the backdoor criterion and estimate the total causal influence of *A* on *F*. What effect would increasing the territory have on the amount of food inside of it?
 
 
+Total causal effect of *A* on *F* is just F ~ A. 
+```{r}
+# get data
+data(foxes)
+d <- foxes %>% 
+  select(c(avgfood, area)) %>%
+  mutate(avgfood = standardize(avgfood), 
+         area = standardize(area))
 
+# get a list of priors present in the model
+default_prior <- get_prior(avgfood ~ area, data = d, family = gaussian())
 
+# load model
+tar_load(h03_q1)
+m1<- h03_q1
 
+# model formula
+m1$formula
+
+# priors
+m1$prior
+
+# check diagnostics
+plot(m1)
+
+# get a summary of posterior distribution
+posterior_summary(m1)
+
+# plot the effect
+m1 %>% 
+  gather_draws(b_Intercept, b_area, sigma) %>% 
+  median_qi() %>%
+  ggplot(aes(y = .variable, x = .value, xmin = .lower, xmax = .upper)) + 
+  geom_pointinterval() + 
+  theme_classic() +
+  labs(y = "", x = "mean value +/- 95% CIs")
+
+```
+
+It looks like the effect of territory size on food availability is a strong positive relationship (remember to interpret this as standardized variables - so effect is stronger than it seems).
 
 #### Question 2: Infer the **total** causal effect of adding food, *F*, to a territory on the weight *W* of foxes. Can you calculate the causal effect by simulating an intervention on food?
 
