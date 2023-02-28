@@ -67,8 +67,66 @@ It looks like the effect of territory size on food availability is a strong posi
 
 #### Question 2: Infer the **total** causal effect of adding food, *F*, to a territory on the weight *W* of foxes. Can you calculate the causal effect by simulating an intervention on food?
 
+```{r}
+# get data
+data(foxes)
+d <- foxes %>% 
+  select(c(avgfood, weight)) %>%
+  mutate(avgfood = standardize(avgfood), 
+         weight = standardize(weight))
 
+# get a list of priors present in the model
+default_prior <- get_prior(weight ~ avgfood, data = d, family = gaussian())
 
+# load model
+tar_load(h03_q2)
+m2<- h03_q2
+
+# model formula
+m2$formula
+
+# priors
+m2$prior
+
+# check diagnostics
+plot(m2)
+
+# get a summary of posterior distribution
+posterior_summary(m2)
+
+# simulate an intervention on food
+# make empty df 
+simdf <- tibble(weight = double(), 
+                    avgfood = double(), 
+                    condition = character())
+# sample W from data
+n <- 1e3
+sampW <- sample(d$weight, size = n, replace = T)
+# make df where avgfood = 0
+simdf_nofood <- simdf %>%
+  add_row(weight = sampW, avgfood = rep(0, n), condition = rep('no food', n))
+
+# make df where avgfood = 1
+simdf_food <- simdf %>%
+  add_row(weight = sampW, avgfood = rep(1, n), condition = rep('food', n))
+
+# simulate model output when F = 0
+epred_nofood <- simdf_nofood %>% 
+  add_epred_draws(m2)
+
+# simulate model output when F = 1
+epred_food <- simdf_food %>%
+  add_epred_draws(m2)
+
+# visualize contrast of intervention on food
+epred <- as.data.frame(rbind(epred_nofood, epred_food))
+
+ggplot(data = epred, aes(x = .epred, y = condition)) +
+  stat_pointinterval(.width = c(.66, .95)) + 
+  theme_classic() + 
+  labs(y = "", x = "mean value +/- 66% and 95% CIs")
+```
+We see that the **total** effect of food on weight is very slightly negative. There is almost equal plausibility that it could be a positive effect as well and the effect is very small. 
 
 
 

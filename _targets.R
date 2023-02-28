@@ -66,14 +66,24 @@ targets_h03 <- c(
   tar_target(
     f,
     foxes %>% 
-      select(c(avgfood, area)) %>%
+      select(c(weight, avgfood, area)) %>%
       mutate(avgfood = standardize(avgfood), 
-             area = standardize(area))
+             area = standardize(area),
+             weight = standardize(weight))
   ),
   
   tar_target(
     h03_q1,
     brm(formula = avgfood ~ area, data = f, family = gaussian(),
+        prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
+                  set_prior("normal(0, 0.5)", class = "b"), # uniform so it stays positive
+                  set_prior("exponential(1)", class = "sigma")))
+  ),
+  
+  
+  tar_target(
+    h03_q2,
+    brm(formula = weight ~ avgfood, data = f, family = gaussian(),
         prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
                   set_prior("normal(0, 0.5)", class = "b"), # uniform so it stays positive
                   set_prior("exponential(1)", class = "sigma")))
