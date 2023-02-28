@@ -21,7 +21,7 @@ ggdag(dag) +
     theme_dag()
 ```
 
-where *F* is `avgfood`, *G* is `groupsize`, *A* is `area`, and *W* is `weight`. Use the backdoor criterion and estimate the total causal influence of *A* on *F*. What effect would increasing the territory have on the amount of food inside of it?
+#### where *F* is `avgfood`, *G* is `groupsize`, *A* is `area`, and *W* is `weight`. Use the backdoor criterion and estimate the total causa influence of *A* on *F*. What effect would increasing the territory have on the amount of food inside of it?
 
 
 Total causal effect of *A* on *F* is just F ~ A. 
@@ -64,6 +64,9 @@ m1 %>%
 ```
 
 It looks like the effect of territory size on food availability is a strong positive relationship (remember to interpret this as standardized variables - so effect is stronger than it seems).
+
+
+
 
 #### Question 2: Infer the **total** causal effect of adding food, *F*, to a territory on the weight *W* of foxes. Can you calculate the causal effect by simulating an intervention on food?
 
@@ -126,14 +129,83 @@ ggplot(data = epred, aes(x = .epred, y = condition)) +
   theme_classic() + 
   labs(y = "", x = "mean value +/- 66% and 95% CIs")
 ```
-We see that the **total** effect of food on weight is very slightly negative. There is almost equal plausibility that it could be a positive effect as well and the effect is very small. 
+We see that the **total** effect of food on weight is very slightly negative. Adding food would result in a small decrease in average weight. However, there is almost equal plausibility that it could be a positive effect as well and the effect is very small. 
+
+
 
 
 
 #### Question 3: Infer the **direct** causal effect of adding food *F* to a territory on the weight *W* of foxes. In light of your estimates from this problem and the previous one, what do you think is going on with these foxes?
 
+To assess the **direct** causal effect of adding food on fox weight, we need to stratify by group size. This means simply adding group size to the model.
 
+```{r}
+# get data
+data(foxes)
+d <- foxes %>% 
+  select(c(avgfood, weight, groupsize)) %>%
+  mutate(avgfood = standardize(avgfood), 
+         weight = standardize(weight),
+         groupsize = standardize(groupsize))
 
+# get a list of priors present in the model
+default_prior <- get_prior(weight ~ avgfood + groupsize, data = d, family = gaussian())
+
+# load model
+tar_load(h03_q3)
+m3<- h03_q3
+
+# model formula
+m3$formula
+
+# priors
+m3$prior
+
+# check diagnostics
+plot(m3)
+
+# get a summary of posterior distribution
+posterior_summary(m3)
+
+# plot
+m3 %>% 
+  gather_draws(b_Intercept, b_avgfood, b_groupsize, sigma) %>% 
+  median_qi() %>%
+  ggplot(aes(y = .variable, x = .value, xmin = .lower, xmax = .upper)) + 
+  geom_pointinterval() + 
+  theme_classic() +
+  labs(y = "", x = "mean value +/- 95% CIs")
+
+```
+Once we stratify for group size, we see that the effect of food availability on weight is stronger, and positive. We also see that group size has a moderate negative effect on weight. The effect sizes are almost the same size, but in opposite directions. When calculating the total effect, the effect of group size may be masking the effect of food on fox weight.
+
+Biological explanation: increases in territory size increase food availability (Q1) - but increases in food don't affect fox weight. Is this effect being cancelled out by subsequent increases in group size? Can test causal model
+
+```{r}
+
+# load model
+tar_load(h03_q3b)
+m3b <- h03_q3b
+
+# model formula
+m3b$formula
+
+# check diagnostics
+plot(m3b)
+
+# get a summary of posterior distribution
+posterior_summary(m3b)
+
+# plot
+m3b %>% 
+  gather_draws(b_Intercept, b_avgfood, sigma) %>% 
+  median_qi() %>%
+  ggplot(aes(y = .variable, x = .value, xmin = .lower, xmax = .upper)) + 
+  geom_pointinterval() + 
+  theme_classic() +
+  labs(y = "", x = "mean value +/- 95% CIs")
+```
+Average food has a strong positive effect on group size. More food = larger groups = negative/minimal effect on weight.
 
 
 #### Question 4: Suppose there is an unovserved confound that influences *F* and *G*, like this: 
@@ -149,7 +221,7 @@ ggdag(dag) +
     theme_dag()
 ```
 
-Assuming the DAG above is correct, again estimate both the total and direct causal effects of *F* on *W*. What impact does the unobserved confound have?
+#### Assuming the DAG above is correct, again estimate both the total and direct causal effects of *F* on *W*. What impact does the unobserved confound have?
 
 
 

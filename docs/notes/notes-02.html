@@ -424,7 +424,7 @@ W,L = f(p,N)
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "W" "L" "L" "L" "W" "W" "L" "W" "W"</code></pre>
+<pre><code>[1] "W" "W" "L" "W" "L" "W" "W" "L" "L"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>(<span class="at">p=</span><span class="dv">1</span>, <span class="at">N=</span><span class="dv">11</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -432,7 +432,7 @@ W,L = f(p,N)
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">sim_globe</span>(<span class="at">p=</span><span class="fl">0.5</span>, <span class="at">N=</span><span class="fl">1e4</span>) <span class="sc">==</span> <span class="st">"W"</span>)<span class="sc">/</span><span class="fl">1e4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.4966</code></pre>
+<pre><code>[1] 0.513</code></pre>
 </div>
 </div>
 <p>Function:</p>
@@ -467,9 +467,9 @@ Attaching package: 'crayon'</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>  poss ways  post                 bars
 1 0.00    0 0.000                     
-2 0.25    9 0.003                     
-3 0.50  512 0.189 ####                
-4 0.75 2187 0.808 ################    
+2 0.25    3 0.000                     
+3 0.50  512 0.072 #                   
+4 0.75 6561 0.927 ################### 
 5 1.00    0 0.000                     </code></pre>
 </div>
 </div>
