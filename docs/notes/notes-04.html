@@ -164,12 +164,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">Home</a>
+  <a href="../CODE_OF_CONDUCT.html" class="sidebar-item-text sidebar-link">Contributor Covenant Code of Conduct</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../homework/homework-listing.html" class="sidebar-item-text sidebar-link">Homework</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Homework</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -177,24 +177,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">Homework 01</a>
+  <a href="../homework/homework-listing.html" class="sidebar-item-text sidebar-link">Homework</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">Homework 02</a>
+  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">Homework - Week 01</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">Homework 03</a>
+  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">Homework - Week 02</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">Homework - Week 03</a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../notes/notes-listing.html" class="sidebar-item-text sidebar-link">Notes</a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Notes</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -202,32 +207,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">Lecture 01</a>
+  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">Lecture 01 - The Golem of Prague</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-02.html" class="sidebar-item-text sidebar-link">Lecture 02</a>
+  <a href="../notes/notes-02.html" class="sidebar-item-text sidebar-link">Lecture 02 - The Garden of Forking Data</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">Lecture 03</a>
+  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">Lecture 03 - Geocentric Models</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-04.html" class="sidebar-item-text sidebar-link active">Lecture 04</a>
+  <a href="../notes/notes-04.html" class="sidebar-item-text sidebar-link active">Lecture 04 - Categories &amp; Curves</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-05.html" class="sidebar-item-text sidebar-link">Lecture 05</a>
+  <a href="../notes/notes-05.html" class="sidebar-item-text sidebar-link">Lecture 05 - Elemental Confounds</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-06.html" class="sidebar-item-text sidebar-link">Lecture 06</a>
+  <a href="../notes/notes-06.html" class="sidebar-item-text sidebar-link">Lecture 06 - Good &amp; Bad Controls</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">Lecture 07 - Good &amp; Bad Controls</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-listing.html" class="sidebar-item-text sidebar-link">Notes</a>
   </div>
 </li>
       </ul>
@@ -402,13 +417,13 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_HW</span>(S, <span class="at">b=</span><span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.6</span>), <span class="at">a=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  S        H        W
-1 2 159.2361 97.46736
-2 1 149.7131 77.56935
-3 1 155.0171 77.17607
-4 2 155.5350 89.69473
-5 1 151.3929 85.58340
-6 2 161.6476 97.80993</code></pre>
+<pre><code>  S        H         W
+1 1 149.2019  73.71015
+2 2 161.1619  90.31431
+3 2 167.4098  99.44316
+4 1 139.3507  76.87242
+5 2 168.7789 111.37359
+6 1 141.0735  77.45375</code></pre>
 </div>
 </div>
 <ul>
@@ -441,7 +456,7 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 21.07857</code></pre>
+<pre><code>[1] 21.0776</code></pre>
 </div>
 </div>
 <ul>
@@ -461,9 +476,9 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-a[1]  74.136364 0.8610422 72.760252 75.512476
-a[2]  95.386672 0.7042407 94.261159 96.512184
-sigma  5.465193 0.3867452  4.847099  6.083286</code></pre>
+a[1]  74.935677 0.8535603 73.571523 76.299832
+a[2]  95.235698 0.8541949 93.870530 96.600866
+sigma  6.056698 0.4287313  5.371502  6.741893</code></pre>
 </div>
 </div>
 <ul>
@@ -515,11 +530,11 @@ sigma  5.465193 0.3867452  4.847099  6.083286</code></pre>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8</code></pre>
+<pre><code>[1] 0.82</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.2</code></pre>
+<pre><code>[1] 0.18</code></pre>
 </div>
 </div>
 <ul>

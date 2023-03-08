@@ -1,0 +1,16 @@
+---
+title: "Lecture 07 - Good & Bad Controls"
+author: Isabella C. Richmond
+date: Feb 22, 2023
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:* identifying and working through bad controls
+
+*Thorn:*

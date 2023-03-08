@@ -7,34 +7,8 @@ website:
   title: "Statistical Rethinking colearning 2023 - Bella"
 
   sidebar:
-    contents:
-      - href: index.qmd
-        text: Home
-      - section: "Homework"
-        href: homework/homework-listing.qmd
-        contents:
-          - href: homework/homework-01.qmd
-            text: Homework 01
-          - href: homework/homework-02.qmd
-            text: Homework 02
-          - href: homework/homework-03.qmd
-            text: Homework 03
-      - section: "Notes"
-        href: notes/notes-listing.qmd
-        contents:
-          - href: notes/notes-01.qmd
-            text: Lecture 01
-          - href: notes/notes-02.qmd
-            text: Lecture 02
-          - href: notes/notes-03.qmd
-            text: Lecture 03
-          - href: notes/notes-04.qmd
-            text: Lecture 04
-          - href: notes/notes-05.qmd
-            text: Lecture 05
-          - href: notes/notes-06.qmd
-            text: Lecture 06
-
+    contents: auto
+     
 format:
   html:
     theme:
