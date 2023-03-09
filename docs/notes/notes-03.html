@@ -237,7 +237,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">Lecture 07 - Good &amp; Bad Controls</a>
+  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">Lecture 07 - Fitting Over &amp; Under</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-08.html" class="sidebar-item-text sidebar-link">Lecture 08 - Markov chain Monte Carlo</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -476,10 +481,10 @@ Pr(\alpha,\beta,\sigma| H_{i}, W_{i}) = \frac{Pr(W_{i}|H_{i}, \alpha,\beta,\sigm
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model summary</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            mean         sd       5.5%     94.5%
-a     -0.3268050 4.43913920 -7.4214068 6.7677968
-b      0.5024642 0.02951316  0.4552964 0.5496319
-sigma  5.0674527 0.25336600  4.6625249 5.4723805</code></pre>
+<pre><code>          mean        sd       5.5%      94.5%
+a     3.335053 4.3010774 -3.5388994 10.2090053
+b     0.481177 0.0286992  0.4353101  0.5270438
+sigma 4.995108 0.2497266  4.5959963  5.3942191</code></pre>
 </div>
 </div>
 <ol start="5" type="1">
@@ -498,9 +503,9 @@ sigma  5.0674527 0.25336600  4.6625249 5.4723805</code></pre>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             mean         sd        5.5%       94.5%
-a     -43.4056333 4.16892630 -50.0683827 -36.7428838
-b       0.5719301 0.02693889   0.5288765   0.6149836
-sigma   4.2506680 0.16154284   3.9924914   4.5088447</code></pre>
+a     -43.3800766 4.17117617 -50.0464218 -36.7137315
+b       0.5717627 0.02695346   0.5286859   0.6148395
+sigma   4.2531506 0.16178016   3.9945946   4.5117065</code></pre>
 </div>
 </div>
 <ul>

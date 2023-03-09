@@ -1,7 +1,7 @@
 ---
-title: "Lecture 07 - Good & Bad Controls"
+title: "Lecture 07 - Fitting Over & Under"
 author: Isabella C. Richmond
-date: Feb 22, 2023
+date: Mar 8, 2023
 format: html
 ---
 
@@ -11,6 +11,167 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* identifying and working through bad controls
+*Rose:* not trying to be perfect, just better
 
-*Thorn:*
+*Thorn:* thinking through prediction vs causality - when do I want prediction?
+
+## Problems of Prediction
+
+-   what function describes the data (fitting, compression)
+
+-   what functions explains these points (causal inference)
+
+-   what would happen if we changed the data (intervention)
+
+-   what is the next observation from the same process **(prediction)**
+
+    -   prediction is the absence of intervention
+
+    -   prediction does not require causal inference
+
+-   Leave-one-out cross-validation
+
+    -   <div>
+
+        1.  drop one point
+        2.  fit line to remaining
+        3.  predict dropped point
+        4.  repeat (1) with next point
+        5.  score is error on dropped
+
+        </div>
+
+    -   task you use to assess the expected predictive accuracy of a statistical procedure
+
+    -   score in: fit to the sample / score out: fit to prediction
+
+    -   LPPD (log posterior probability of observation) used for cross-validation because it includes the entire posterior
+
+    -   more flexible patterns generally perform better in sample and worse out of sample
+
+## Cross-Validation
+
+-   for simple models, more parameters improves fit to sample BUT may reduce accuracy of predictions out of sample
+
+-   accurate models trade off flexibility with **overfitting**
+
+## Regularization
+
+-   overfitting depends upon the priors
+
+-   don't be too excited about every point in the sample, because not every point in the sample is regular (not all points are representative)
+
+-   skeptical priors regularize models - have tighter variance that reduces flexibility
+
+    -   downweights improbable values
+
+-   skeptical priors improve model prediction - regularize so that models learn regular features and ignore irregular features
+
+    -   there is such a thing as too tight priors
+
+-   Regularizing priors -\> for pure prediction uses, you can tune the prior using cross-validation
+
+    -   causal inference uses science to choose priors
+
+## Prediction Penalty
+
+-   For N points, cross-validation requires fitting N models
+
+    -   feasible for few data points but for many data points gets unwieldy
+
+-   Importance sampling (PSIS) and information criteria (WAIC) allow you to assess prediction penalty from one model posterior distribution (for predictive models)
+
+-   WAIC, PSIS, cross-validation (CV) measure overfitting
+
+    -   regularization manages overfiting
+
+-   Causal inference is *not* addressed by measuring or addressing overfitting
+
+    -   these tools are addressing the performance of a **predictive** model, not a causal model
+
+    -   should not select causal models based on these values because they are not associated with causality
+
+## Model Mis-selection 
+
+-   Do not use predictive criteria (WAIC, PSIS, CV) to choose a causal estimate
+
+-   Predictive criteria *prefer* confounds and colliders
+
+    -   improve predictive accuracy
+
+## Outliers & Robust Regression 
+
+-   some points are more influential than others - 'outliers'
+
+-   outliers are information - don't necessarily want to remove them
+
+    -   but they often have high leverage/weight because they are "surprising"
+
+    -   dropping outliers ignores the problem - predictions will still be bad
+
+    -   model is wrong, not the data
+
+-   can quantify the influence of each point on the posterior distribution using cross-validation
+
+-   can also use a mixture model/robust regression to address outliers
+
+-   divorce rate example
+
+    -   Maine and Idaho are outliers in divorce/age relationship
+
+    -   quantify influence of outliers using PSIS k statistic or WAIC penalty term
+
+    -   unmodelled sources of variation cause outliers -\> error distributions are not constant across the sample
+
+        -   assuming that the dataset has multiple error distributions, with the same mean but different variations indicates that you are using a **student t-test**
+
+        -   Gaussian distribution has extremely thin tails - very skeptical
+
+        -   student t distribution is much less skeptical, wider tails, much less influenced by outliers + more robust
+
+```{r}
+data(WaffleDivorce)
+d <- WaffleDivorce
+
+# model
+dat <- list(
+    D = standardize(d$Divorce),
+    M = standardize(d$Marriage),
+    A = standardize(d$MedianAgeMarriage)
+)
+
+m5.3 <- quap(alist(
+  D ~ dnorm(mu, sigma), 
+  mu <- a + bM*M + bA*A,
+  a ~ dnorm(0, 0.2),
+  bM ~ dnorm(0, 0.5), 
+  bA ~ dnorm(0, 0.5),
+  sigma ~ dexp(1)
+), data = dat)
+
+m5.3t <- quap(alist(
+  D ~ dstudent(2, mu, sigma), 
+  mu <- a + bM*M + bA*A,
+  a ~ dnorm(0, 0.2),
+  bM ~ dnorm(0, 0.5), 
+  bA ~ dnorm(0, 0.5),
+  sigma ~ dexp(1)
+), data = dat)
+
+```
+
+## Robust Regressions
+
+-   unobserved heterogeneity in sample -\> mixture of Gaussian errors
+
+    -   thicker tails means model is less surprised/more robust
+
+-   student-t regression can be a good default for undertheorized domains
+
+    -   because Gaussian distribution is so skeptical
+
+## Prediction
+
+-   possible to make very good predictions without knowing causes
+
+-   optimizing prediction does not reliably reveal causes

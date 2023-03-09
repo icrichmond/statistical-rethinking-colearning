@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.237">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Isabella C. Richmond">
+<meta name="dcterms.date" content="2023-03-08">
+
+<title>Statistical Rethinking colearning 2023 - Bella - Lecture 08 - Markov chain Monte Carlo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lecture 08 - Markov chain Monte Carlo</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Statistical Rethinking colearning 2023 - Bella</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CODE_OF_CONDUCT.html" class="sidebar-item-text sidebar-link">Contributor Covenant Code of Conduct</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Homework</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-listing.html" class="sidebar-item-text sidebar-link">Homework</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">Homework - Week 01</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">Homework - Week 02</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">Homework - Week 03</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Notes</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">Lecture 01 - The Golem of Prague</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-02.html" class="sidebar-item-text sidebar-link">Lecture 02 - The Garden of Forking Data</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">Lecture 03 - Geocentric Models</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-04.html" class="sidebar-item-text sidebar-link">Lecture 04 - Categories &amp; Curves</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-05.html" class="sidebar-item-text sidebar-link">Lecture 05 - Elemental Confounds</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-06.html" class="sidebar-item-text sidebar-link">Lecture 06 - Good &amp; Bad Controls</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">Lecture 07 - Fitting Over &amp; Under</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-08.html" class="sidebar-item-text sidebar-link active">Lecture 08 - Markov chain Monte Carlo</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-listing.html" class="sidebar-item-text sidebar-link">Notes</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
+  <li><a href="#modelling-approaches" id="toc-modelling-approaches" class="nav-link" data-scroll-target="#modelling-approaches">Modelling Approaches</a></li>
+  <li><a href="#markov-chain-monte-carlo" id="toc-markov-chain-monte-carlo" class="nav-link" data-scroll-target="#markov-chain-monte-carlo">Markov chain Monte Carlo</a></li>
+  <li><a href="#hamiltonian-monte-carlo" id="toc-hamiltonian-monte-carlo" class="nav-link" data-scroll-target="#hamiltonian-monte-carlo">Hamiltonian Monte Carlo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Lecture 08 - Markov chain Monte Carlo</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Isabella C. Richmond </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 8, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<section id="rose-thorn" class="level2">
+<h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
+<p><em>Rose:</em> skateboarding metaphor</p>
+<p><em>Thorn:</em> not understanding parameters in model specification</p>
+</section>
+<section id="modelling-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="modelling-approaches">Modelling Approaches</h2>
+<ul>
+<li><p>quadratic approximation makes strong assumptions about what the model looks like - approximately Gaussian</p></li>
+<li><p>MCMC is intensive but with less assumptions and more flexible</p></li>
+</ul>
+</section>
+<section id="markov-chain-monte-carlo" class="level2">
+<h2 class="anchored" data-anchor-id="markov-chain-monte-carlo">Markov chain Monte Carlo</h2>
+<ul>
+<li><p>chain: sequence of draws from distribution</p></li>
+<li><p><em>Markov chain</em>: history doesn’t matter, just where you are now</p></li>
+<li><p>Monte Carlo: random simulation</p></li>
+</ul>
+</section>
+<section id="hamiltonian-monte-carlo" class="level2">
+<h2 class="anchored" data-anchor-id="hamiltonian-monte-carlo">Hamiltonian Monte Carlo</h2>
+<ul>
+<li>uses random pathways that follow the distribution of the variables</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dag <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  S <span class="sc">~</span> Q <span class="sc">+</span> J <span class="sc">+</span> X,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  Q <span class="sc">~</span> X,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  J <span class="sc">~</span> Z,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">'S'</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">latent =</span> <span class="st">'Q'</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">coords =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="at">Q =</span> <span class="dv">0</span>, <span class="at">X =</span> <span class="dv">0</span>, <span class="at">S =</span> <span class="dv">1</span>, <span class="at">J =</span> <span class="dv">1</span>, <span class="at">Z =</span> <span class="dv">2</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> <span class="fu">c</span>(<span class="at">X =</span> <span class="dv">0</span>, <span class="at">J =</span> <span class="dv">0</span>, <span class="at">Z =</span> <span class="dv">0</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">1</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(dag) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="notes-08_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ul>
+<li>Estimand: association between wine quality and wine origin. Stratify by judge for efficiency.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Wines2012)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Wines2012</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">S =</span> <span class="fu">standardize</span>(d<span class="sc">$</span>score),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">J =</span> <span class="fu">as.numeric</span>(d<span class="sc">$</span>judge), </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> <span class="fu">as.numeric</span>(d<span class="sc">$</span>wine),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>wine.amer <span class="sc">==</span> <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Z =</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>judge.amer <span class="sc">==</span> <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>mQ <span class="ot">&lt;-</span> <span class="fu">ulam</span>(<span class="fu">alist</span>(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  S <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma), </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> Q[W],</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  Q[W] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730472646c5.stan', line 2, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730472646c5.stan', line 3, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730472646c5.stan', line 4, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730472646c5.stan', line 6, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array/multi_array_ref.hpp:32,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array.hpp:34,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint/algebra/multi_array_algebra.hpp:22,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint.hpp:63,
+                 from stan/lib/stan_math/stan/math/prim/functor/ode_rk45.hpp:9,
+                 from stan/lib/stan_math/stan/math/prim/functor/integrate_ode_rk45.hpp:6,
+                 from stan/lib/stan_math/stan/math/prim/functor.hpp:14,
+                 from stan/lib/stan_math/stan/math/rev/fun.hpp:198,
+                 from stan/lib/stan_math/stan/math/rev.hpp:10,
+                 from stan/lib/stan_math/stan/math.hpp:19,
+                 from stan/src/stan/model/model_header.hpp:4,
+                 from C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730472646c5.hpp:3:
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:180:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  180 |         : public boost::functional::detail::unary_function&lt;typename unary_traits&lt;Predicate&gt;::argument_type,bool&gt;
+      |                                             ^~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from C:/rtools42/ucrt64/include/c++/12.2.0/string:48,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/bits/locale_classes.h:40,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/bits/ios_base.h:41,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/ios:42,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/istream:38,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/sstream:38,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/complex:45,
+                 from stan/lib/stan_math/lib/eigen_3.3.9/Eigen/Core:96,
+                 from stan/lib/stan_math/lib/eigen_3.3.9/Eigen/Dense:1,
+                 from stan/lib/stan_math/stan/math/prim/fun/Eigen.hpp:22,
+                 from stan/lib/stan_math/stan/math/rev.hpp:4:
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:214:45: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  214 |         : public boost::functional::detail::binary_function&lt;
+      |                                             ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:252:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  252 |         : public boost::functional::detail::unary_function&lt;
+      |                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:299:45: warning: 'template&lt;cl</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ass _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  299 |         : public boost::functional::detail::unary_function&lt;
+      |                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:345:57: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  345 |     class mem_fun_t : public boost::functional::detail::unary_function&lt;T*, S&gt;
+      |                                                         ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:361:58: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  361 |     class mem_fun1_t : public boost::functional::detail::binary_function&lt;T*, A, S&gt;
+      |                                                          ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:377:63: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  377 |     class const_mem_fun_t : public boost::functional::detail::unary_function&lt;const T*, S&gt;
+      |                                                               ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:393:64: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  393 |     class const_mem_fun1_t : public boost::functional::detail::binary_function&lt;const T*, A, S&gt;
+      |                                                                ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:438:61: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  438 |     class mem_fun_ref_t : public boost::functional::detail::unary_function&lt;T&amp;, S&gt;
+      |                                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:454:62: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  454 |     class mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;T&amp;, A, S&gt;
+      |                                                              ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:470:67: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  470 |     class const_mem_fun_ref_t : public boost::functional::detail::unary_function&lt;const T&amp;, S&gt;
+      |                                                                   ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:487:68: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  487 |     class const_mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;const T&amp;, A, S&gt;
+      |                                                                    ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:533:73: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  533 |     class pointer_to_unary_function : public boost::functional::detail::unary_function&lt;Arg,Result&gt;
+      |     </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                    ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:557:74: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  557 |     class pointer_to_binary_function : public boost::functional::detail::binary_function&lt;Arg1,Arg2,Result&gt;
+      |                                                                          ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730472646c5.stan', line 19, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
+Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.1 seconds.
+Total execution time: 0.5 seconds.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(mQ, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              mean         sd        5.5%      94.5%    n_eff     Rhat4
+Q[1]   0.141280911 0.32752252 -0.38296031  0.6728663 2373.554 0.9992735
+Q[2]   0.102264237 0.30150945 -0.38948781  0.5793216 3104.564 0.9991653
+Q[3]   0.276132298 0.32034641 -0.23731430  0.7786119 2661.664 0.9987617
+Q[4]   0.549036098 0.30277790  0.06632057  1.0310031 2490.343 1.0004530
+Q[5]  -0.116625014 0.31669430 -0.63114625  0.3773641 2997.719 0.9996960
+Q[6]  -0.362558124 0.33005385 -0.89072912  0.1696392 3246.726 0.9994846
+Q[7]   0.284460198 0.33210806 -0.22588986  0.8175873 2804.308 0.9984371
+Q[8]   0.270317174 0.30619094 -0.24810333  0.7760260 3022.067 0.9984410
+Q[9]   0.090971824 0.31676227 -0.40428330  0.6218299 2598.589 0.9999810
+Q[10]  0.122825863 0.31394332 -0.37342817  0.6291982 2944.541 0.9989178
+Q[11] -0.013475107 0.32218902 -0.53830115  0.4899448 2911.914 0.9992474
+Q[12] -0.033384580 0.31220910 -0.52168353  0.4592776 2474.021 1.0006742
+Q[13] -0.110985979 0.32004236 -0.61486370  0.3946202 3477.344 0.9990289
+Q[14]  0.008301113 0.31749926 -0.49502770  0.5141304 2608.013 1.0001215
+Q[15] -0.220221415 0.32154834 -0.72980209  0.3010883 3096.501 0.9986053
+Q[16] -0.199691490 0.32406212 -0.70285368  0.2968092 2364.413 0.9993229
+Q[17] -0.138665364 0.30215136 -0.63587148  0.3562213 2791.274 1.0009248
+Q[18] -0.854426811 0.32822670 -1.37614340 -0.3158699 2777.727 0.9994480
+Q[19] -0.163332108 0.32414101 -0.65746125  0.3557851 2522.380 0.9993802
+Q[20]  0.384874876 0.31356544 -0.11333343  0.8793258 2715.918 0.9988350
+sigma  0.998527260 0.05729889  0.91084465  1.0915628 2418.495 0.9990913</code></pre>
+</div>
+</div>
+<ul>
+<li><p>trace plots: visualization of the Markov chain</p></li>
+<li><p>want more than one chain in order to check convergence</p>
+<ul>
+<li>convergence: each chain explores the right distribution and every chain explores the same distribution</li>
+</ul></li>
+<li><p>R-hat is chain convergence diagnostic</p>
+<ul>
+<li><p>variance ratio</p></li>
+<li><p>if chains do converge, beginning of the chain and end of chain should be exploring the same place and therefore the chain is stationary</p></li>
+<li><p>as total variance (among chains) approaches average variance within chains, R-hat approaches 1</p></li>
+<li><p>does not guarantee convergence but gives an idea that the chains are working when ~ 1</p></li>
+</ul></li>
+<li><p>n_eff = effective samples</p>
+<ul>
+<li><p>approximation of how long the chain would be if each sample was completely independent of the one before it</p></li>
+<li><p>when samples are autocorrelated, you have fewer <em>effective</em> samples</p></li>
+<li><p>typically n_eff is smaller than number of samples you actually took</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mQO <span class="ot">&lt;-</span> <span class="fu">ulam</span>(<span class="fu">alist</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  S <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma), </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> Q[W] <span class="sc">+</span> O[X],</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  Q[W] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  O[X] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730589e7075.stan', line 2, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730589e7075.stan', line 3, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730589e7075.stan', line 5, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730589e7075.stan', line 6, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array/multi_array_ref.hpp:32,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array.hpp:34,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint/algebra/multi_array_algebra.hpp:22,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint.hpp:63,
+                 from stan/lib/stan_math/stan/math/prim/functor/ode_rk45.hpp:9,
+                 from stan/lib/stan_math/stan/math/prim/functor/integrate_ode_rk45.hpp:6,
+                 from stan/lib/stan_math/stan/math/prim/functor.hpp:14,
+                 from stan/lib/stan_math/stan/math/rev/fun.hpp:198,
+                 from stan/lib/stan_math/stan/math/rev.hpp:10,
+                 from stan/lib/stan_math/stan/math.hpp:19,
+                 from stan/src/stan/model/model_header.hpp:4,
+                 from C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-1730589e7075.hpp:3:
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:180:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  180 |         : public boost::functional::detail::unary_function&lt;typename unary_traits&lt;Predicate&gt;::argument_type,bool&gt;
+      |                                             ^~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from C:/rtools42/ucrt64/include/c++/12.2.0/string:48,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/bits/locale_classes.h:40,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/bits/ios_base.h:41,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/ios:42,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/istream:38,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/sstream:38,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/complex:45,
+                 from stan/lib/stan_math/lib/eigen_3.3.9/Eigen/Core:96,
+                 from stan/lib/stan_math/lib/eigen_3.3.9/Eigen/Dense:1,
+                 from stan/lib/stan_math/stan/math/prim/fun/Eigen.hpp:22,
+                 from stan/lib/stan_math/stan/math/rev.hpp:4:
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:214:45: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  214 |         : public boost::functional::detail::binary_function&lt;
+      |                                             ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:252:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  252 |         : public boost::functional::detail::unary_function&lt;
+      |                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:299:45: warning: 'template&lt;cl</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ass _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  299 |         : public boost::functional::detail::unary_function&lt;
+      |                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:345:57: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  345 |     class mem_fun_t : public boost::functional::detail::unary_function&lt;T*, S&gt;
+      |                                                         ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:361:58: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  361 |     class mem_fun1_t : public boost::functional::detail::binary_function&lt;T*, A, S&gt;
+      |                                                          ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:377:63: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  377 |     class const_mem_fun_t : public boost::functional::detail::unary_function&lt;const T*, S&gt;
+      |                                                               ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:393:64: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  393 |     class const_mem_fun1_t : public boost::functional::detail::binary_function&lt;const T*, A, S&gt;
+      |                                                                ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:438:61: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  438 |     class mem_fun_ref_t : public boost::functional::detail::unary_function&lt;T&amp;, S&gt;
+      |                                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:454:62: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  454 |     class mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;T&amp;, A, S&gt;
+      |                                                              ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:470:67: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  470 |     class const_mem_fun_ref_t : public boost::functional::detail::unary_function&lt;const T&amp;, S&gt;
+      |                                                                   ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:487:68: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  487 |     class const_mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;const T&amp;, A, S&gt;
+      |                                        </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                            ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:533:73: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  533 |     class pointer_to_unary_function : public boost::functional::detail::unary_function&lt;Arg,Result&gt;
+      |                                                                         ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:557:74: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  557 |     class pointer_to_binary_function : public boost::functional::detail::binary_function&lt;Arg1,Arg2,Result&gt;
+      |                                                                          ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 finished in 0.2 seconds.
+Chain 2 finished in 0.2 seconds.
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 finished in 0.2 seconds.
+Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.2 seconds.
+Total execution time: 0.5 seconds.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mQO, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="notes-08_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mQOJ <span class="ot">&lt;-</span> <span class="fu">ulam</span>(<span class="fu">alist</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  S <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma), </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> (Q[W] <span class="sc">+</span> O[X] <span class="sc">-</span> H[J])<span class="sc">*</span>D[J],</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  Q[W] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  O[X] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  H[J] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  D[J] <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)),</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">cores =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-17301f072f7.stan', line 2, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-17301f072f7.stan', line 4, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-17301f072f7.stan', line 5, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc
+Warning in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-17301f072f7.stan', line 6, column 4: Declaration
+    of arrays by placing brackets after a variable name is deprecated and
+    will be removed in Stan 2.32.0. Instead use the array keyword before the
+    type. This can be changed automatically using the auto-format flag to
+    stanc</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array/multi_array_ref.hpp:32,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/multi_array.hpp:34,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint/algebra/multi_array_algebra.hpp:22,
+                 from stan/lib/stan_math/lib/boost_1.78.0/boost/numeric/odeint.hpp:63,
+                 from stan/lib/stan_math/stan/math/prim/functor/ode_rk45.hpp:9,
+                 from stan/lib/stan_math/stan/math/prim/functor/integrate_ode_rk45.hpp:6,
+                 from stan/lib/stan_math/stan/math/prim/functor.hpp:14,
+                 from stan/lib/stan_math/stan/math/rev/fun.hpp:198,
+                 from stan/lib/stan_math/stan/math/rev.hpp:10,
+                 from stan/lib/stan_math/stan/math.hpp:19,
+                 from stan/src/stan/model/model_header.hpp:4,
+                 from C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-17301f072f7.hpp:3:
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:180:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  180 |         : public boost::functional::detail::unary_function&lt;typename unary_traits&lt;Predicate&gt;::argument_type,bool&gt;
+      |                                             ^~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>In file included from C:/rtools42/ucrt64/include/c++/12.2.0/string:48,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/bits/locale_classes.h:40,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/bits/ios_base.h:41,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/ios:42,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/istream:38,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/sstream:38,
+                 from C:/rtools42/ucrt64/include/c++/12.2.0/complex:45,
+                 from stan/lib/stan_math/lib/eigen_3.3.9/Eigen/Core:96,
+                 from stan/lib/stan_math/lib/eigen_3.3.9/Eigen/Dense:1,
+                 from stan/lib/stan_math/stan/math/prim/fun/Eigen.hpp:22,
+                 from stan/lib/stan_math/stan/math/rev.hpp:4:
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:214:45: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  214 |         : public boost::functional::detail::binary_function&lt;
+      |                                             ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:252:45: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  252 |         : public boost::functional::detail::unary_function&lt;
+      |                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:299:45: warning: 'template&lt;cl</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ass _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  299 |         : public boost::functional::detail::unary_function&lt;
+      |                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:345:57: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  345 |     class mem_fun_t : public boost::functional::detail::unary_function&lt;T*, S&gt;
+      |                                                         ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:361:58: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  361 |     class mem_fun1_t : public boost::functional::detail::binary_function&lt;T*, A, S&gt;
+      |                                                          ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:377:63: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  377 |     class const_mem_fun_t : public boost::functional::detail::unary_function&lt;const T*, S&gt;
+      |                                                               ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:393:64: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  393 |     class const_mem_fun1_t : public boost::functional::detail::binary_function&lt;const T*, A, S&gt;
+      |                                                                ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:438:61: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  438 |     class mem_fun_ref_t : public boost::functional::detail::unary_function&lt;T&amp;, S&gt;
+      |                                                             ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:454:62: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  454 |     class mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;T&amp;, A, S&gt;
+      |                                                              ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:470:67: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  470 |     class const_mem_fun_ref_t : public boost::functional::detail::unary_function&lt;const T&amp;, S&gt;
+      |                                                                   ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:487:68: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  487 |     class const_mem_fun1_ref_t : public boost::functional::detail::binary_function&lt;const T&amp;, A, S&gt;
+      |                                        </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                            ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:533:73: warning: 'template&lt;class _Arg, class _Result&gt; struct std::unary_function' is deprecated [-Wdeprecated-declarations]
+  533 |     class pointer_to_unary_function : public boost::functional::detail::unary_function&lt;Arg,Result&gt;
+      |                                                                         ^~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:117:12: note: declared here
+  117 |     struct unary_function
+      |            ^~~~~~~~~~~~~~
+stan/lib/stan_math/lib/boost_1.78.0/boost/functional.hpp:557:74: warning: 'template&lt;class _Arg1, class _Arg2, class _Result&gt; struct std::binary_function' is deprecated [-Wdeprecated-declarations]
+  557 |     class pointer_to_binary_function : public boost::functional::detail::binary_function&lt;Arg1,Arg2,Result&gt;
+      |                                                                          ^~~~~~~~~~~~~~~
+C:/rtools42/ucrt64/include/c++/12.2.0/bits/stl_function.h:131:12: note: declared here
+  131 |     struct binary_function
+      |            ^~~~~~~~~~~~~~~</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in 'C:/Users/I_RICHMO/AppData/Local/Temp/RtmpaGmO8i/model-17301f072f7.stan', line 25, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 finished in 0.6 seconds.
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 finished in 0.6 seconds.
+Chain 3 finished in 0.6 seconds.
+Chain 4 finished in 0.5 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.6 seconds.
+Total execution time: 0.8 seconds.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mQOJ, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="notes-08_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ul>
+<li><p>often if there is an issue, it is with your model</p>
+<ul>
+<li><p>loop back to basic scientific questions and assumptions</p></li>
+<li><p>divergent transitions are one of the signs of this - “rejected proposal”</p></li>
+</ul></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
