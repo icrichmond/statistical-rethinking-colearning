@@ -25,6 +25,9 @@ data(foxes)
 
 happiness <- sim_happiness(seed = 1977, N_years = 1000)
 
+data(cherry_blossoms)
+
+
 # Targets: homework 2 -----------------------------------------------------
 targets_h02 <- c(
   
@@ -120,6 +123,15 @@ targets_h04 <- c(
   ),
   
   tar_target(
+    cherry,
+    cherry_blossoms %>% 
+      select(temp, doy) %>%
+      drop_na() %>%
+      mutate(temp_s = standardize(temp),
+             doy_s = standardize(doy))
+  ),
+  
+  tar_target(
     h04_q1a,
     brm(formula = happiness ~ mid + A, data = happiness_data, family = gaussian(),
         prior = c(set_prior("normal(0, 1)", class = "Intercept"),
@@ -144,8 +156,28 @@ targets_h04 <- c(
   ),
   
   tar_target(
-    h04_q1,
-    brm(formula = )
+    h04_q3a,
+    brm(formula = doy_s ~ temp_s, data = cherry, family = gaussian(),
+        prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
+                  set_prior("normal(0, 0.5)", class = "b"),
+                  set_prior("exponential(1)", class = "sigma")),
+        sample_prior = 'only')
+  ),
+  
+  tar_target(
+    h04_q3b,
+    brm(formula = doy_s ~ temp_s, data = cherry, family = gaussian(),
+        prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
+                  set_prior("normal(0, 0.5)", class = "b"),
+                  set_prior("exponential(1)", class = "sigma")))
+  ),
+  
+  tar_target(
+    h04_q3c,
+    brm(formula = doy_s ~ s(temp_s), data = cherry, family = gaussian(),
+        prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
+                  set_prior("normal(0, 0.5)", class = "b"),
+                  set_prior("exponential(1)", class = "sigma")))
   )
   
   

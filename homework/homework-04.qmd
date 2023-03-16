@@ -81,12 +81,60 @@ The model with area, average food, and group size is the best predictive model. 
 #### Question 3: Build a predictive model of the relationship show on the cover of the book, the relationship between the timing of cherry blossoms and March temperature in the same year. The data are found in data(cherry_blossoms). Consider at least two different models (functional relationships) to predict doy with temp. You could for example compare a linear model with a quadratic model. Compare them with PSIS or WAIC.
 
 ```{r}
+# data
 data("cherry_blossoms")
 
+cherry <- cherry_blossoms %>% 
+  select(temp, doy) %>%
+  drop_na() %>%
+  mutate(temp_s = standardize(temp),
+         doy_s = standardize(doy))
+
+# models
+tar_load(h04_q3a)
+tar_load(h04_q3b)
+tar_load(h04_q3c)
+m_priors <- h04_q3a
+m_linear <- h04_q3b
+m_gam <- h04_q3c
+
+# compare
+crit_priors <- add_criterion(m_priors, c("loo"))
+crit_linear <- add_criterion(m_linear, c("loo"))
+crit_gam <- add_criterion(m_gam, c("loo"))
+
+loo_compare(crit_priors, crit_linear, crit_gam, criterion = "loo")
 
 ```
 
+The linear model performed best, but the GAM and linear model performed much more similarly than the prior only model (which makes sense).
+
 #### Suppose March temperatures reach 9 degrees by the year 2050. What does your best model predict for the predictive distribution of the day-in-year that the cherry trees will blossom?
+
+```{r}
+# posterior summary
+posterior_summary(m_linear)
+
+# create dataset that simulates 9 degree days in March (also need to standardize as that is how model is currently set up)
+pred_val <- cherry %>%
+  summarize(temp_s = (9-mean(temp))/sd(temp))
+
+# simulate from model for when March is 9 degrees
+post_pred <- predicted_draws(m_linear, pred_val) 
+post_pred <- post_pred %>%
+  # convert back to real values from standardized ones
+  mutate(doy = .prediction*sd(cherry$doy) + mean(cherry$doy))
+
+# plot  
+ggplot() + 
+  geom_density(aes(x = doy), col = "red", data = post_pred) + 
+  geom_density(aes(x = doy), data = cherry) + 
+  xlab("day of year in 1st bloom") + 
+  theme_classic()
+
+```
+
+Average first day in bloom seems to be much earlier when warming occurs (red line) according to our predictive model.
 
 #### Question 4: The data in data(Dinosaurs) are body mass estimates at different estimated ages for six different dinosaur species. See ?Dinosaurs for more details. Choose one or more of these species (at least one, but as many as you like) and model its growth. To be precise: Make a predictive model of body mass using age as a predictor. Consider two or more model types for the function relating age to body mass and score each using PSIS and WAIC.
 

@@ -386,11 +386,77 @@ crit_food              -5.3       3.4   </code></pre>
 <section id="question-3-build-a-predictive-model-of-the-relationship-show-on-the-cover-of-the-book-the-relationship-between-the-timing-of-cherry-blossoms-and-march-temperature-in-the-same-year.-the-data-are-found-in-datacherry_blossoms.-consider-at-least-two-different-models-functional-relationships-to-predict-doy-with-temp.-you-could-for-example-compare-a-linear-model-with-a-quadratic-model.-compare-them-with-psis-or-waic." class="level4">
 <h4 class="anchored" data-anchor-id="question-3-build-a-predictive-model-of-the-relationship-show-on-the-cover-of-the-book-the-relationship-between-the-timing-of-cherry-blossoms-and-march-temperature-in-the-same-year.-the-data-are-found-in-datacherry_blossoms.-consider-at-least-two-different-models-functional-relationships-to-predict-doy-with-temp.-you-could-for-example-compare-a-linear-model-with-a-quadratic-model.-compare-them-with-psis-or-waic.">Question 3: Build a predictive model of the relationship show on the cover of the book, the relationship between the timing of cherry blossoms and March temperature in the same year. The data are found in data(cherry_blossoms). Consider at least two different models (functional relationships) to predict doy with temp. You could for example compare a linear model with a quadratic model. Compare them with PSIS or WAIC.</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"cherry_blossoms"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"cherry_blossoms"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>cherry <span class="ot">&lt;-</span> cherry_blossoms <span class="sc">%&gt;%</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(temp, doy) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">temp_s =</span> <span class="fu">standardize</span>(temp),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">doy_s =</span> <span class="fu">standardize</span>(doy))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># models</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h04_q3a)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h04_q3b)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h04_q3c)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>m_priors <span class="ot">&lt;-</span> h04_q3a</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>m_linear <span class="ot">&lt;-</span> h04_q3b</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>m_gam <span class="ot">&lt;-</span> h04_q3c</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co"># compare</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>crit_priors <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m_priors, <span class="fu">c</span>(<span class="st">"loo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Found 787 observations with a pareto_k &gt; 0.7 in model 'm_priors'. It
+is recommended to set 'moment_match = TRUE' in order to perform moment matching
+for problematic observations.</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>crit_linear <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m_linear, <span class="fu">c</span>(<span class="st">"loo"</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>crit_gam <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m_gam, <span class="fu">c</span>(<span class="st">"loo"</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">loo_compare</span>(crit_priors, crit_linear, crit_gam, <span class="at">criterion =</span> <span class="st">"loo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            elpd_diff     se_diff      
+crit_linear  0.000000e+00  0.000000e+00
+crit_gam    -1.900000e+00  1.000000e+00
+crit_priors -1.188291e+11  5.619104e+09</code></pre>
+</div>
+</div>
+<p>The linear model performed best, but the GAM and linear model performed much more similarly than the prior only model (which makes sense).</p>
 </section>
 <section id="suppose-march-temperatures-reach-9-degrees-by-the-year-2050.-what-does-your-best-model-predict-for-the-predictive-distribution-of-the-day-in-year-that-the-cherry-trees-will-blossom" class="level4">
 <h4 class="anchored" data-anchor-id="suppose-march-temperatures-reach-9-degrees-by-the-year-2050.-what-does-your-best-model-predict-for-the-predictive-distribution-of-the-day-in-year-that-the-cherry-trees-will-blossom">Suppose March temperatures reach 9 degrees by the year 2050. What does your best model predict for the predictive distribution of the day-in-year that the cherry trees will blossom?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># posterior summary</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m_linear)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Estimate  Est.Error          Q2.5         Q97.5
+b_Intercept  4.343635e-05 0.03468038 -7.035872e-02  6.782152e-02
+b_temp_s    -3.247333e-01 0.03339855 -3.908559e-01 -2.599676e-01
+sigma        9.465189e-01 0.02359388  9.021125e-01  9.927066e-01
+lprior      -1.613640e+00 0.04994275 -1.718661e+00 -1.524033e+00
+lp__        -1.074888e+03 1.24161065 -1.078241e+03 -1.073480e+03</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create dataset that simulates 9 degree days in March (also need to standardize as that is how model is currently set up)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pred_val <span class="ot">&lt;-</span> cherry <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">temp_s =</span> (<span class="dv">9</span><span class="sc">-</span><span class="fu">mean</span>(temp))<span class="sc">/</span><span class="fu">sd</span>(temp))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate from model for when March is 9 degrees</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>post_pred <span class="ot">&lt;-</span> <span class="fu">predicted_draws</span>(m_linear, pred_val) </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>post_pred <span class="ot">&lt;-</span> post_pred <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert back to real values from standardized ones</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">doy =</span> .prediction<span class="sc">*</span><span class="fu">sd</span>(cherry<span class="sc">$</span>doy) <span class="sc">+</span> <span class="fu">mean</span>(cherry<span class="sc">$</span>doy))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plot  </span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> doy), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">data =</span> post_pred) <span class="sc">+</span> </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> doy), <span class="at">data =</span> cherry) <span class="sc">+</span> </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"day of year in 1st bloom"</span>) <span class="sc">+</span> </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="homework-04_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Average first day in bloom seems to be much earlier when warming occurs (red line) according to our predictive model.</p>
 </section>
 <section id="question-4-the-data-in-datadinosaurs-are-body-mass-estimates-at-different-estimated-ages-for-six-different-dinosaur-species.-see-dinosaurs-for-more-details.-choose-one-or-more-of-these-species-at-least-one-but-as-many-as-you-like-and-model-its-growth.-to-be-precise-make-a-predictive-model-of-body-mass-using-age-as-a-predictor.-consider-two-or-more-model-types-for-the-function-relating-age-to-body-mass-and-score-each-using-psis-and-waic." class="level4">
 <h4 class="anchored" data-anchor-id="question-4-the-data-in-datadinosaurs-are-body-mass-estimates-at-different-estimated-ages-for-six-different-dinosaur-species.-see-dinosaurs-for-more-details.-choose-one-or-more-of-these-species-at-least-one-but-as-many-as-you-like-and-model-its-growth.-to-be-precise-make-a-predictive-model-of-body-mass-using-age-as-a-predictor.-consider-two-or-more-model-types-for-the-function-relating-age-to-body-mass-and-score-each-using-psis-and-waic.">Question 4: The data in data(Dinosaurs) are body mass estimates at different estimated ages for six different dinosaur species. See ?Dinosaurs for more details. Choose one or more of these species (at least one, but as many as you like) and model its growth. To be precise: Make a predictive model of body mass using age as a predictor. Consider two or more model types for the function relating age to body mass and score each using PSIS and WAIC.</h4>
