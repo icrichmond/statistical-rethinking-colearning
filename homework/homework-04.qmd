@@ -61,16 +61,30 @@ d <- foxes %>%
            weight = standardize(weight),
            groupsize = standardize(groupsize))
 
-tar_load(h03_q1)
+# load models
 tar_load(h03_q2)
 tar_load(h03_q3)
-m_area <- h03_q1
+tar_load(h04_q2)
 m_food <- h03_q2
 m_foodgroupsize <- h03_q3
+m_areafoodgroupsize <- h04_q2
 
+crit_food <- add_criterion(m_food, c("loo", "waic"))
+crit_foodgroupsize <- add_criterion(m_foodgroupsize, c("loo", "waic"))
+crit_areafoodgroupsize <- add_criterion(m_areafoodgroupsize, c("loo", "waic"))
+
+loo_compare(crit_food, crit_foodgroupsize, crit_areafoodgroupsize, criterion = "loo")
 ```
 
+The model with area, average food, and group size is the best predictive model. In this model, we are assessing the direct effect of group size on weight. So the coefficient for G can be read as the direct effect. The coefficients for F and A do not have causal meaning **(discuss with group)**. If we hadn't stratified by group size, we would be assessing the direct effect of area on weight but stratifying by both average food *and* group size means that we opened a backdoor path.
+
 #### Question 3: Build a predictive model of the relationship show on the cover of the book, the relationship between the timing of cherry blossoms and March temperature in the same year. The data are found in data(cherry_blossoms). Consider at least two different models (functional relationships) to predict doy with temp. You could for example compare a linear model with a quadratic model. Compare them with PSIS or WAIC.
+
+```{r}
+data("cherry_blossoms")
+
+
+```
 
 #### Suppose March temperatures reach 9 degrees by the year 2050. What does your best model predict for the predictive distribution of the day-in-year that the cherry trees will blossom?
 

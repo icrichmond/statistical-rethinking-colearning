@@ -344,9 +344,50 @@ cA  -147.7      15.4 </code></pre>
 </section>
 <section id="question-2-reconsider-the-urban-fox-analysis-from-last-weeks-homework.-on-the-basis-of-psis-and-waic-scores-which-combination-of-variables-best-predicts-body-weight-w-weight-what-causal-interpretation-can-you-assign-each-coefficient-parameter-from-the-best-scoring-model" class="level4">
 <h4 class="anchored" data-anchor-id="question-2-reconsider-the-urban-fox-analysis-from-last-weeks-homework.-on-the-basis-of-psis-and-waic-scores-which-combination-of-variables-best-predicts-body-weight-w-weight-what-causal-interpretation-can-you-assign-each-coefficient-parameter-from-the-best-scoring-model">Question 2: Reconsider the urban fox analysis from last week’s homework. On the basis of PSIS and WAIC scores, which combination of variables best predicts body weight (W, weight)? What causal interpretation can you assign each coefficient (parameter) from the best scoring model?</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(foxes)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> foxes <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">c</span>(weight, avgfood, area, groupsize)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">avgfood =</span> <span class="fu">standardize</span>(avgfood), </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">area =</span> <span class="fu">standardize</span>(area),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">weight =</span> <span class="fu">standardize</span>(weight),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">groupsize =</span> <span class="fu">standardize</span>(groupsize))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># load models</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h03_q2)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h03_q3)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h04_q2)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>m_food <span class="ot">&lt;-</span> h03_q2</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>m_foodgroupsize <span class="ot">&lt;-</span> h03_q3</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>m_areafoodgroupsize <span class="ot">&lt;-</span> h04_q2</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>crit_food <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m_food, <span class="fu">c</span>(<span class="st">"loo"</span>, <span class="st">"waic"</span>))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>crit_foodgroupsize <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m_foodgroupsize, <span class="fu">c</span>(<span class="st">"loo"</span>, <span class="st">"waic"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: 
+1 (0.9%) p_waic estimates greater than 0.4. We recommend trying loo instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>crit_areafoodgroupsize <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m_areafoodgroupsize, <span class="fu">c</span>(<span class="st">"loo"</span>, <span class="st">"waic"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: 
+1 (0.9%) p_waic estimates greater than 0.4. We recommend trying loo instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">loo_compare</span>(crit_food, crit_foodgroupsize, crit_areafoodgroupsize, <span class="at">criterion =</span> <span class="st">"loo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       elpd_diff se_diff
+crit_areafoodgroupsize  0.0       0.0   
+crit_foodgroupsize     -0.4       1.7   
+crit_food              -5.3       3.4   </code></pre>
+</div>
+</div>
+<p>The model with area, average food, and group size is the best predictive model. In this model, we are assessing the direct effect of group size on weight. So the coefficient for G can be read as the direct effect. The coefficients for F and A do not have causal meaning <strong>(discuss with group)</strong>. If we hadn’t stratified by group size, we would be assessing the direct effect of area on weight but stratifying by both average food <em>and</em> group size means that we opened a backdoor path.</p>
 </section>
 <section id="question-3-build-a-predictive-model-of-the-relationship-show-on-the-cover-of-the-book-the-relationship-between-the-timing-of-cherry-blossoms-and-march-temperature-in-the-same-year.-the-data-are-found-in-datacherry_blossoms.-consider-at-least-two-different-models-functional-relationships-to-predict-doy-with-temp.-you-could-for-example-compare-a-linear-model-with-a-quadratic-model.-compare-them-with-psis-or-waic." class="level4">
 <h4 class="anchored" data-anchor-id="question-3-build-a-predictive-model-of-the-relationship-show-on-the-cover-of-the-book-the-relationship-between-the-timing-of-cherry-blossoms-and-march-temperature-in-the-same-year.-the-data-are-found-in-datacherry_blossoms.-consider-at-least-two-different-models-functional-relationships-to-predict-doy-with-temp.-you-could-for-example-compare-a-linear-model-with-a-quadratic-model.-compare-them-with-psis-or-waic.">Question 3: Build a predictive model of the relationship show on the cover of the book, the relationship between the timing of cherry blossoms and March temperature in the same year. The data are found in data(cherry_blossoms). Consider at least two different models (functional relationships) to predict doy with temp. You could for example compare a linear model with a quadratic model. Compare them with PSIS or WAIC.</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"cherry_blossoms"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="suppose-march-temperatures-reach-9-degrees-by-the-year-2050.-what-does-your-best-model-predict-for-the-predictive-distribution-of-the-day-in-year-that-the-cherry-trees-will-blossom" class="level4">
 <h4 class="anchored" data-anchor-id="suppose-march-temperatures-reach-9-degrees-by-the-year-2050.-what-does-your-best-model-predict-for-the-predictive-distribution-of-the-day-in-year-that-the-cherry-trees-will-blossom">Suppose March temperatures reach 9 degrees by the year 2050. What does your best model predict for the predictive distribution of the day-in-year that the cherry trees will blossom?</h4>

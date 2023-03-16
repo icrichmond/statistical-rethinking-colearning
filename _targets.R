@@ -141,6 +141,11 @@ targets_h04 <- c(
         prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
                   set_prior("normal(0, 0.5)", class = "b"),
                   set_prior("exponential(1)", class = "sigma")))
+  ),
+  
+  tar_target(
+    h04_q1,
+    brm(formula = )
   )
   
   
