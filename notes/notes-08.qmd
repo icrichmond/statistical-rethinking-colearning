@@ -49,7 +49,7 @@ ggdag(dag) + theme_dag()
 
 -   Estimand: association between wine quality and wine origin. Stratify by judge for efficiency.
 
-```{r}
+```{r, eval = F, echo = T}
 data(Wines2012)
 d <- Wines2012
 
@@ -95,7 +95,7 @@ precis(mQ, 2)
 
     -   typically n_eff is smaller than number of samples you actually took
 
-```{r}
+```{r, eval = F, echo = T}
 mQO <- ulam(alist(
   S ~ dnorm(mu, sigma), 
   mu <- Q[W] + O[X],

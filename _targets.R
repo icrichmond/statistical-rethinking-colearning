@@ -23,6 +23,7 @@ data(Howell1)
 
 data(foxes)
 
+happiness <- sim_happiness(seed = 1977, N_years = 1000)
 
 # Targets: homework 2 -----------------------------------------------------
 targets_h02 <- c(
@@ -106,6 +107,44 @@ targets_h03 <- c(
   )
 )
 
+
+# Targets: homework 04 ----------------------------------------------------
+targets_h04 <- c(
+  
+  tar_target(
+    happiness_data, 
+    happiness %>%
+      mutate(age = age > 17,
+             A = (age - 18) / (65 - 18),
+             mid = married + 1)
+  ),
+  
+  tar_target(
+    h04_q1a,
+    brm(formula = happiness ~ mid + A, data = happiness_data, family = gaussian(),
+        prior = c(set_prior("normal(0, 1)", class = "Intercept"),
+                  set_prior("normal(0, 2)", class = "b"),
+                  set_prior("exponential(1)", class = "sigma")))
+  ),
+  
+  tar_target(
+    h04_q1b,
+    brm(formula = happiness ~ A, data = happiness_data, family = gaussian(),
+        prior = c(set_prior("normal(0, 1)", class = "Intercept"),
+                  set_prior("normal(0, 2)", class = "b"),
+                  set_prior("exponential(1)", class = "sigma")))
+  ),
+  
+  tar_target(
+    h04_q2,
+    brm(formula = weight ~ avgfood + groupsize + area, data = f, family = gaussian(),
+        prior = c(set_prior("normal(0, 0.5)", class = "Intercept"),
+                  set_prior("normal(0, 0.5)", class = "b"),
+                  set_prior("exponential(1)", class = "sigma")))
+  )
+  
+  
+)
 
 
 

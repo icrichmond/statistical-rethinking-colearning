@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.237">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -195,6 +195,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">Homework - Week 03</a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">Homework - Week 04</a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -335,20 +340,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Loading required package: StanHeaders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>
-rstan version 2.26.13 (Stan version 2.26.1)</code></pre>
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>rstan (Version 2.21.8, GitRev: 2e1f913d3ca3)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>For execution on a local, multicore CPU with excess RAM we recommend calling
 options(mc.cores = parallel::detectCores()).
 To avoid recompilation of unchanged Stan programs, we recommend calling
-rstan_options(auto_write = TRUE)
-For within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,
-change `threads_per_chain` option:
-rstan_options(threads_per_chain = 1)</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file</code></pre>
+rstan_options(auto_write = TRUE)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: cmdstanr</code></pre>
@@ -360,7 +361,7 @@ rstan_options(threads_per_chain = 1)</code></pre>
 <pre><code>- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>- CmdStan path: C:/Users/I_RICHMO/Documents/.cmdstan/cmdstan-2.31.0</code></pre>
+<pre><code>- CmdStan path: /home/icrichmond/.cmdstan/cmdstan-2.31.0</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>- CmdStan version: 2.31.0</code></pre>
@@ -423,12 +424,12 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  S        H         W
-1 1 141.6733  72.99612
-2 2 158.3855  98.41114
-3 1 143.2963  74.81923
-4 2 156.4940  91.12557
-5 1 137.3591  69.40379
-6 2 157.4056 105.90044</code></pre>
+1 2 159.5952  96.97320
+2 1 145.4824  70.05005
+3 1 144.3575  82.79749
+4 2 162.6258 100.43484
+5 1 146.7997  76.89398
+6 2 164.3618 105.25174</code></pre>
 </div>
 </div>
 <ul>
@@ -461,7 +462,7 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 20.24286</code></pre>
+<pre><code>[1] 21.52404</code></pre>
 </div>
 </div>
 <ul>
@@ -481,9 +482,9 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-a[1]  75.467742 0.8090982 74.174647 76.760838
-a[2]  96.324668 0.7180624 95.177065 97.472270
-sigma  5.383726 0.3809937  4.774824  5.992627</code></pre>
+a[1]  75.815504 0.8057976 74.527684 77.103324
+a[2]  96.224152 0.7748631 94.985771 97.462533
+sigma  5.600023 0.3963665  4.966553  6.233493</code></pre>
 </div>
 </div>
 <ul>
@@ -535,11 +536,11 @@ sigma  5.383726 0.3809937  4.774824  5.992627</code></pre>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.82</code></pre>
+<pre><code>[1] 0.806</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.18</code></pre>
+<pre><code>[1] 0.194</code></pre>
 </div>
 </div>
 <ul>

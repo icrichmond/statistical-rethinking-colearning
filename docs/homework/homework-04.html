@@ -8,7 +8,7 @@
 
 <meta name="author" content="Isabella C. Richmond">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Homework - Week 01</title>
+<title>Statistical Rethinking colearning 2023 - Bella - Homework - Week 04</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -125,7 +125,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -135,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Homework - Week 01</h1>
+      <h1 class="quarto-secondary-nav-title">Homework - Week 04</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -181,7 +180,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link active">Homework - Week 01</a>
+  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">Homework - Week 01</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -196,7 +195,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">Homework - Week 04</a>
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link active">Homework - Week 04</a>
   </div>
 </li>
       </ul>
@@ -268,7 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Homework - Week 01</h1>
+<h1 class="title d-none d-lg-block">Homework - Week 04</h1>
 </div>
 
 
@@ -289,123 +288,77 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<section id="question-1-revisit-the-marriage-age-and-happiness-collider-bias-example-from-chapter-6.-run-models-m6.9-and-m6.10-again-pages-178179.-compare-these-two-models-using-both-psis-and-waic.-which-model-is-expected-to-make-better-predictions-according-to-these-criteria-and-which-model-yields-the-correct-causal-inference" class="level4">
+<h4 class="anchored" data-anchor-id="question-1-revisit-the-marriage-age-and-happiness-collider-bias-example-from-chapter-6.-run-models-m6.9-and-m6.10-again-pages-178179.-compare-these-two-models-using-both-psis-and-waic.-which-model-is-expected-to-make-better-predictions-according-to-these-criteria-and-which-model-yields-the-correct-causal-inference">Question 1: Revisit the marriage, age, and happiness collider bias example from Chapter 6. Run models m6.9 and m6.10 again (pages 178–179). Compare these two models using both PSIS and WAIC. Which model is expected to make better predictions, according to these criteria, and which model yields the correct causal inference?</h4>
 <div class="cell">
-
-</div>
-<section id="question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution." class="level4">
-<h4 class="anchored" data-anchor-id="question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution.">Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define how many tosses were W &amp; L</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="dv">11</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># define p, every 0.01 between 0,1 </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># function to compute posterior by every p</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>compute_posterior <span class="ot">&lt;-</span> <span class="cf">function</span>(W, L, poss){</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  ways <span class="ot">&lt;-</span> <span class="fu">sapply</span>(poss, <span class="cf">function</span>(q) (q<span class="sc">*</span><span class="dv">4</span>)<span class="sc">^</span>W <span class="sc">*</span> ((<span class="dv">1</span><span class="sc">-</span>q)<span class="sc">*</span><span class="dv">4</span>)<span class="sc">^</span>L)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  post <span class="ot">&lt;-</span> ways<span class="sc">/</span><span class="fu">sum</span>(ways)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(poss, ways, <span class="at">post =</span> <span class="fu">round</span>(post,<span class="dv">3</span>))</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># compute posterior for our data</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> <span class="fu">compute_posterior</span>(w, l, p)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize posterior </span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> posterior) <span class="sc">+</span> </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(poss, post)) <span class="sc">+</span> </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"proportion water"</span>) <span class="sc">+</span> </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"probability"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sim_happiness</span>(<span class="at">seed =</span> <span class="dv">1977</span>, <span class="at">N_years =</span> <span class="dv">1000</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d[d<span class="sc">$</span>age <span class="sc">&gt;</span> <span class="dv">17</span>, ]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>A <span class="ot">&lt;-</span> (d2<span class="sc">$</span>age <span class="sc">-</span> <span class="dv">18</span>) <span class="sc">/</span> (<span class="dv">65</span> <span class="sc">-</span> <span class="dv">18</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>mid <span class="ot">&lt;-</span> d2<span class="sc">$</span>married <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># model with marital status and age</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h04_q1a)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mMA <span class="ot">&lt;-</span> h04_q1a</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mMA <span class="sc">%&gt;%</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather_draws</span>(b_Intercept, b_mid, b_A, sigma) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median_qi</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> .variable, <span class="at">x =</span> .value, <span class="at">xmin =</span> .lower, <span class="at">xmax =</span> .upper)) <span class="sc">+</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointinterval</span>() <span class="sc">+</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"mean value +/- 95% CIs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="homework-01_files/figure-html/q1-1.png" class="img-fluid" width="672"></p>
+<p><img src="homework-04_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<p>NOTE: Bonus answer in solutions is somewhat key to understanding next answer. This specific problem, where you have a continuous value bounded by 0,1 with an infinite number of <em>p</em>, follows a <strong>beta distribution</strong>. Because the beta distribution is defined, you can instead just use that mathematical equation to come to the same conclusion as above.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">dbeta</span>(x, <span class="dv">4</span><span class="sc">+</span><span class="dv">1</span>, <span class="dv">11</span><span class="sc">+</span><span class="dv">1</span>), <span class="at">color =</span> <span class="st">"black"</span>,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"p"</span>) <span class="sc">+</span> </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with age</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h04_q1b)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mA <span class="ot">&lt;-</span> h04_q1b</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mA <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather_draws</span>(b_Intercept, b_A, sigma) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">median_qi</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> .variable, <span class="at">x =</span> .value, <span class="at">xmin =</span> .lower, <span class="at">xmax =</span> .upper)) <span class="sc">+</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointinterval</span>() <span class="sc">+</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"mean value +/- 95% CIs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="homework-01_files/figure-html/q1-beta-1.png" class="img-fluid" width="672"></p>
+<p><img src="homework-04_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-</section>
-<section id="question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method." class="level4">
-<h4 class="anchored" data-anchor-id="question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method.">Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample our posterior (beta distribution with 4 W, 11 L)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>post_samples <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(n, <span class="dv">4</span><span class="sc">+</span><span class="dv">1</span>, <span class="dv">11</span><span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># sim globe function</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>sim_globe <span class="ot">&lt;-</span> <span class="cf">function</span>(p, N){</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"W"</span>, <span class="st">"L"</span>), <span class="at">size =</span> N, <span class="at">prob=</span><span class="fu">c</span>(p, <span class="dv">1</span><span class="sc">-</span>p), <span class="at">replace =</span> T)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate posterior predictive distribution for next 5 tosses of the globe</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># how many of the 5 tosses will = W? Tested 1e4 times</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>pred_post <span class="ot">&lt;-</span> <span class="fu">sapply</span>(post_samples, <span class="cf">function</span>(p) <span class="fu">sum</span>(<span class="fu">sim_globe</span>(p, <span class="dv">5</span>)<span class="sc">==</span><span class="st">"W"</span>))</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># create table that counts number of incidences of each option (i.e., how many times will 0 W appear, 1 W, 2 W, 3 W, 4 W, 5 W?)</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>tab_post <span class="ot">&lt;-</span> <span class="fu">table</span>(pred_post)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>pred_post_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(tab_post)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_post_df, <span class="fu">aes</span>(<span class="fu">as.factor</span>(pred_post), Freq)) <span class="sc">+</span> </span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"number of W"</span>) <span class="sc">+</span> </span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="homework-01_files/figure-html/q2-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>NOTE: Can also use <code>rbinom()</code> function instead of <code>sim_globe()</code> since there are only two possible outcomes.</p>
-</section>
-<section id="question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses." class="level4">
-<h4 class="anchored" data-anchor-id="question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses.">Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.</h4>
-<p>We know that <span class="math display">\[ p = \frac{ways}{sum(ways)} \]</span> Therefore, count the incidences of 3, 4, 5 in posterior predictive distribution from 2 and divide by total number of ways (1e4)</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p_threeplus <span class="ot">&lt;-</span> (<span class="fu">sum</span>(pred_post_df[<span class="fu">which</span>(pred_post_df[,<span class="dv">1</span>]<span class="sc">==</span><span class="dv">3</span> <span class="sc">|</span> pred_post_df[,<span class="dv">1</span>]<span class="sc">==</span><span class="dv">4</span> <span class="sc">|</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                         pred_post_df[,<span class="dv">1</span>]<span class="sc">==</span><span class="dv">5</span>),<span class="dv">2</span>]))<span class="sc">/</span>n</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"p = "</span>, p_threeplus))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare with PSIS &amp; WAIC</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cMA <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(mMA, <span class="fu">c</span>(<span class="st">"loo"</span>, <span class="st">"waic"</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(mA, <span class="fu">c</span>(<span class="st">"loo"</span>, <span class="st">"waic"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">loo_compare</span>(cMA, cA, <span class="at">criterion =</span> <span class="st">"loo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "p = 0.1843"</code></pre>
+<pre><code>    elpd_diff se_diff
+cMA    0.0       0.0 
+cA  -147.7      15.4 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">loo_compare</span>(cMA, cA, <span class="at">criterion =</span> <span class="st">"waic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    elpd_diff se_diff
+cMA    0.0       0.0 
+cA  -147.7      15.4 </code></pre>
 </div>
 </div>
+<p>The correct predictive model includes both marriage status and age. However, marriage status is a collider and the correct causal model includes only age. Thus, the correct causal model and the best predictive model are different in this case (because predictive models favour colliders).</p>
 </section>
-<section id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution." class="level4">
-<h4 class="anchored" data-anchor-id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution.">Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don’t know the number of land points L. Assume that <em>p</em> = 0.7 and compute the posterior distribution of the number of tosses <em>N</em>. Hint: Use the binomial distribution.</h4>
-<p>Before, we were solving for <em>p</em> using <span class="math display">\[ p^W(1-p)^L \]</span> Which was a beta distribution because p was a continuous variable bound between 0,1. Now we want to solve for <em>N</em>, with W and <em>p</em>. We have a success/fail dataset, with a probability of success, therefore we use the binomial distribution. We need to calculate the probability of 0-5 <em>N</em>’s resulting in 5 successes (W).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># N &amp; L = unknown</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>N_max <span class="ot">&lt;-</span> <span class="dv">25</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>lst <span class="ot">&lt;-</span> <span class="fu">seq</span>(W, N_max, <span class="at">by =</span> <span class="dv">1</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate binomial distribution for each N between lower bound (W) and upper bound (N_max) with p = 0.7</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sapply</span>(lst, <span class="cf">function</span>(x) <span class="fu">dbinom</span>(W, x, p))</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">data =</span> x, <span class="at">N =</span> W<span class="sc">:</span>N_max), <span class="fu">aes</span>(<span class="at">x =</span> N, <span class="at">y =</span> x)) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Probability"</span>, <span class="at">x =</span> <span class="st">"N"</span>) <span class="sc">+</span> </span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="homework-01_files/figure-html/q4-optional-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<section id="question-2-reconsider-the-urban-fox-analysis-from-last-weeks-homework.-on-the-basis-of-psis-and-waic-scores-which-combination-of-variables-best-predicts-body-weight-w-weight-what-causal-interpretation-can-you-assign-each-coefficient-parameter-from-the-best-scoring-model" class="level4">
+<h4 class="anchored" data-anchor-id="question-2-reconsider-the-urban-fox-analysis-from-last-weeks-homework.-on-the-basis-of-psis-and-waic-scores-which-combination-of-variables-best-predicts-body-weight-w-weight-what-causal-interpretation-can-you-assign-each-coefficient-parameter-from-the-best-scoring-model">Question 2: Reconsider the urban fox analysis from last week’s homework. On the basis of PSIS and WAIC scores, which combination of variables best predicts body weight (W, weight)? What causal interpretation can you assign each coefficient (parameter) from the best scoring model?</h4>
+</section>
+<section id="question-3-build-a-predictive-model-of-the-relationship-show-on-the-cover-of-the-book-the-relationship-between-the-timing-of-cherry-blossoms-and-march-temperature-in-the-same-year.-the-data-are-found-in-datacherry_blossoms.-consider-at-least-two-different-models-functional-relationships-to-predict-doy-with-temp.-you-could-for-example-compare-a-linear-model-with-a-quadratic-model.-compare-them-with-psis-or-waic." class="level4">
+<h4 class="anchored" data-anchor-id="question-3-build-a-predictive-model-of-the-relationship-show-on-the-cover-of-the-book-the-relationship-between-the-timing-of-cherry-blossoms-and-march-temperature-in-the-same-year.-the-data-are-found-in-datacherry_blossoms.-consider-at-least-two-different-models-functional-relationships-to-predict-doy-with-temp.-you-could-for-example-compare-a-linear-model-with-a-quadratic-model.-compare-them-with-psis-or-waic.">Question 3: Build a predictive model of the relationship show on the cover of the book, the relationship between the timing of cherry blossoms and March temperature in the same year. The data are found in data(cherry_blossoms). Consider at least two different models (functional relationships) to predict doy with temp. You could for example compare a linear model with a quadratic model. Compare them with PSIS or WAIC.</h4>
+</section>
+<section id="suppose-march-temperatures-reach-9-degrees-by-the-year-2050.-what-does-your-best-model-predict-for-the-predictive-distribution-of-the-day-in-year-that-the-cherry-trees-will-blossom" class="level4">
+<h4 class="anchored" data-anchor-id="suppose-march-temperatures-reach-9-degrees-by-the-year-2050.-what-does-your-best-model-predict-for-the-predictive-distribution-of-the-day-in-year-that-the-cherry-trees-will-blossom">Suppose March temperatures reach 9 degrees by the year 2050. What does your best model predict for the predictive distribution of the day-in-year that the cherry trees will blossom?</h4>
+</section>
+<section id="question-4-the-data-in-datadinosaurs-are-body-mass-estimates-at-different-estimated-ages-for-six-different-dinosaur-species.-see-dinosaurs-for-more-details.-choose-one-or-more-of-these-species-at-least-one-but-as-many-as-you-like-and-model-its-growth.-to-be-precise-make-a-predictive-model-of-body-mass-using-age-as-a-predictor.-consider-two-or-more-model-types-for-the-function-relating-age-to-body-mass-and-score-each-using-psis-and-waic." class="level4">
+<h4 class="anchored" data-anchor-id="question-4-the-data-in-datadinosaurs-are-body-mass-estimates-at-different-estimated-ages-for-six-different-dinosaur-species.-see-dinosaurs-for-more-details.-choose-one-or-more-of-these-species-at-least-one-but-as-many-as-you-like-and-model-its-growth.-to-be-precise-make-a-predictive-model-of-body-mass-using-age-as-a-predictor.-consider-two-or-more-model-types-for-the-function-relating-age-to-body-mass-and-score-each-using-psis-and-waic.">Question 4: The data in data(Dinosaurs) are body mass estimates at different estimated ages for six different dinosaur species. See ?Dinosaurs for more details. Choose one or more of these species (at least one, but as many as you like) and model its growth. To be precise: Make a predictive model of body mass using age as a predictor. Consider two or more model types for the function relating age to body mass and score each using PSIS and WAIC.</h4>
+</section>
+<section id="which-model-do-you-think-is-best-on-predictive-grounds-on-scientific-grounds-if-your-answers-to-these-questions-differ-why" class="level4">
+<h4 class="anchored" data-anchor-id="which-model-do-you-think-is-best-on-predictive-grounds-on-scientific-grounds-if-your-answers-to-these-questions-differ-why">Which model do you think is best, on predictive grounds? On scientific grounds? If your answers to these questions differ, why?</h4>
+</section>
+<section id="this-is-a-challenging-exercise-because-the-data-are-so-scarce.-but-it-is-also-a-realistic-example-because-people-publish-nature-papers-with-even-less-data.-so-do-your-best-and-i-look-forward-to-seeing-your-growth-curves." class="level4">
+<h4 class="anchored" data-anchor-id="this-is-a-challenging-exercise-because-the-data-are-so-scarce.-but-it-is-also-a-realistic-example-because-people-publish-nature-papers-with-even-less-data.-so-do-your-best-and-i-look-forward-to-seeing-your-growth-curves.">This is a challenging exercise, because the data are so scarce. But it is also a realistic example, because people publish Nature papers with even less data. So do your best, and I look forward to seeing your growth curves.</h4>
 
 
 </section>

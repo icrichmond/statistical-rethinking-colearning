@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.237">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -193,6 +193,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">Homework - Week 03</a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">Homework - Week 04</a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -369,12 +374,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get a summary of posterior distribution</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(mAW)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>               Estimate Est.Error        Q2.5       Q97.5
-b_Intercept    7.045412 0.3704883    6.321620    7.769590
-b_age          1.333968 0.0503244    1.234562    1.429823
-sigma          2.592469 0.1503199    2.324365    2.911670
-lprior       -55.444885 2.0344274  -59.543533  -51.468315
-lp__        -427.516094 1.2149396 -430.616461 -426.119946</code></pre>
+<pre><code>               Estimate  Est.Error        Q2.5       Q97.5
+b_Intercept    7.036794 0.36425544    6.327332    7.753923
+b_age          1.335759 0.05138795    1.235176    1.442238
+sigma          2.596536 0.15143607    2.320393    2.903958
+lprior       -55.469858 2.07865655  -59.474311  -51.354272
+lp__        -427.576650 1.31101667 -431.020299 -426.121602</code></pre>
 </div>
 </div>
 </section>
@@ -436,12 +441,12 @@ lp__        -427.516094 1.2149396 -430.616461 -426.119946</code></pre>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(mAWS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate  Est.Error         Q2.5       Q97.5
-b_Intercept    6.424833 0.38730794    5.6545303    7.178183
-b_age          1.327970 0.04716903    1.2346135    1.421895
-b_sex2         1.404762 0.39473554    0.6284143    2.162025
-sigma          2.496224 0.14432855    2.2345827    2.796510
-lprior       -57.976391 1.94753955  -61.6161336  -54.160491
-lp__        -424.159815 1.40643917 -427.5797510 -422.434599</code></pre>
+b_Intercept    6.421874 0.39163836    5.6340126    7.180696
+b_age          1.328347 0.04822519    1.2345120    1.425671
+b_sex2         1.406962 0.39901129    0.6507742    2.223799
+sigma          2.499072 0.13997303    2.2404017    2.788606
+lprior       -57.983164 1.96677528  -61.9331028  -54.196221
+lp__        -424.165388 1.42733997 -427.9576483 -422.453753</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get prediction options </span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>pred_vals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">age =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">13</span>, <span class="fl">0.5</span>))</span>
@@ -467,21 +472,6 @@ lp__        -424.159815 1.40643917 -427.5797510 -422.434599</code></pre>
 <span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">'age'</span>,</span>
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">'predicted difference in weight (males-females)'</span>) <span class="sc">+</span></span>
 <span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using the `size` aesthetic with geom_ribbon was deprecated in ggplot2 3.4.0.
-ℹ Please use the `linewidth` aesthetic instead.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Unknown or uninitialised column: `linewidth`.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using the `size` aesthetic with geom_line was deprecated in ggplot2 3.4.0.
-ℹ Please use the `linewidth` aesthetic instead.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Unknown or uninitialised column: `linewidth`.
-Unknown or uninitialised column: `linewidth`.</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="homework-02_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
 </div>
