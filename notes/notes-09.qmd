@@ -1,0 +1,273 @@
+---
+title: "Lecture 09 - Modeling Events"
+author: Isabella C. Richmond
+date: Mar 22, 2023
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:*
+
+*Thorn:*
+
+## Modeling Events
+
+NOTE: read causal foundations of bias, fairness, and ...
+
+-   observations are counts
+
+-   unknowns are possibilities, odds
+
+-   everything is interacting
+
+What is the effect of gender on university admissions?
+
+```{r, echo=FALSE}
+dag <- dagify(
+    D ~ G,
+    perG ~ G,
+    A ~ D + perG + R
+)
+
+ggdag(dag) +
+    theme_dag()
+```
+
+-   total effect of discrimination is what people experience
+
+-   quite often, the thing we are able to estimate is what we want (total effects are easier to estimate but subpaths are interesting and important to understanding equity)
+
+```{r}
+N <- 1000 # number of applicants
+G <- sample(1:2, size = N, replace = T) # gender distribution
+D <- rbern(N, ifelse(G==1, 0.3, 0.8)) + 1 #gener 1 tends to apply to appartment 1, 2 to 2
+accept_rate <- matrix(c(0.1, 0.3, 0.1, 0.3), nrow = 2) # matrix of acceptance rates [dept, gender]
+A <- rbern(N, accept_rate[D,G]) # simulate acceptance
+```
+
+-   we observe: count of events
+
+-   we estimate: probability (or log-odds) of events
+
+    -   like the globe tossing model, but need "proportion of water" stratified by other variables
+
+## Generalized Linear Models
+
+-   linear models: expected value is additive "linear" combination of parameters
+
+-   generalized linear models: expected value is *some function* of an additive combination of parameters
+
+-   f is the link function - links parameters of distribution to linear model
+
+-   distributions: relative number of ways to observe data, given assumptions about rates, probabilities, slopes, etc.
+
+-   distributions are matched to constraints on observed variables
+
+-   link functions are matched to distributions
+
+-   exponential distribution - the time to an event that has a constant rate. Values you sample from exponential distribution are latencies/rates (continuous data above one)
+
+    -   process that produces events and then you count those events = binomial distribution
+
+    -   don't know maximum number of counts = poisson (special case of binomial)
+
+    -   sum exponential processes = gamma
+
+    -   large means of gamma distribution = normal distribution
+
+-   **distribution you want is governed by the constraints you assume about your variable**
+
+    -   you cannot test if your data are normal
+
+    -   need to think about constraints and match to distributions
+
+## Logit Link
+
+-   log-odds = logit link
+
+-   Bernoulli/binomial models most often use the logit link
+
+-   linear model output is on the "log-odds scale"
+
+## Logistic Priors
+
+-   logit link compresses parameter distributions
+
+-   on log-odds scale, above +4 = almost always, below -4 = almost never
+
+    -   therefore, tighter priors are better
+
+```{r}
+# generative model, basic mediator scenario
+
+N <- 1000 # number of applicants
+# even gender distribution
+G <- sample( 1:2 , size=N , replace=TRUE )
+# gender 1 tends to apply to department 1, 2 to 2
+D <- rbern( N , ifelse( G==1 , 0.3 , 0.8 ) ) + 1
+# matrix of acceptance rates [dept,gender]
+accept_rate <- matrix( c(0.1,0.3,0.1,0.3) , nrow=2 )
+accept_rate <- matrix( c(0.05,0.2,0.1,0.3) , nrow=2 )
+# simulate acceptance
+p <- sapply( 1:N , function(i) accept_rate[D[i],G[i]] )
+A <- rbern( N , p )
+
+# total effect gender
+dat_sim <- list( A=A , D=D , G=G )
+
+m1 <- ulam(
+    alist(
+        A ~ bernoulli(p),
+        logit(p) <- a[G],
+        a[G] ~ normal(0,1)
+    ), data=dat_sim , chains=4 , cores=4 )
+
+precis(m1,depth=2)
+
+# direct effects
+m2 <- ulam(
+    alist(
+        A ~ bernoulli(p),
+        logit(p) <- a[G,D],
+        matrix[G,D]:a ~ normal(0,1)
+    ), data=dat_sim , chains=4 , cores=4 )
+
+precis(m2,depth=3)
+
+# aggregate the dat_sim for binomial instead of Bernoulli
+
+x <- as.data.frame(cbind( A=dat_sim$A , G=dat_sim$G , D=dat_sim$D  ))
+head(x,20)
+
+dat_sim2 <- aggregate( A ~ G + D , dat_sim , sum )
+dat_sim2$N <- aggregate( A ~ G + D , dat_sim , length )$A
+
+m2_bin <- ulam(
+    alist(
+        A ~ binomial(N,p),
+        logit(p) <- a[G,D],
+        matrix[G,D]:a ~ normal(0,1)
+    ), data=dat_sim2 , chains=4 , cores=4 )
+
+precis(m2_bin,3)
+```
+
+Model real data:
+
+```{r}
+data(UCBadmit)
+d <- UCBadmit
+
+dat <- list( 
+    A = d$admit,
+    N = d$applications,
+    G = ifelse(d$applicant.gender=="female",1,2),
+    D = as.integer(d$dept)
+)
+
+# total effect gender
+mG <- ulam(
+    alist(
+        A ~ binomial(N,p),
+        logit(p) <- a[G],
+        a[G] ~ normal(0,1)
+    ), data=dat , chains=4 , cores=4 )
+
+precis(mG,2)
+
+# direct effects
+mGD <- ulam(
+    alist(
+        A ~ binomial(N,p),
+        logit(p) <- a[G,D],
+        matrix[G,D]:a ~ normal(0,1)
+    ), data=dat , chains=4 , cores=4 )
+
+precis(mGD,3)
+
+# check chains
+
+traceplot(mGD)
+trankplot(mGD)
+
+# contrasts
+# on probability scale
+
+post1 <- extract.samples(mG)
+PrA_G1 <- inv_logit( post1$a[,1] )
+PrA_G2 <- inv_logit( post1$a[,2] )
+diff_prob <- PrA_G1 - PrA_G2
+dens(diff_prob,lwd=4,col=2,xlab="Gender contrast (probability)")
+
+post2 <- extract.samples(mGD)
+PrA <- inv_logit( post2$a ) 
+diff_prob_D_ <- sapply( 1:6 , function(i) PrA[,1,i] - PrA[,2,i] )
+plot(NULL,xlim=c(-0.2,0.3),ylim=c(0,25),xlab="Gender contrast (probability)",ylab="Density")
+for ( i in 1:6 ) dens( diff_prob_D_[,i] , lwd=4 , col=1+i , add=TRUE )
+abline(v=0,lty=3)
+
+# marginal effect of gender perception (direct effect)
+
+# compute department weights via simulation
+# we can just compute predictions as if all applications had been perceived as men
+# and then again as if all had been perceived as women
+# difference is marginal effect of perception, beause does not change department assignments (G -> A only, no G -> D)
+
+# OLD WRONG CODE!
+#p_G1 <- link( mGD , data=list(N=dat$N,D=dat$D,G=rep(1,12)) )
+#p_G2 <- link( mGD , data=list(N=dat$N,D=dat$D,G=rep(2,12)) )
+
+# NEW CORRECT CODE
+
+# number of applicatons to simulate
+total_apps <- sum(dat$N)
+
+# number of applications per department
+apps_per_dept <- sapply( 1:6 , function(i) sum(dat$N[dat$D==i]) )
+
+# simulate as if all apps from women
+p_G1 <- link(mGD,data=list(
+    D=rep(1:6,times=apps_per_dept),
+    N=rep(1,total_apps),
+    G=rep(1,total_apps)))
+
+# simulate as if all apps from men
+p_G2 <- link(mGD,data=list(
+    D=rep(1:6,times=apps_per_dept),
+    N=rep(1,total_apps),
+    G=rep(2,total_apps)))
+
+# summarize
+dens( p_G1 - p_G2 , lwd=4 , col=2 , xlab="effect of gender perception" )
+abline(v=0,lty=3)
+
+# show each dept density with weight as in population
+w <- xtabs( dat$N ~ dat$D ) / sum(dat$N)
+w <- w/max(w)
+plot(NULL,xlim=c(-0.2,0.3),ylim=c(0,25),xlab="Gender contrast (probability)",ylab="Density")
+for ( i in 1:6 ) dens( diff_prob_D_[,i] , lwd=2+8*w[i]^3 , col=1+i , add=TRUE )
+abline(v=0,lty=3)
+```
+
+## Post-Stratification
+
+-   description, prediction, and causal inference often require post-stratification
+
+-   way to predict what the intervention will do to a specific population
+
+-   post-stratification = re-weighting estimates for target population
+
+## Survival Analysis
+
+-   another way of modelling events but we care about the time it took for an event to happen instead of number of times it happened
+
+-   cannot ignore censored cases (left-censored = don't know when time started, right-censored = observation ended before event)
+
+-   exponential or gamma distribution
+
+-   
