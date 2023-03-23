@@ -252,6 +252,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../notes/notes-09.html" class="sidebar-item-text sidebar-link">Lecture 09 - Modeling Events</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-10.html" class="sidebar-item-text sidebar-link">Lecture 10 - Counts &amp; Hidden Confounds</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../notes/notes-listing.html" class="sidebar-item-text sidebar-link">Notes</a>
   </div>
 </li>
@@ -424,12 +434,12 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  S        H         W
-1 2 155.5787 100.77917
-2 2 156.8826  92.95368
-3 1 156.3441  85.65257
-4 2 162.9091 100.83216
-5 2 160.5084 100.16474
-6 1 148.3724  70.40170</code></pre>
+1 1 149.3730  71.72211
+2 1 156.0945  74.37437
+3 2 155.5118  95.54604
+4 2 161.4741  98.92966
+5 1 145.7694  79.70352
+6 2 163.1763 102.72147</code></pre>
 </div>
 </div>
 <ul>
@@ -462,7 +472,7 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 21.87561</code></pre>
+<pre><code>[1] 22.30765</code></pre>
 </div>
 </div>
 <ul>
@@ -482,9 +492,9 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-a[1]  75.237408 0.8826043 73.826836 76.647980
-a[2]  95.552914 0.8320889 94.223076 96.882753
-sigma  6.073428 0.4299071  5.386353  6.760503</code></pre>
+a[1]  74.520394 0.6518068 73.478681 75.562107
+a[2]  95.757894 0.8148193 94.455656 97.060133
+sigma  5.101163 0.3610445  4.524144  5.678182</code></pre>
 </div>
 </div>
 <ul>
@@ -536,11 +546,11 @@ sigma  6.073428 0.4299071  5.386353  6.760503</code></pre>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.794</code></pre>
+<pre><code>[1] 0.803</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.206</code></pre>
+<pre><code>[1] 0.197</code></pre>
 </div>
 </div>
 <ul>

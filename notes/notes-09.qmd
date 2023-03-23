@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:*
+*Rose:* starting to understand what a generalized linear model actually is
 
-*Thorn:*
+*Thorn:* algebra and links
 
 ## Modeling Events
 
@@ -102,7 +102,7 @@ A <- rbern(N, accept_rate[D,G]) # simulate acceptance
 
     -   therefore, tighter priors are better
 
-```{r}
+```{r, eval = FALSE}
 # generative model, basic mediator scenario
 
 N <- 1000 # number of applicants
@@ -159,7 +159,7 @@ precis(m2_bin,3)
 
 Model real data:
 
-```{r}
+```{r, eval = FALSE}
 data(UCBadmit)
 d <- UCBadmit
 
@@ -269,5 +269,3 @@ abline(v=0,lty=3)
 -   cannot ignore censored cases (left-censored = don't know when time started, right-censored = observation ended before event)
 
 -   exponential or gamma distribution
-
--   

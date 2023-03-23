@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Isabella C. Richmond">
-<meta name="dcterms.date" content="2023-02-08">
+<meta name="dcterms.date" content="2023-03-22">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 03 - Geocentric Models</title>
+<title>Statistical Rethinking colearning 2023 - Bella - Lecture 10 - Counts &amp; Hidden Confounds</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -126,7 +126,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -136,7 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Lecture 03 - Geocentric Models</h1>
+      <h1 class="quarto-secondary-nav-title">Lecture 10 - Counts &amp; Hidden Confounds</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -222,7 +221,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link active">Lecture 03 - Geocentric Models</a>
+  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">Lecture 03 - Geocentric Models</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -257,7 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-10.html" class="sidebar-item-text sidebar-link">Lecture 10 - Counts &amp; Hidden Confounds</a>
+  <a href="../notes/notes-10.html" class="sidebar-item-text sidebar-link active">Lecture 10 - Counts &amp; Hidden Confounds</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -277,12 +276,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
-  <li><a href="#linear-regressions" id="toc-linear-regressions" class="nav-link" data-scroll-target="#linear-regressions">Linear Regressions</a></li>
-  <li><a href="#gaussian-distributions" id="toc-gaussian-distributions" class="nav-link" data-scroll-target="#gaussian-distributions">Gaussian Distributions</a></li>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow">Workflow</a></li>
-  <li><a href="#describing-models" id="toc-describing-models" class="nav-link" data-scroll-target="#describing-models">Describing Models</a></li>
-  <li><a href="#howell-example" id="toc-howell-example" class="nav-link" data-scroll-target="#howell-example">Howell Example</a></li>
-  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo">TODO:</a></li>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
+  <li><a href="#confounded-admissions" id="toc-confounded-admissions" class="nav-link" data-scroll-target="#confounded-admissions">Confounded Admissions</a></li>
   </ul>
 </nav>
     </div>
@@ -291,7 +286,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Lecture 03 - Geocentric Models</h1>
+<h1 class="title d-none d-lg-block">Lecture 10 - Counts &amp; Hidden Confounds</h1>
 </div>
 
 
@@ -308,7 +303,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 8, 2023</p>
+      <p class="date">March 22, 2023</p>
     </div>
   </div>
   
@@ -318,238 +313,70 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<div class="cell">
+
+</div>
 <section id="rose-thorn" class="level2">
 <h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
-<p><em>Rose:</em> flow reminder! Retrograde explanation</p>
-<p><em>Thorn:</em> installing rethinking on windows</p>
+<p><em>Rose:</em></p>
+<p><em>Thorn:</em></p>
 </section>
-<section id="linear-regressions" class="level2">
-<h2 class="anchored" data-anchor-id="linear-regressions">Linear Regressions</h2>
+<section id="generalized-linear-models" class="level2">
+<h2 class="anchored" data-anchor-id="generalized-linear-models">Generalized Linear Models</h2>
 <ul>
-<li>essentially a geocentric model - overly simplified</li>
-<li>separate from a causal model</li>
-<li>associations are from the causal model, not the statistical model</li>
+<li><p>Expected value is <em>some function</em> of an additive combination of parameters</p></li>
+<li><p>uniform changes in predictor not uniform changes in prediction</p></li>
+<li><p>all predictor variables interact and moderate one another</p></li>
+<li><p>inlfuences predictions and uncertainty of predictions</p></li>
 </ul>
 </section>
-<section id="gaussian-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="gaussian-distributions">Gaussian Distributions</h2>
+<section id="confounded-admissions" class="level2">
+<h2 class="anchored" data-anchor-id="confounded-admissions">Confounded Admissions</h2>
 <ul>
-<li>there are many more ways to end up in the center than to end up on the periphery</li>
-<li>why the Gaussian distribution spontaneously occurs in natural systems</li>
-<li><strong>generative</strong>: if we add fluctuations, we tend towards normal distribution (lots of summed fluctuations in nature)</li>
-<li><strong>inferential</strong>: estimating mean and variance, normal distribution is best one to use because it is least informative (no other information present)</li>
-<li>normal distribution is just a tool for estimating mean/variance because it has widest distribution
-<ul>
-<li>data doesn’t have to be normal to be able to leverage the tool to estimate mean/variance</li>
-</ul></li>
-</ul>
-</section>
-<section id="workflow" class="level2">
-<h2 class="anchored" data-anchor-id="workflow">Workflow</h2>
-<ol type="1">
-<li>State a clear question</li>
-<li>Sketch causal assumptions</li>
-<li>Define generative model from sketch</li>
-<li>Use generative model to build estimator</li>
-<li>Profit</li>
-</ol>
+<li><p>ability is a confound for admissions</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Howell1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="describing-models" class="level2">
-<h2 class="anchored" data-anchor-id="describing-models">Describing Models</h2>
-<p><span class="math display">\[
-W_{i}= \beta H_{i} + U_{i}
-\]</span></p>
-<p><span class="math display">\[
-U_{i} \sim Normal(0, \sigma)
-\]</span></p>
-<p><span class="math display">\[
-H_{i} \sim Uniform(130, 170)
-\]</span></p>
-<ul>
-<li><p>= is deterministic</p></li>
-<li><p>~ is distributional</p></li>
-</ul>
-</section>
-<section id="howell-example" class="level2">
-<h2 class="anchored" data-anchor-id="howell-example">Howell Example</h2>
-<ol type="1">
-<li>Question: Describe association between <strong>adult</strong> weight and height</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> Howell1[Howell1<span class="sc">$</span>age<span class="sc">&gt;=</span><span class="dv">18</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="2" type="1">
-<li>Scientific model: weight is some function of height and unobserved influences</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">                H -&gt; W</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">                U -&gt; W</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">             }"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">drawdag</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<p><img src="notes-10_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<p><span class="math display">\[
-W = f(H, U)
-\]</span></p>
-<ol start="3" type="1">
-<li>Generative/Statistical model</li>
-</ol>
-<ul>
-<li><p>Two options: dynamic (complex and ongoing) and <strong>static</strong></p>
-<ul>
-<li>Static model allows us to imagine changes at specific times and still use a Gaussian distribution</li>
-</ul></li>
-<li><p>For adults, weight is a proportion of height plus the influence of unobserved causes</p></li>
-</ul>
-<p><span class="math display">\[
-W = \beta H+U
-\]</span></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sim_weight <span class="ot">&lt;-</span> <span class="cf">function</span>(H, b, sd){</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  U <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(H), <span class="dv">0</span>, sd)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> b<span class="sc">*</span>H <span class="sc">+</span> U</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(W)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="at">min =</span> <span class="dv">130</span>, <span class="at">max =</span> <span class="dv">170</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sim_weight</span>(H, <span class="at">b =</span> <span class="fl">0.5</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(W <span class="sc">~</span> H, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<ul>
-<li><p>we want to estimate how the average weight changes with height</p>
-<p><span class="math display">\[
-E(W_{i}|H_{i}) = \alpha + \beta H_{i}
-\]</span></p></li>
-<li><p><span class="math inline">\(E(W_{i}|H_{i})\)</span> = average weight conditional on height</p></li>
-<li><p><span class="math inline">\(\alpha\)</span> = intercept (when height is 0, what is weight? Scientifically should be zero but putting it in model to make sure our model is scientifically sound)</p></li>
-<li><p><span class="math inline">\(\beta\)</span> = slope</p></li>
-<li><p>Posterior distribution:</p>
-<ul>
-<li><p><span class="math display">\[
-Pr(\alpha,\beta,\sigma| H_{i}, W_{i}) = \frac{Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)Pr(\alpha,\beta,\sigma)}{Z}
-\]</span></p></li>
-<li><p><span class="math inline">\(W_{i} \sim Normal(\mu _{i}), \sigma)\)</span></p></li>
-<li><p><span class="math inline">\(\mu _{i} = \alpha + \beta H_{i}\)</span></p></li>
-<li><p>alpha, sigma, beta are unknown so we need a posterior distribution for them (and they are dependent on the data)</p></li>
-<li><p><span class="math inline">\(Pr(\alpha,\beta,\sigma| H_{i}, W_{i})\)</span> = posterior probability of specific line</p></li>
-<li><p><span class="math inline">\(Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)\)</span> = probability of each weight dependent on height value, alpha, beta, sigma</p></li>
-<li><p><span class="math inline">\(Pr(\alpha,\beta,\sigma)\)</span> = prior</p></li>
-</ul></li>
-</ul>
-<p><strong>Statistical Model</strong></p>
-<ul>
-<li><p>Quadratic approximation</p>
-<ul>
-<li><p><span class="math inline">\(W_{i} \sim Normal(\mu _{i}), \sigma)\)</span></p></li>
-<li><p><span class="math inline">\(\mu _{i} = \alpha + \beta H_{i}\)</span></p></li>
-<li><p><span class="math inline">\(\alpha \sim Normal(0,10)\)</span></p></li>
-<li><p><span class="math inline">\(\beta \sim Uniform(0,1)\)</span></p></li>
-<li><p><span class="math inline">\(\sigma \sim Uniform(0, 10)\)</span></p></li>
-</ul></li>
+</div></li>
+<li><p>include confound in the model:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m3<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b<span class="sc">*</span>H,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">W=</span>W, <span class="at">H=</span>H))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ul>
-<li><p>Priors</p>
-<ul>
-<li>we want to constrain to scientifically plausible values</li>
-<li>justify with information outside the data - <strong>like the rest of model</strong></li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">130</span>, <span class="dv">170</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">90</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for (j in 1:50) abline(a=a[j], b=b[j])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="4" type="1">
-<li>Validate model</li>
-</ol>
-<ul>
-<li><p>test statistical model with simulated observations from scientific model - need to test if your model is working</p></li>
-<li><p>use many values and make sure your model responds appropriately</p></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model summary</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># continuing from UCBadmit example</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># what happens when there is a confound?</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">17</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">2000</span> <span class="co"># number of applicants</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># even gender distribution</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>G <span class="ot">&lt;-</span> <span class="fu">sample</span>( <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span> , <span class="at">size=</span>N , <span class="at">replace=</span><span class="cn">TRUE</span> )</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># sample ability, high (1) to average (0)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">rbern</span>(N,<span class="fl">0.1</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># gender 1 tends to apply to department 1, 2 to 2</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># and G=1 with greater ability tend to apply to 2 as well</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">rbern</span>( N , <span class="fu">ifelse</span>( G<span class="sc">==</span><span class="dv">1</span> , u<span class="sc">*</span><span class="fl">0.5</span> , <span class="fl">0.8</span> ) ) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># matrix of acceptance rates [dept,gender]</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>accept_rate_u0 <span class="ot">&lt;-</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.3</span>) , <span class="at">nrow=</span><span class="dv">2</span> )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>accept_rate_u1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.2</span>,<span class="fl">0.5</span>) , <span class="at">nrow=</span><span class="dv">2</span> )</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate acceptance</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span>N , <span class="cf">function</span>(i) </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>( u[i]<span class="sc">==</span><span class="dv">0</span> , accept_rate_u0[D[i],G[i]] , accept_rate_u1[D[i],G[i]] ) )</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">rbern</span>( N , p )</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(G,D)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           mean         sd      5.5%      94.5%
-a     8.5825496 4.19249647 1.8821305 15.2829687
-b     0.4423181 0.02758948 0.3982248  0.4864114
-sigma 4.9586795 0.24809251 4.5621797  5.3551792</code></pre>
+<pre><code>   D
+G     1   2
+  1 960  51
+  2 202 787</code></pre>
 </div>
-</div>
-<ol start="5" type="1">
-<li>Analyze data</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">W =</span> d2<span class="sc">$</span>weight, <span class="at">H =</span> d2<span class="sc">$</span>height)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m3<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b<span class="sc">*</span>H,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>), </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(G,A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>             mean         sd        5.5%       94.5%
-a     -43.4013918 4.17075658 -50.0670663 -36.7357172
-b       0.5719008 0.02695074   0.5288283   0.6149733
-sigma   4.2528573 0.16175152   3.9943471   4.5113675</code></pre>
+<pre><code>   A
+G     0   1
+  1 902 109
+  2 696 293</code></pre>
 </div>
 </div>
-<ul>
-<li><p>parameters are not independent of one another, they cannot be independently interpreted</p>
-<ul>
-<li>use posterior predictions and describe/interpret those by sampling the posterior distribution</li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m3<span class="fl">.2</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d2<span class="sc">$</span>height, d2<span class="sc">$</span>weight)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#for (j in 1:20)</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  abline(a=post$a[j], b=post$b[j])</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>height_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">130</span>, <span class="dv">190</span>, <span class="at">len =</span> <span class="dv">20</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>W_postpred <span class="ot">&lt;-</span> <span class="fu">sim</span>(m3<span class="fl">.2</span>, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">H=</span>height_seq))</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>W_PI <span class="ot">&lt;-</span> <span class="fu">apply</span>(W_postpred, <span class="dv">2</span>, PI)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(height_seq, W_PI[<span class="dv">1</span>,])</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(height_seq, W_PI[<span class="dv">2</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="todo" class="level2">
-<h2 class="anchored" data-anchor-id="todo">TODO:</h2>
-<ul>
-<li>figure out plot erroring</li>
-</ul>
 
 
 </section>
