@@ -217,7 +217,7 @@ targets_h05 <- c(
   
   tar_target(
     h05_q2,
-    brm(formula = awards | trials(applications)  ~ gender + discipline, data = grant_data, family = binomial(),
+    brm(formula = awards | trials(applications)  ~ gender + discipline + gender:discipline, data = grant_data, family = binomial(),
         prior = c(set_prior("normal(-1, 1)", class = "Intercept"),
                   set_prior("normal(-1, 1)", class = "b")))
   )
