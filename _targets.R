@@ -27,6 +27,8 @@ happiness <- sim_happiness(seed = 1977, N_years = 1000)
 
 data(cherry_blossoms)
 
+data(NWOGrants)
+
 
 # Targets: homework 2 -----------------------------------------------------
 targets_h02 <- c(
@@ -182,6 +184,44 @@ targets_h04 <- c(
   
   
 )
+
+
+
+# Targets: homework 05 ----------------------------------------------------
+targets_h05 <- c(
+  
+  tar_target(
+    grant_data, 
+    NWOGrants %>%
+      mutate(awards = as.integer(awards),
+             applications = as.integer(applications),
+             discipline = as.integer(discipline),
+             gender = as.factor(case_when(gender == 'f' ~ 1,
+                                gender == 'm' ~ 2)))
+  ),
+  
+  tar_target(
+    h05_q1_prior,
+    brm(formula = awards ~ gender, data = grant_data, family = binomial(),
+        prior = c(set_prior("normal(-1, 1)", class = "Intercept"),
+                  set_prior("normal(-1, 1)", class = "b")),
+        sample_prior = "only")
+  ),
+  
+  tar_target(
+    h05_q1,
+    brm(formula = awards ~ gender, data = grant_data, family = binomial(),
+        prior = c(set_prior("normal(-1, 1)", class = "Intercept"),
+                  set_prior("normal(-1, 1)", class = "b")))
+  )
+  
+  
+  
+)
+
+
+
+
 
 
 
