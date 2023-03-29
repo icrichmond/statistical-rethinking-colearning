@@ -311,7 +311,7 @@ W_do_S_auto <- HWsim$W[,2] - HWsim$W[,1]
 
 ```
 
-- you can either do one statistical model for each estimand OR one simulation for each estimand (full luxury Bayes)
+-   you can either do one statistical model for each estimand OR one simulation for each estimand (full luxury Bayes)
 
 ## TODO:
 
