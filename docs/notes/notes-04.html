@@ -443,12 +443,12 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  S        H         W
-1 1 150.2297  71.70066
-2 2 155.3298 100.12789
-3 2 165.5236  86.87896
-4 2 152.2650  94.63175
-5 1 157.8738  83.30065
-6 1 147.1100  67.00105</code></pre>
+1 2 162.4749 100.10458
+2 2 158.7989  92.70826
+3 1 149.5077  81.13181
+4 1 148.2903  78.47929
+5 2 158.0333  92.82758
+6 1 147.3122  67.38760</code></pre>
 </div>
 </div>
 <ul>
@@ -481,7 +481,7 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 21.7948</code></pre>
+<pre><code>[1] 21.89961</code></pre>
 </div>
 </div>
 <ul>
@@ -501,9 +501,9 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-a[1]  74.274028 0.7820745 73.024122 75.523934
-a[2]  96.452055 0.8647797 95.069970 97.834140
-sigma  5.817105 0.4117913  5.158983  6.475227</code></pre>
+a[1]  75.562882 0.7699525 74.332349 76.793414
+a[2]  94.878722 0.8512818 93.518210 96.239235
+sigma  5.726293 0.4053223  5.078509  6.374076</code></pre>
 </div>
 </div>
 <ul>
@@ -555,11 +555,11 @@ sigma  5.817105 0.4117913  5.158983  6.475227</code></pre>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.809</code></pre>
+<pre><code>[1] 0.797</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.191</code></pre>
+<pre><code>[1] 0.203</code></pre>
 </div>
 </div>
 <ul>

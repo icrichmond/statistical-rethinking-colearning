@@ -368,16 +368,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output-display">
 <p><img src="homework-05_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional_effects</span>(m1) <span class="sc">+</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional_effects</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting all 'trials' variables to 1 by default if not specified otherwise.</code></pre>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table (logit)</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table (logit)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate  Est.Error          Q2.5       Q97.5
 b_Intercept  -1.7360854 0.08084481  -1.895110674  -1.5847487
@@ -385,24 +384,24 @@ b_gender2     0.1977248 0.10142669  -0.003809679   0.3934985
 lprior       -2.7647172 0.13333272  -3.036665579  -2.5194333
 lp__        -64.8898356 0.99441404 -67.600901653 -63.9137578</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use model to predict values for each gender individually</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to the data.</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_grid</span>(gender, applications) <span class="sc">%&gt;%</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_linpred_draws</span>(m1) <span class="sc">%&gt;%</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.row) <span class="sc">%&gt;%</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(gender, .linpred) <span class="sc">%&gt;%</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">female =</span> <span class="st">'1'</span>, </span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">male =</span> <span class="st">'2'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">contrast =</span> <span class="fu">inv_logit_scaled</span>(female) <span class="sc">-</span> <span class="fu">inv_logit_scaled</span>(male))</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(t, <span class="fu">aes</span>(contrast)) <span class="sc">+</span> </span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Contrast (F-M) total"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use model to predict values for each gender individually</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to the data.</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_grid</span>(gender, applications) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_linpred_draws</span>(m1) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.row) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(gender, .linpred) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">female =</span> <span class="st">'1'</span>, </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">male =</span> <span class="st">'2'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">contrast =</span> <span class="fu">inv_logit_scaled</span>(female) <span class="sc">-</span> <span class="fu">inv_logit_scaled</span>(male))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(t, <span class="fu">aes</span>(contrast)) <span class="sc">+</span> </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Contrast (F-M) total"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="homework-05_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+<p><img src="homework-05_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>This shows approximately 2.5-3% disadvantage against women.</p>
@@ -412,118 +411,184 @@ lp__        -64.8898356 0.99441404 -67.600901653 -63.9137578</code></pre>
 <p>applications in the sample. Refer to the marginal effect example in Lecture 9 for help.</p>
 <p>The direct causal effect of gender requires us to stratify by discipline as well:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h05_q2)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> h05_q2</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># diagnostics</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_load</span>(h05_q2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> h05_q2</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># diagnostics</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="homework-05_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
 <p><img src="homework-05_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table (logit)</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                 Estimate Est.Error         Q2.5        Q97.5
-b_Intercept    -1.0057020 0.1953100  -1.40574154  -0.63163157
-b_gender2       0.1256524 0.1074912  -0.08787327   0.34048846
-b_discipline2  -0.4764652 0.2238227  -0.89881920  -0.02361181
-b_discipline3  -0.7100477 0.2236057  -1.15260929  -0.25988789
-b_discipline4  -0.7619972 0.2649563  -1.26977690  -0.23140873
-b_discipline5  -0.8102035 0.2158962  -1.22025369  -0.37827598
-b_discipline6  -0.4979698 0.2551987  -0.98124755   0.01685190
-b_discipline7  -0.2052947 0.3084714  -0.82202968   0.39547249
-b_discipline8  -0.9282086 0.2021736  -1.30406394  -0.50933218
-b_discipline9  -0.6836401 0.2417241  -1.15275190  -0.19146869
-lprior        -10.9170272 0.6403341 -12.53287370 -10.09886465
-lp__          -66.7215808 2.2400011 -71.96503646 -63.31210210</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot effects</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional_effects</span>(m1) <span class="sc">+</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Setting all 'trials' variables to 1 by default if not specified otherwise.</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Model each department independently and contrast</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dmod <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  tf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> x,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">applications =</span> <span class="dv">1</span>, </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(discipline, applications, gender)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  tm <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> x,</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">applications =</span> <span class="dv">1</span>, </span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(discipline, applications, gender)</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  pred_dept_female <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(m2, tf) <span class="sc">%&gt;%</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ppred =</span> <span class="fu">inv_logit</span>(.linpred))</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  pred_dept_male <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(m2, tm) <span class="sc">%&gt;%</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ppred =</span> <span class="fu">inv_logit</span>(.linpred))</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> x, </span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">ppred =</span> pred_dept_female<span class="sc">$</span>ppred <span class="sc">-</span> pred_dept_male<span class="sc">$</span>ppred)</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(c)</span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>dmod_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, dmod))</span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dmod_df, <span class="fu">aes</span>(<span class="at">x =</span> ppred, <span class="at">colour =</span> <span class="fu">as.factor</span>(discipline))) <span class="sc">+</span></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Gender contrast (F-M) by department"</span>, <span class="at">colour =</span> <span class="st">"Discipline"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="homework-05_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Simulate </span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># number of applicatons to simulate</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>total_apps <span class="ot">&lt;-</span> <span class="fu">sum</span>(df<span class="sc">$</span>applications)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># number of applications per department</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>apps_per_dept <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span> , <span class="cf">function</span>(i) <span class="fu">sum</span>(df<span class="sc">$</span>applications[df<span class="sc">$</span>discipline<span class="sc">==</span>i]) )</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># female dataset </span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>dff <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">times =</span> apps_per_dept),</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">applications =</span> <span class="fu">rep</span>(<span class="dv">1</span>, total_apps), </span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">rep</span>(<span class="dv">1</span>, total_apps)) <span class="sc">%&gt;%</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(discipline, applications, gender)</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co"># male dataset</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">times =</span> apps_per_dept),</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">applications =</span> <span class="fu">rep</span>(<span class="dv">1</span>, total_apps), </span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">rep</span>(<span class="dv">2</span>, total_apps)) <span class="sc">%&gt;%</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(discipline, applications, gender)</span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate as if all apps from each gender respectively</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>pred_female <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(m2, dff) <span class="sc">%&gt;%</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ppred =</span> <span class="fu">inv_logit</span>(.linpred))</span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>pred_male <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(m2, dfm) <span class="sc">%&gt;%</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ppred =</span> <span class="fu">inv_logit</span>(.linpred))</span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>c2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ppred =</span> pred_female<span class="sc">$</span>ppred <span class="sc">-</span> pred_male<span class="sc">$</span>ppred)</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(c2, <span class="fu">aes</span>(ppred)) <span class="sc">+</span> </span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Contrast F-M (marginal)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="homework-05_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table (logit)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          Estimate Est.Error        Q2.5         Q97.5
+b_Intercept            -1.08916852 0.2321708  -1.5472449 -6.446542e-01
+b_gender2               0.31807748 0.2622164  -0.2122169  8.302995e-01
+b_discipline2          -0.66852157 0.3206118  -1.2906439 -4.331076e-02
+b_discipline3          -0.36361403 0.2921276  -0.9262881  2.163703e-01
+b_discipline4          -0.27037303 0.3296643  -0.9273744  3.550838e-01
+b_discipline5          -0.95636591 0.2900080  -1.5086518 -3.796808e-01
+b_discipline6          -0.17991066 0.3977730  -0.9802213  5.637761e-01
+b_discipline7          -0.18012967 0.5624323  -1.3039927  8.828957e-01
+b_discipline8          -0.93895603 0.2708121  -1.4639436 -4.030828e-01
+b_discipline9          -0.29017909 0.3567557  -0.9958118  3.987583e-01
+b_gender2:discipline2   0.25661678 0.3748470  -0.4641953  1.000714e+00
+b_gender2:discipline3  -0.67792514 0.3516304  -1.3710119  4.594452e-05
+b_gender2:discipline4  -1.03164339 0.4330488  -1.8812883 -1.827009e-01
+b_gender2:discipline5   0.21784082 0.3461980  -0.4550456  8.927343e-01
+b_gender2:discipline6  -0.52034230 0.4488518  -1.3813462  3.860632e-01
+b_gender2:discipline7  -0.13567909 0.5863208  -1.2873476  1.036001e+00
+b_gender2:discipline8  -0.02141044 0.3252919  -0.6658650  6.178296e-01
+b_gender2:discipline9  -0.63238008 0.4127721  -1.4441915  1.592195e-01
+lprior                -22.86412838 1.2830461 -25.7406533 -2.074418e+01
+lp__                  -73.47038277 2.9541246 -80.1294901 -6.879286e+01</code></pre>
 </div>
-<p>We see departments having a consistent negative effect - which makes sense re: why the effect is so strong. HOWEVER, this is so different than Richard’s answers……… WHY</p>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot effects</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional_effects</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting all 'trials' variables to 1 by default if not specified otherwise.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-5-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-5-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Model each department independently and contrast</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dmod <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  tf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> x,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">applications =</span> <span class="dv">1</span>, </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(discipline, applications, gender)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  tm <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> x,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">applications =</span> <span class="dv">1</span>, </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(discipline, applications, gender)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  pred_dept_female <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(m2, tf) <span class="sc">%&gt;%</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ppred =</span> <span class="fu">inv_logit</span>(.linpred))</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  pred_dept_male <span class="ot">&lt;-</span> <span class="fu">linpred_draws</span>(m2, tm) <span class="sc">%&gt;%</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ppred =</span> <span class="fu">inv_logit</span>(.linpred))</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">discipline =</span> x, </span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">ppred =</span> pred_dept_female<span class="sc">$</span>ppred <span class="sc">-</span> pred_dept_male<span class="sc">$</span>ppred)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(c)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>dmod_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, dmod))</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dmod_df, <span class="fu">aes</span>(<span class="at">x =</span> ppred, <span class="at">colour =</span> <span class="fu">as.factor</span>(discipline))) <span class="sc">+</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Gender contrast (F-M) by department"</span>, <span class="at">colour =</span> <span class="st">"Discipline"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-5-8.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Simulate </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>apps_per_dept <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(discipline) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">applications =</span> <span class="fu">sum</span>(applications))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate as if all applications are from males</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>dff <span class="ot">&lt;-</span> apps_per_dept <span class="sc">%&gt;%</span> </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(applications) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applications =</span> 1L)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate as if all applications are from females</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> apps_per_dept <span class="sc">%&gt;%</span> </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(applications) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applications =</span> 1L) <span class="co"># </span><span class="al">TODO</span><span class="co">: ask group why set applications to 1?</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>marg_eff <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">add_epred_draws</span>(dff, m2),</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">add_epred_draws</span>(dfm, m2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"gender"</span>, <span class="at">values_from =</span> <span class="st">".epred"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">female =</span> <span class="st">"1"</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">male =</span> <span class="st">"2"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">contrast =</span> female <span class="sc">-</span> male)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(marg_eff, <span class="fu">aes</span>(contrast)) <span class="sc">+</span> </span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Contrast F-M (marginal)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-5-9.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Effect size and direction varies widely across departments - leading to a direct effect of gender having a very wide spread, with most of the density showing a disadvantage towards women but some notable exceptions. <strong>Does stan/rethinking automatically assume interaction effects?</strong></p>
 </section>
 <section id="question-3-considering-the-total-effect-problem-1-and-direct-effect-problem-2-of-gender-what-causes-contribute-to-the-average-difference-between-women-and-men-in-award-rate-in-this-sample-it-is-not-necessary-to-say-whether-or-not-there-is-evidence-of-discrimination-or-the-presence-or-absence-of-unobserved-confounds-which-are-likely.-simply-explain-how-the-direct-effects-you-have-estimated-make-sense-or-not-of-the-total-effect." class="level4">
 <h4 class="anchored" data-anchor-id="question-3-considering-the-total-effect-problem-1-and-direct-effect-problem-2-of-gender-what-causes-contribute-to-the-average-difference-between-women-and-men-in-award-rate-in-this-sample-it-is-not-necessary-to-say-whether-or-not-there-is-evidence-of-discrimination-or-the-presence-or-absence-of-unobserved-confounds-which-are-likely.-simply-explain-how-the-direct-effects-you-have-estimated-make-sense-or-not-of-the-total-effect.">Question 3: Considering the total effect (problem 1) and direct effect (problem 2) of gender, what causes contribute to the average difference between women and men in award rate in this sample? It is not necessary to say whether or not there is evidence of discrimination or the presence or absence of unobserved confounds (which are likely!). Simply explain how the direct effects you have estimated make sense (or not) of the total effect.</h4>
+<p>We see that gender has a total effect of ~ 3% discrimination, and the model also shows that there is an effect of department - so the effect of gender acting through department is also important. We can plot this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate percent of each discipline that is male/female </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_f =</span> <span class="fu">sum</span>(applications[gender <span class="sc">==</span> <span class="dv">1</span>]),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">total_m =</span> <span class="fu">sum</span>(applications[gender <span class="sc">==</span> <span class="dv">2</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(discipline) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">pDF =</span> <span class="fu">sum</span>(applications[gender <span class="sc">==</span> <span class="dv">1</span>])<span class="sc">/</span>total_f,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">pDM =</span> <span class="fu">sum</span>(applications[gender <span class="sc">==</span> <span class="dv">2</span>])<span class="sc">/</span>total_m,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">nApp =</span> <span class="fu">sum</span>(applications),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">nAwa =</span> <span class="fu">sum</span>(awards),</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">pAwa =</span> nAwa<span class="sc">/</span>nApp) <span class="sc">%&gt;%</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+dplyr 1.1.0.
+ℹ Please use `reframe()` instead.
+ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+  always returns an ungrouped data frame and adjust accordingly.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'discipline'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_grid</span>(gender, discipline, applications) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_linpred_draws</span>(m2) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>.row) <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(gender, .linpred) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">female =</span> <span class="st">'1'</span>, </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">male =</span> <span class="st">'2'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(discipline) <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_pFA =</span> <span class="fu">mean</span>(<span class="fu">inv_logit_scaled</span>(female)), </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_pMA =</span> <span class="fu">mean</span>(<span class="fu">inv_logit_scaled</span>(male))) <span class="sc">%&gt;%</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">award_dominant =</span> <span class="fu">if_else</span>(mean_pMA <span class="sc">&gt;</span> mean_pFA, <span class="st">"male"</span>, <span class="st">"female"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>discipline)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>full <span class="ot">&lt;-</span> <span class="fu">cbind</span>(t, post)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(full) <span class="sc">+</span> </span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> pDF, <span class="at">y =</span> pDM, <span class="at">colour =</span> award_dominant)) <span class="sc">+</span> </span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">slope =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> pDF, <span class="at">y =</span> pDM, <span class="at">label =</span> <span class="fu">round</span>(pAwa, <span class="dv">2</span>)), <span class="at">check_overlap =</span> T) <span class="sc">+</span> </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="homework-05_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Below the line, there relatively larger proportion of women applied to the disciplines below the diagonal line. Numbers represent award success rates. Colours correspond to which gender receives more awards.</p>
 </section>
 <section id="question-4-the-data-in-dataufclefties-are-the-outcomes-of-205-ultimate-fighting-championship-ufc-matches-see-ufclefties-for-details.-it-is-widely-believed-that-left-handed-fighters-aka-southpaws-have-an-advantage-against-right-handed-fighters-and-left-handed-men-are-indeed-over-represented-among-fighters-and-fencers-and-tennis-players-compared-to-the-general-population.-estimate-the-average-advantage-if-any-that-a-left-handed-fighter-has-against-right-handed-fighters.-based-upon-your-estimate-why-do-you-think-left-handers-are-over-represented-among-ufc-fighters" class="level4">
 <h4 class="anchored" data-anchor-id="question-4-the-data-in-dataufclefties-are-the-outcomes-of-205-ultimate-fighting-championship-ufc-matches-see-ufclefties-for-details.-it-is-widely-believed-that-left-handed-fighters-aka-southpaws-have-an-advantage-against-right-handed-fighters-and-left-handed-men-are-indeed-over-represented-among-fighters-and-fencers-and-tennis-players-compared-to-the-general-population.-estimate-the-average-advantage-if-any-that-a-left-handed-fighter-has-against-right-handed-fighters.-based-upon-your-estimate-why-do-you-think-left-handers-are-over-represented-among-ufc-fighters">Question 4: The data in data(UFClefties) are the outcomes of 205 Ultimate Fighting Championship (UFC) matches (see ?UFClefties for details). It is widely believed that left-handed fighters (aka “Southpaws”) have an advantage against right-handed fighters, and left-handed men are indeed over-represented among fighters (and fencers and tennis players) compared to the general population. Estimate the average advantage, if any, that a left-handed fighter has against right-handed fighters. Based upon your estimate, why do you think left-handers are over-represented among UFC fighters?</h4>
