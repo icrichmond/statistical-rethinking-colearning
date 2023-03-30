@@ -509,15 +509,15 @@ lp__                  -73.47038277 2.9541246 -80.1294901 -6.879286e+01</code></p
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate as if all applications are from males</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>dff <span class="ot">&lt;-</span> apps_per_dept <span class="sc">%&gt;%</span> </span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(applications) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(applications) <span class="sc">%&gt;%</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applications =</span> 1L)</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate as if all applications are from females</span></span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> apps_per_dept <span class="sc">%&gt;%</span> </span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(applications) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applications =</span> 1L) <span class="co"># </span><span class="al">TODO</span><span class="co">: ask group why set applications to 1?</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(applications) <span class="sc">%&gt;%</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">applications =</span> 1L)</span>
 <span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>marg_eff <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">add_epred_draws</span>(dff, m2),</span>
 <span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">add_epred_draws</span>(dfm, m2)) <span class="sc">%&gt;%</span> </span>
@@ -534,7 +534,7 @@ lp__                  -73.47038277 2.9541246 -80.1294901 -6.879286e+01</code></p
 <p><img src="homework-05_files/figure-html/unnamed-chunk-5-9.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Effect size and direction varies widely across departments - leading to a direct effect of gender having a very wide spread, with most of the density showing a disadvantage towards women but some notable exceptions. <strong>Does stan/rethinking automatically assume interaction effects?</strong></p>
+<p>Effect size and direction varies widely across departments - leading to a direct effect of gender having a very wide spread, with most of the density showing a disadvantage towards women but some notable exceptions.</p>
 </section>
 <section id="question-3-considering-the-total-effect-problem-1-and-direct-effect-problem-2-of-gender-what-causes-contribute-to-the-average-difference-between-women-and-men-in-award-rate-in-this-sample-it-is-not-necessary-to-say-whether-or-not-there-is-evidence-of-discrimination-or-the-presence-or-absence-of-unobserved-confounds-which-are-likely.-simply-explain-how-the-direct-effects-you-have-estimated-make-sense-or-not-of-the-total-effect." class="level4">
 <h4 class="anchored" data-anchor-id="question-3-considering-the-total-effect-problem-1-and-direct-effect-problem-2-of-gender-what-causes-contribute-to-the-average-difference-between-women-and-men-in-award-rate-in-this-sample-it-is-not-necessary-to-say-whether-or-not-there-is-evidence-of-discrimination-or-the-presence-or-absence-of-unobserved-confounds-which-are-likely.-simply-explain-how-the-direct-effects-you-have-estimated-make-sense-or-not-of-the-total-effect.">Question 3: Considering the total effect (problem 1) and direct effect (problem 2) of gender, what causes contribute to the average difference between women and men in award rate in this sample? It is not necessary to say whether or not there is evidence of discrimination or the presence or absence of unobserved confounds (which are likely!). Simply explain how the direct effects you have estimated make sense (or not) of the total effect.</h4>
