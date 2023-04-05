@@ -14,7 +14,7 @@ library(rethinking)
 library(ggplot2)
 ```
 
-#### Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.
+## Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.
 
 ```{r}
 #| label: q1
@@ -64,7 +64,7 @@ ggplot() +
 
 ```
 
-#### Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.
+## Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.
 
 ```{r}
 #| label: q2
@@ -98,7 +98,7 @@ ggplot(pred_post_df, aes(as.factor(pred_post), Freq)) +
 ```
 NOTE: Can also use `rbinom()` function instead of `sim_globe()` since there are only two possible outcomes.
 
-#### Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.  
+## Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.  
 
 We know that $$ p = \frac{ways}{sum(ways)} $$ Therefore, count the incidences of 3, 4, 5 in posterior predictive distribution from 2 and divide by total number of ways (1e4)
 
@@ -114,7 +114,7 @@ print(paste0("p = ", p_threeplus))
 
 ```
 
-#### Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don't know the number of land points L. Assume that *p* = 0.7 and compute the posterior distribution of the number of tosses *N*. Hint: Use the binomial distribution.
+## Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don't know the number of land points L. Assume that *p* = 0.7 and compute the posterior distribution of the number of tosses *N*. Hint: Use the binomial distribution.
 
 Before, we were solving for *p* using $$ p^W(1-p)^L $$ Which was a beta distribution because p was a continuous variable bound between 0,1. Now we want to solve for *N*, with W and *p*. We have a success/fail dataset, with a probability of success, therefore we use the binomial distribution. We need to calculate the probability of 0-5 *N*'s resulting in 5 successes (W).
 
