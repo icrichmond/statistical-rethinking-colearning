@@ -33,9 +33,8 @@ p01_draws <- prior_draws(tar_read(prior_0.1)) %>%
 p10_draws <- prior_draws(tar_read(prior_10)) %>%
   mutate(prior = "10",
          Intercept_p = inv_logit_scaled(Intercept))
-
 p100_draws <- prior_draws(tar_read(prior_100)) %>%
-  mutate(prior = "10",
+  mutate(prior = "100",
          Intercept_p = inv_logit_scaled(Intercept))
 
 draws <- rbind(p1_draws, p10_draws, p100_draws)
@@ -47,12 +46,18 @@ ggplot(draws, aes(x = Intercept_p)) +
 
 ```
 
-Simulating from the prior 0.1 did not allow the model to succeed due to the too-strict constraints. When looking at what that "flat" prior looks like under this distribution via Richard's homework, we see that all the probability is bunched at either tail, which is probably why the model fails to start. There is no significant difference between priors 1 and 10 for sigma as plotted above.
+Simulating from the prior 0.1 did not allow the model to succeed because `brms` interprets it as Exponential(0) (which is impossible). When looking at what the Exponential(0.1) prior looks like under this distribution via Richard's homework, we see that all the probability is bunched at either tail. There is no real difference between priors 1-100 for sigma as plotted above.
+
 
 ## Question 2: Revisit the Reedfrog survival data, `data(reedfrogs)`. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.
 
+
+
+
+
 ## Question 3: Now estimate the causal effect of `density` on survival. Consider whether pred modifies the effect of `density`. There are several good ways to include density in your Binomial GLM. You could treat it as a continuous regression variable (possibly standardized). Or you could convert it to an ordered category (with three levels). Compare the σ (tank standard deviation) posterior distribution to σ from your model in Problem 2. How are they different? Why?
 
-## Question 4: Return to the Trolley data, `data(Trolley)`, from
-Chapter 12. Define and fit a varying intercepts model for these data. By this I mean to add an intercept parameter for the individual participants to the linear model. Cluster the varying intercepts on individual participants, as indicated by the unique
-values in the `id` variable. Include `action`, `intention`, and `contact` as treatment effects of interest. Compare the varying intercepts model and a model that ignores individuals. What is the impact of individual variation in these data?
+
+
+
+## Question 4: Return to the Trolley data, `data(Trolley)`, from Chapter 12. Define and fit a varying intercepts model for these data. By this I mean to add an intercept parameter for the individual participants to the linear model. Cluster the varying intercepts on individual participants, as indicated by the unique values in the `id` variable. Include `action`, `intention`, and `contact` as treatment effects of interest. Compare the varying intercepts model and a model that ignores individuals. What is the impact of individual variation in these data?
