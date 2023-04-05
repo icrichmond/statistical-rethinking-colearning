@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Isabella C. Richmond">
-<meta name="dcterms.date" content="2023-02-08">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 03 - Geocentric Models</title>
+<title>Statistical Rethinking colearning 2023 - Bella - Homework - Week 06</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -136,7 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Lecture 03 - Geocentric Models</h1>
+      <h1 class="quarto-secondary-nav-title">Homework - Week 06</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -207,7 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-06.html" class="sidebar-item-text sidebar-link">Homework - Week 06</a>
+  <a href="../homework/homework-06.html" class="sidebar-item-text sidebar-link active">Homework - Week 06</a>
   </div>
 </li>
       </ul>
@@ -232,7 +231,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link active">Lecture 03 - Geocentric Models</a>
+  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">Lecture 03 - Geocentric Models</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -296,13 +295,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
-  <li><a href="#linear-regressions" id="toc-linear-regressions" class="nav-link" data-scroll-target="#linear-regressions">Linear Regressions</a></li>
-  <li><a href="#gaussian-distributions" id="toc-gaussian-distributions" class="nav-link" data-scroll-target="#gaussian-distributions">Gaussian Distributions</a></li>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow">Workflow</a></li>
-  <li><a href="#describing-models" id="toc-describing-models" class="nav-link" data-scroll-target="#describing-models">Describing Models</a></li>
-  <li><a href="#howell-example" id="toc-howell-example" class="nav-link" data-scroll-target="#howell-example">Howell Example</a></li>
-  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo">TODO:</a></li>
+  <li><a href="#question-1-conduct-a-prior-predictive-simulation-for-the-reedfrog-model.-by-this-i-mean-to-simulate-the-prior-distribution-of-tank-survival-probabilities-αj.-start-by-using-this-prior-below.-be-sure-to-transform-the-αj-values-to-the-probability-scale-for-plotting-and-summary.-how-does-increasing-the-width-of-the-prior-on-σ-change-the-prior-distribution-of-αj-you-might-try-exponential10-and-exponential0.1-for-example." id="toc-question-1-conduct-a-prior-predictive-simulation-for-the-reedfrog-model.-by-this-i-mean-to-simulate-the-prior-distribution-of-tank-survival-probabilities-αj.-start-by-using-this-prior-below.-be-sure-to-transform-the-αj-values-to-the-probability-scale-for-plotting-and-summary.-how-does-increasing-the-width-of-the-prior-on-σ-change-the-prior-distribution-of-αj-you-might-try-exponential10-and-exponential0.1-for-example." class="nav-link active" data-scroll-target="#question-1-conduct-a-prior-predictive-simulation-for-the-reedfrog-model.-by-this-i-mean-to-simulate-the-prior-distribution-of-tank-survival-probabilities-αj.-start-by-using-this-prior-below.-be-sure-to-transform-the-αj-values-to-the-probability-scale-for-plotting-and-summary.-how-does-increasing-the-width-of-the-prior-on-σ-change-the-prior-distribution-of-αj-you-might-try-exponential10-and-exponential0.1-for-example.">Question 1: Conduct a prior predictive simulation for the Reedfrog model. By this I mean to simulate the prior distribution of tank survival probabilities αj. Start by using this prior (below). Be sure to transform the αj values to the probability scale for plotting and summary. How does increasing the width of the prior on σ change the prior distribution of αj? You might try Exponential(10) and Exponential(0.1) for example.</a></li>
+  <li><a href="#question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment." id="toc-question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment." class="nav-link" data-scroll-target="#question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment.">Question 2: Revisit the Reedfrog survival data, <code>data(reedfrogs)</code>. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.</a></li>
+  <li><a href="#question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why" id="toc-question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why" class="nav-link" data-scroll-target="#question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why">Question 3: Now estimate the causal effect of <code>density</code> on survival. Consider whether pred modifies the effect of <code>density</code>. There are several good ways to include density in your Binomial GLM. You could treat it as a continuous regression variable (possibly standardized). Or you could convert it to an ordered category (with three levels). Compare the σ (tank standard deviation) posterior distribution to σ from your model in Problem 2. How are they different? Why?</a></li>
+  <li><a href="#question-4-return-to-the-trolley-data-datatrolley-from" id="toc-question-4-return-to-the-trolley-data-datatrolley-from" class="nav-link" data-scroll-target="#question-4-return-to-the-trolley-data-datatrolley-from">Question 4: Return to the Trolley data, <code>data(Trolley)</code>, from</a></li>
   </ul>
 </nav>
     </div>
@@ -311,7 +307,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Lecture 03 - Geocentric Models</h1>
+<h1 class="title d-none d-lg-block">Homework - Week 06</h1>
 </div>
 
 
@@ -325,12 +321,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
   </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">February 8, 2023</p>
-    </div>
-  </div>
   
     
   </div>
@@ -338,238 +328,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="rose-thorn" class="level2">
-<h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
-<p><em>Rose:</em> flow reminder! Retrograde explanation</p>
-<p><em>Thorn:</em> installing rethinking on windows</p>
-</section>
-<section id="linear-regressions" class="level2">
-<h2 class="anchored" data-anchor-id="linear-regressions">Linear Regressions</h2>
-<ul>
-<li>essentially a geocentric model - overly simplified</li>
-<li>separate from a causal model</li>
-<li>associations are from the causal model, not the statistical model</li>
-</ul>
-</section>
-<section id="gaussian-distributions" class="level2">
-<h2 class="anchored" data-anchor-id="gaussian-distributions">Gaussian Distributions</h2>
-<ul>
-<li>there are many more ways to end up in the center than to end up on the periphery</li>
-<li>why the Gaussian distribution spontaneously occurs in natural systems</li>
-<li><strong>generative</strong>: if we add fluctuations, we tend towards normal distribution (lots of summed fluctuations in nature)</li>
-<li><strong>inferential</strong>: estimating mean and variance, normal distribution is best one to use because it is least informative (no other information present)</li>
-<li>normal distribution is just a tool for estimating mean/variance because it has widest distribution
-<ul>
-<li>data doesn’t have to be normal to be able to leverage the tool to estimate mean/variance</li>
-</ul></li>
-</ul>
-</section>
-<section id="workflow" class="level2">
-<h2 class="anchored" data-anchor-id="workflow">Workflow</h2>
-<ol type="1">
-<li>State a clear question</li>
-<li>Sketch causal assumptions</li>
-<li>Define generative model from sketch</li>
-<li>Use generative model to build estimator</li>
-<li>Profit</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Howell1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="describing-models" class="level2">
-<h2 class="anchored" data-anchor-id="describing-models">Describing Models</h2>
+<section id="question-1-conduct-a-prior-predictive-simulation-for-the-reedfrog-model.-by-this-i-mean-to-simulate-the-prior-distribution-of-tank-survival-probabilities-αj.-start-by-using-this-prior-below.-be-sure-to-transform-the-αj-values-to-the-probability-scale-for-plotting-and-summary.-how-does-increasing-the-width-of-the-prior-on-σ-change-the-prior-distribution-of-αj-you-might-try-exponential10-and-exponential0.1-for-example." class="level2">
+<h2 class="anchored" data-anchor-id="question-1-conduct-a-prior-predictive-simulation-for-the-reedfrog-model.-by-this-i-mean-to-simulate-the-prior-distribution-of-tank-survival-probabilities-αj.-start-by-using-this-prior-below.-be-sure-to-transform-the-αj-values-to-the-probability-scale-for-plotting-and-summary.-how-does-increasing-the-width-of-the-prior-on-σ-change-the-prior-distribution-of-αj-you-might-try-exponential10-and-exponential0.1-for-example.">Question 1: Conduct a prior predictive simulation for the Reedfrog model. By this I mean to simulate the prior distribution of tank survival probabilities αj. Start by using this prior (below). Be sure to transform the αj values to the probability scale for plotting and summary. How does increasing the width of the prior on σ change the prior distribution of αj? You might try Exponential(10) and Exponential(0.1) for example.</h2>
 <p><span class="math display">\[
-W_{i}= \beta H_{i} + U_{i}
-\]</span></p>
-<p><span class="math display">\[
-U_{i} \sim Normal(0, \sigma)
-\]</span></p>
-<p><span class="math display">\[
-H_{i} \sim Uniform(130, 170)
-\]</span></p>
-<ul>
-<li><p>= is deterministic</p></li>
-<li><p>~ is distributional</p></li>
-</ul>
+\alpha_j \sim Normal(\overline{\alpha}, \sigma)
+\\
+\overline{\alpha} \sim Normal(0, 1)
+\\
+\sigma \sim Exponential(1)
+\]</span> To make a prior predictive simulation in <code>brms</code>, I can build the model and then sample only from the priors. This just requires me to build the model as I normally would:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"reedfrogs"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> reedfrogs <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tank =</span> <span class="fu">row_number</span>())</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>p1_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_1)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"1"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intercept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>p01_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_0<span class="fl">.1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"0.1"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intecept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>p10_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_10)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"10"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intercept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>p100_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_100)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"10"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intercept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">rbind</span>(p1_draws, p10_draws, p100_draws)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(draws, <span class="fu">aes</span>(<span class="at">x =</span> Intercept_p)) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Simulating from the prior 0.1 did not allow the model to succeed due to the too-strict constraints. When looking at what that “flat” prior looks like under this distribution via Richard’s homework, we see that all the probability is bunched at either tail, which is probably why the model fails to start. There is no significant difference between priors 1 and 10 for sigma as plotted above.</p>
 </section>
-<section id="howell-example" class="level2">
-<h2 class="anchored" data-anchor-id="howell-example">Howell Example</h2>
-<ol type="1">
-<li>Question: Describe association between <strong>adult</strong> weight and height</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> Howell1[Howell1<span class="sc">$</span>age<span class="sc">&gt;=</span><span class="dv">18</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="2" type="1">
-<li>Scientific model: weight is some function of height and unobserved influences</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">                H -&gt; W</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">                U -&gt; W</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">             }"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">drawdag</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p><span class="math display">\[
-W = f(H, U)
-\]</span></p>
-<ol start="3" type="1">
-<li>Generative/Statistical model</li>
-</ol>
-<ul>
-<li><p>Two options: dynamic (complex and ongoing) and <strong>static</strong></p>
-<ul>
-<li>Static model allows us to imagine changes at specific times and still use a Gaussian distribution</li>
-</ul></li>
-<li><p>For adults, weight is a proportion of height plus the influence of unobserved causes</p></li>
-</ul>
-<p><span class="math display">\[
-W = \beta H+U
-\]</span></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sim_weight <span class="ot">&lt;-</span> <span class="cf">function</span>(H, b, sd){</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  U <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(H), <span class="dv">0</span>, sd)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> b<span class="sc">*</span>H <span class="sc">+</span> U</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(W)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="at">min =</span> <span class="dv">130</span>, <span class="at">max =</span> <span class="dv">170</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sim_weight</span>(H, <span class="at">b =</span> <span class="fl">0.5</span>, <span class="at">sd =</span> <span class="dv">5</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(W <span class="sc">~</span> H, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<ul>
-<li><p>we want to estimate how the average weight changes with height</p>
-<p><span class="math display">\[
-E(W_{i}|H_{i}) = \alpha + \beta H_{i}
-\]</span></p></li>
-<li><p><span class="math inline">\(E(W_{i}|H_{i})\)</span> = average weight conditional on height</p></li>
-<li><p><span class="math inline">\(\alpha\)</span> = intercept (when height is 0, what is weight? Scientifically should be zero but putting it in model to make sure our model is scientifically sound)</p></li>
-<li><p><span class="math inline">\(\beta\)</span> = slope</p></li>
-<li><p>Posterior distribution:</p>
-<ul>
-<li><p><span class="math display">\[
-Pr(\alpha,\beta,\sigma| H_{i}, W_{i}) = \frac{Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)Pr(\alpha,\beta,\sigma)}{Z}
-\]</span></p></li>
-<li><p><span class="math inline">\(W_{i} \sim Normal(\mu _{i}), \sigma)\)</span></p></li>
-<li><p><span class="math inline">\(\mu _{i} = \alpha + \beta H_{i}\)</span></p></li>
-<li><p>alpha, sigma, beta are unknown so we need a posterior distribution for them (and they are dependent on the data)</p></li>
-<li><p><span class="math inline">\(Pr(\alpha,\beta,\sigma| H_{i}, W_{i})\)</span> = posterior probability of specific line</p></li>
-<li><p><span class="math inline">\(Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)\)</span> = probability of each weight dependent on height value, alpha, beta, sigma</p></li>
-<li><p><span class="math inline">\(Pr(\alpha,\beta,\sigma)\)</span> = prior</p></li>
-</ul></li>
-</ul>
-<p><strong>Statistical Model</strong></p>
-<ul>
-<li><p>Quadratic approximation</p>
-<ul>
-<li><p><span class="math inline">\(W_{i} \sim Normal(\mu _{i}), \sigma)\)</span></p></li>
-<li><p><span class="math inline">\(\mu _{i} = \alpha + \beta H_{i}\)</span></p></li>
-<li><p><span class="math inline">\(\alpha \sim Normal(0,10)\)</span></p></li>
-<li><p><span class="math inline">\(\beta \sim Uniform(0,1)\)</span></p></li>
-<li><p><span class="math inline">\(\sigma \sim Uniform(0, 10)\)</span></p></li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m3<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b<span class="sc">*</span>H,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> <span class="fu">list</span>(<span class="at">W=</span>W, <span class="at">H=</span>H))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ul>
-<li><p>Priors</p>
-<ul>
-<li>we want to constrain to scientifically plausible values</li>
-<li>justify with information outside the data - <strong>like the rest of model</strong></li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">130</span>, <span class="dv">170</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">90</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for (j in 1:50) abline(a=a[j], b=b[j])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="4" type="1">
-<li>Validate model</li>
-</ol>
-<ul>
-<li><p>test statistical model with simulated observations from scientific model - need to test if your model is working</p></li>
-<li><p>use many values and make sure your model responds appropriately</p></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model summary</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>            mean         sd        5.5%     94.5%
-a     -4.6771142 4.40019042 -11.7094683 2.3552400
-b      0.5271831 0.02894353   0.4809258 0.5734405
-sigma  4.8698201 0.24359394   4.4805099 5.2591302</code></pre>
-</div>
-</div>
-<ol start="5" type="1">
-<li>Analyze data</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">W =</span> d2<span class="sc">$</span>weight, <span class="at">H =</span> d2<span class="sc">$</span>height)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m3<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b<span class="sc">*</span>H,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">10</span>), </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  b <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>             mean         sd        5.5%       94.5%
-a     -42.4084573 4.15372526 -49.0469126 -35.7700021
-b       0.5654931 0.02684043   0.5225969   0.6083893
-sigma   4.2213491 0.15880539   3.9675474   4.4751508</code></pre>
-</div>
-</div>
-<ul>
-<li><p>parameters are not independent of one another, they cannot be independently interpreted</p>
-<ul>
-<li>use posterior predictions and describe/interpret those by sampling the posterior distribution</li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m3<span class="fl">.2</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d2<span class="sc">$</span>height, d2<span class="sc">$</span>weight)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#for (j in 1:20)</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  abline(a=post$a[j], b=post$b[j])</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>height_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">130</span>, <span class="dv">190</span>, <span class="at">len =</span> <span class="dv">20</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>W_postpred <span class="ot">&lt;-</span> <span class="fu">sim</span>(m3<span class="fl">.2</span>, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">H=</span>height_seq))</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>W_PI <span class="ot">&lt;-</span> <span class="fu">apply</span>(W_postpred, <span class="dv">2</span>, PI)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(height_seq, W_PI[<span class="dv">1</span>,])</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(height_seq, W_PI[<span class="dv">2</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="notes-03_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<section id="question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment." class="level2">
+<h2 class="anchored" data-anchor-id="question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment.">Question 2: Revisit the Reedfrog survival data, <code>data(reedfrogs)</code>. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.</h2>
 </section>
-<section id="todo" class="level2">
-<h2 class="anchored" data-anchor-id="todo">TODO:</h2>
-<ul>
-<li>figure out plot erroring</li>
-</ul>
+<section id="question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why" class="level2">
+<h2 class="anchored" data-anchor-id="question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why">Question 3: Now estimate the causal effect of <code>density</code> on survival. Consider whether pred modifies the effect of <code>density</code>. There are several good ways to include density in your Binomial GLM. You could treat it as a continuous regression variable (possibly standardized). Or you could convert it to an ordered category (with three levels). Compare the σ (tank standard deviation) posterior distribution to σ from your model in Problem 2. How are they different? Why?</h2>
+</section>
+<section id="question-4-return-to-the-trolley-data-datatrolley-from" class="level2">
+<h2 class="anchored" data-anchor-id="question-4-return-to-the-trolley-data-datatrolley-from">Question 4: Return to the Trolley data, <code>data(Trolley)</code>, from</h2>
+<p>Chapter 12. Define and fit a varying intercepts model for these data. By this I mean to add an intercept parameter for the individual participants to the linear model. Cluster the varying intercepts on individual participants, as indicated by the unique values in the <code>id</code> variable. Include <code>action</code>, <code>intention</code>, and <code>contact</code> as treatment effects of interest. Compare the varying intercepts model and a model that ignores individuals. What is the impact of individual variation in these data?</p>
 
 
 </section>

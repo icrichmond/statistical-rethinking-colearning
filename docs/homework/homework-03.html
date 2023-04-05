@@ -203,6 +203,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="../homework/homework-05.html" class="sidebar-item-text sidebar-link">Homework - Week 05</a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-06.html" class="sidebar-item-text sidebar-link">Homework - Week 06</a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -285,7 +290,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag" id="toc-question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag" class="nav-link active" data-scroll-target="#question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag">Question 1: The first two problems are based on the same data. The data in <code>data(foxes)</code> are 116 foxes from 30 different urban groups in England. These fox groups are like street gangs. Group size (<code>groupsize</code>) varies from 2 to 8 individuals. Each group maintains its own (almost exclusive) urban territory. Some territories are larger than others. The <code>area</code> variable encodes this information. Some territories also have more <code>avgfood</code> than others. And food influences the <code>weight</code> of each fox. Assume this DAG:</a></li>
+  <li><a href="#where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it" id="toc-where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it" class="nav-link" data-scroll-target="#where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it">where <em>F</em> is <code>avgfood</code>, <em>G</em> is <code>groupsize</code>, <em>A</em> is <code>area</code>, and <em>W</em> is <code>weight</code>. Use the backdoor criterion and estimate the total causa influence of <em>A</em> on <em>F</em>. What effect would increasing the territory have on the amount of food inside of it?</a></li>
+  <li><a href="#question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food" id="toc-question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food" class="nav-link" data-scroll-target="#question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food">Question 2: Infer the <strong>total</strong> causal effect of adding food, <em>F</em>, to a territory on the weight <em>W</em> of foxes. Can you calculate the causal effect by simulating an intervention on food?</a></li>
+  <li><a href="#question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes" id="toc-question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes" class="nav-link" data-scroll-target="#question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes">Question 3: Infer the <strong>direct</strong> causal effect of adding food <em>F</em> to a territory on the weight <em>W</em> of foxes. In light of your estimates from this problem and the previous one, what do you think is going on with these foxes?</a></li>
+  <li><a href="#question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this" id="toc-question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this" class="nav-link" data-scroll-target="#question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this">Question 4: Suppose there is an unovserved confound that influences <em>F</em> and <em>G</em>, like this:</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -313,16 +328,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag" class="level4">
-<h4 class="anchored" data-anchor-id="question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag">Question 1: The first two problems are based on the same data. The data in <code>data(foxes)</code> are 116 foxes from 30 different urban groups in England. These fox groups are like street gangs. Group size (<code>groupsize</code>) varies from 2 to 8 individuals. Each group maintains its own (almost exclusive) urban territory. Some territories are larger than others. The <code>area</code> variable encodes this information. Some territories also have more <code>avgfood</code> than others. And food influences the <code>weight</code> of each fox. Assume this DAG:</h4>
+<section id="question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag" class="level2">
+<h2 class="anchored" data-anchor-id="question-1-the-first-two-problems-are-based-on-the-same-data.-the-data-in-datafoxes-are-116-foxes-from-30-different-urban-groups-in-england.-these-fox-groups-are-like-street-gangs.-group-size-groupsize-varies-from-2-to-8-individuals.-each-group-maintains-its-own-almost-exclusive-urban-territory.-some-territories-are-larger-than-others.-the-area-variable-encodes-this-information.-some-territories-also-have-more-avgfood-than-others.-and-food-influences-the-weight-of-each-fox.-assume-this-dag">Question 1: The first two problems are based on the same data. The data in <code>data(foxes)</code> are 116 foxes from 30 different urban groups in England. These fox groups are like street gangs. Group size (<code>groupsize</code>) varies from 2 to 8 individuals. Each group maintains its own (almost exclusive) urban territory. Some territories are larger than others. The <code>area</code> variable encodes this information. Some territories also have more <code>avgfood</code> than others. And food influences the <code>weight</code> of each fox. Assume this DAG:</h2>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="homework-03_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-<section id="where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it" class="level4">
-<h4 class="anchored" data-anchor-id="where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it">where <em>F</em> is <code>avgfood</code>, <em>G</em> is <code>groupsize</code>, <em>A</em> is <code>area</code>, and <em>W</em> is <code>weight</code>. Use the backdoor criterion and estimate the total causa influence of <em>A</em> on <em>F</em>. What effect would increasing the territory have on the amount of food inside of it?</h4>
+<section id="where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it" class="level2">
+<h2 class="anchored" data-anchor-id="where-f-is-avgfood-g-is-groupsize-a-is-area-and-w-is-weight.-use-the-backdoor-criterion-and-estimate-the-total-causa-influence-of-a-on-f.-what-effect-would-increasing-the-territory-have-on-the-amount-of-food-inside-of-it">where <em>F</em> is <code>avgfood</code>, <em>G</em> is <code>groupsize</code>, <em>A</em> is <code>area</code>, and <em>W</em> is <code>weight</code>. Use the backdoor criterion and estimate the total causa influence of <em>A</em> on <em>F</em>. What effect would increasing the territory have on the amount of food inside of it?</h2>
 <p>Total causal effect of <em>A</em> on <em>F</em> is just F ~ A.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get data</span></span>
@@ -386,8 +401,8 @@ lp__        -81.05421568 1.23137877 -84.2317716 -79.64285592</code></pre>
 </div>
 <p>It looks like the effect of territory size on food availability is a strong positive relationship (remember to interpret this as standardized variables - so effect is stronger than it seems).</p>
 </section>
-<section id="question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food" class="level4">
-<h4 class="anchored" data-anchor-id="question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food">Question 2: Infer the <strong>total</strong> causal effect of adding food, <em>F</em>, to a territory on the weight <em>W</em> of foxes. Can you calculate the causal effect by simulating an intervention on food?</h4>
+<section id="question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food" class="level2">
+<h2 class="anchored" data-anchor-id="question-2-infer-the-total-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-can-you-calculate-the-causal-effect-by-simulating-an-intervention-on-food">Question 2: Infer the <strong>total</strong> causal effect of adding food, <em>F</em>, to a territory on the weight <em>W</em> of foxes. Can you calculate the causal effect by simulating an intervention on food?</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get data</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(foxes)</span>
@@ -469,8 +484,8 @@ lp__        -1.669784e+02 1.18241208 -169.9610070 -165.6210772</code></pre>
 </div>
 <p>We see that the <strong>total</strong> effect of food on weight is very slightly negative. Adding food would result in a small decrease in average weight. However, there is almost equal plausibility that it could be a positive effect as well and the effect is very small.</p>
 </section>
-<section id="question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes" class="level4">
-<h4 class="anchored" data-anchor-id="question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes">Question 3: Infer the <strong>direct</strong> causal effect of adding food <em>F</em> to a territory on the weight <em>W</em> of foxes. In light of your estimates from this problem and the previous one, what do you think is going on with these foxes?</h4>
+<section id="question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes" class="level2">
+<h2 class="anchored" data-anchor-id="question-3-infer-the-direct-causal-effect-of-adding-food-f-to-a-territory-on-the-weight-w-of-foxes.-in-light-of-your-estimates-from-this-problem-and-the-previous-one-what-do-you-think-is-going-on-with-these-foxes">Question 3: Infer the <strong>direct</strong> causal effect of adding food <em>F</em> to a territory on the weight <em>W</em> of foxes. In light of your estimates from this problem and the previous one, what do you think is going on with these foxes?</h2>
 <p>To assess the <strong>direct</strong> causal effect of adding food on fox weight, we need to stratify by group size. This means simply adding group size to the model.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get data</span></span>
@@ -572,20 +587,20 @@ lp__        -7.183364e+01 1.29035935 -75.16203115 -70.39871422</code></pre>
 </div>
 <p>Average food has a strong positive effect on group size. More food = larger groups = negative/minimal effect on weight.</p>
 </section>
-<section id="question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this" class="level4">
-<h4 class="anchored" data-anchor-id="question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this">Question 4: Suppose there is an unovserved confound that influences <em>F</em> and <em>G</em>, like this:</h4>
+<section id="question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this" class="level2">
+<h2 class="anchored" data-anchor-id="question-4-suppose-there-is-an-unovserved-confound-that-influences-f-and-g-like-this">Question 4: Suppose there is an unovserved confound that influences <em>F</em> and <em>G</em>, like this:</h2>
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="homework-03_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
 <section id="assuming-the-dag-above-is-correct-again-estimate-both-the-total-and-direct-causal-effects-of-f-on-w.-what-impact-does-the-unobserved-confound-have" class="level4">
 <h4 class="anchored" data-anchor-id="assuming-the-dag-above-is-correct-again-estimate-both-the-total-and-direct-causal-effects-of-f-on-w.-what-impact-does-the-unobserved-confound-have">Assuming the DAG above is correct, again estimate both the total and direct causal effects of <em>F</em> on <em>W</em>. What impact does the unobserved confound have?</h4>
 <p>Total effect: Impossible because to close backdoor path you need to stratify on G - then you are estimating the direct effect.</p>
 <p>Direct effect: Stratify by G.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

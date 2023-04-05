@@ -204,6 +204,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="../homework/homework-05.html" class="sidebar-item-text sidebar-link">Homework - Week 05</a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-06.html" class="sidebar-item-text sidebar-link">Homework - Week 06</a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -286,7 +291,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution." id="toc-question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution." class="nav-link active" data-scroll-target="#question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution.">Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.</a></li>
+  <li><a href="#question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method." id="toc-question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method." class="nav-link" data-scroll-target="#question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method.">Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.</a></li>
+  <li><a href="#question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses." id="toc-question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses." class="nav-link" data-scroll-target="#question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses.">Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.</a></li>
+  <li><a href="#question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution." id="toc-question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution." class="nav-link" data-scroll-target="#question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution.">Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don’t know the number of land points L. Assume that <em>p</em> = 0.7 and compute the posterior distribution of the number of tosses <em>N</em>. Hint: Use the binomial distribution.</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -317,8 +331,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 
 </div>
-<section id="question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution." class="level4">
-<h4 class="anchored" data-anchor-id="question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution.">Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.</h4>
+<section id="question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution." class="level2">
+<h2 class="anchored" data-anchor-id="question-1-suppose-the-globe-tossing-data-lecture-2-chapter-2-had-turned-out-to-be-4-water-and-11-land.-construct-the-posterior-distribution.">Question 1: Suppose the globe tossing data (Lecture 2, Chapter 2) had turned out to be 4 water and 11 land. Construct the posterior distribution.</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define how many tosses were W &amp; L</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="dv">4</span></span>
@@ -364,8 +378,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method." class="level4">
-<h4 class="anchored" data-anchor-id="question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method.">Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.</h4>
+<section id="question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method." class="level2">
+<h2 class="anchored" data-anchor-id="question-2-using-the-posterior-distribution-from-1-compute-the-posterior-predictive-distribution-for-the-next-5-tosses-of-the-same-globe.-i-recommend-you-use-the-sampling-method.">Question 2: Using the posterior distribution from 1, compute the posterior predictive distribution for the next 5 tosses of the same globe. I recommend you use the sampling method.</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample our posterior (beta distribution with 4 W, 11 L)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
@@ -397,8 +411,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>NOTE: Can also use <code>rbinom()</code> function instead of <code>sim_globe()</code> since there are only two possible outcomes.</p>
 </section>
-<section id="question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses." class="level4">
-<h4 class="anchored" data-anchor-id="question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses.">Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.</h4>
+<section id="question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses." class="level2">
+<h2 class="anchored" data-anchor-id="question-3-use-the-posterior-predictive-distribution-from-2-to-calculate-the-probability-of-3-or-more-water-samples-in-the-next-5-tosses.">Question 3: Use the posterior predictive distribution from 2 to calculate the probability of 3 or more water samples in the next 5 tosses.</h2>
 <p>We know that <span class="math display">\[ p = \frac{ways}{sum(ways)} \]</span> Therefore, count the incidences of 3, 4, 5 in posterior predictive distribution from 2 and divide by total number of ways (1e4)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p_threeplus <span class="ot">&lt;-</span> (<span class="fu">sum</span>(pred_post_df[<span class="fu">which</span>(pred_post_df[,<span class="dv">1</span>]<span class="sc">==</span><span class="dv">3</span> <span class="sc">|</span> pred_post_df[,<span class="dv">1</span>]<span class="sc">==</span><span class="dv">4</span> <span class="sc">|</span> </span>
@@ -406,12 +420,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"p = "</span>, p_threeplus))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "p = 0.1835"</code></pre>
+<pre><code>[1] "p = 0.1758"</code></pre>
 </div>
 </div>
 </section>
-<section id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution." class="level4">
-<h4 class="anchored" data-anchor-id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution.">Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don’t know the number of land points L. Assume that <em>p</em> = 0.7 and compute the posterior distribution of the number of tosses <em>N</em>. Hint: Use the binomial distribution.</h4>
+<section id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution." class="level2">
+<h2 class="anchored" data-anchor-id="question-4-suppose-you-observe-w-5-water-points-but-you-forgot-to-write-down-how-many-times-the-globe-was-tossed-so-you-dont-know-the-number-of-land-points-l.-assume-that-p-0.7-and-compute-the-posterior-distribution-of-the-number-of-tosses-n.-hint-use-the-binomial-distribution.">Question 4: Suppose you observe W = 5 water points, but you forgot to write down how many times the globe was tossed, so you don’t know the number of land points L. Assume that <em>p</em> = 0.7 and compute the posterior distribution of the number of tosses <em>N</em>. Hint: Use the binomial distribution.</h2>
 <p>Before, we were solving for <em>p</em> using <span class="math display">\[ p^W(1-p)^L \]</span> Which was a beta distribution because p was a continuous variable bound between 0,1. Now we want to solve for <em>N</em>, with W and <em>p</em>. We have a success/fail dataset, with a probability of success, therefore we use the binomial distribution. We need to calculate the probability of 0-5 <em>N</em>’s resulting in 5 successes (W).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># N &amp; L = unknown</span></span>

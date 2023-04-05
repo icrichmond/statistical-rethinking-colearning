@@ -29,6 +29,9 @@ data(cherry_blossoms)
 
 data(NWOGrants)
 
+data(reedfrogs)
+tar_source('input/prior-values.R')
+
 
 # Targets: homework 2 -----------------------------------------------------
 targets_h02 <- c(
@@ -227,8 +230,26 @@ targets_h05 <- c(
 )
 
 
+# Targets: homework 06 ----------------------------------------------------
+targets_h06 <- c(
+  
+  tar_target(
+    frogs,
+    reedfrogs %>%
+      mutate(tank = row_number())
+  ),
+  
+  tar_eval(
+    tar_target(
+      model_name_sym,
+      brm(formula = surv | trials(density)  ~ 1 + (1|tank), data = frogs, family = binomial(),
+        prior = c(prior(normal(0, 1), class = "Intercept"), # alpha bar because only intercept (1) varies by tank (1|tank)
+                  prior_string(paste0("exponential(", prior_level, ")"), class = "sd")), # sigma
+        sample_prior = TRUE)),
+    values = values_priors
+    )
 
-
+)
 
 
 
