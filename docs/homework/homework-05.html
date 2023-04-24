@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.237">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -280,6 +280,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../notes/notes-13.html" class="sidebar-item-text sidebar-link">Lecture 13 - Multilevel Adventures</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-14.html" class="sidebar-item-text sidebar-link">Lecture 14 - Correlated Features</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../notes/notes-listing.html" class="sidebar-item-text sidebar-link">Notes</a>
   </div>
 </li>
@@ -403,10 +413,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Estimate  Est.Error          Q2.5       Q97.5
-b_Intercept  -1.7360854 0.08084481  -1.895110674  -1.5847487
-b_gender2     0.1977248 0.10142669  -0.003809679   0.3934985
-lprior       -2.7647172 0.13333272  -3.036665579  -2.5194333
-lp__        -64.8898356 0.99441404 -67.600901653 -63.9137578</code></pre>
+b_Intercept  -1.7345009 0.07944147  -1.890443412  -1.5814405
+b_gender2     0.1944565 0.10186431  -0.005163647   0.3958046
+lprior       -2.7608262 0.13255535  -3.039364044  -2.5183436
+lp__        -64.8764670 1.01267220 -67.582082077 -63.9086047</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use model to predict values for each gender individually</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># adds draws from (possibly transformed) posterior linear predictors (or "link-level" predictors) to the data.</span></span>
@@ -455,27 +465,27 @@ lp__        -64.8898356 0.99441404 -67.600901653 -63.9137578</code></pre>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary table (logit)</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                          Estimate Est.Error        Q2.5         Q97.5
-b_Intercept            -1.08916852 0.2321708  -1.5472449 -6.446542e-01
-b_gender2               0.31807748 0.2622164  -0.2122169  8.302995e-01
-b_discipline2          -0.66852157 0.3206118  -1.2906439 -4.331076e-02
-b_discipline3          -0.36361403 0.2921276  -0.9262881  2.163703e-01
-b_discipline4          -0.27037303 0.3296643  -0.9273744  3.550838e-01
-b_discipline5          -0.95636591 0.2900080  -1.5086518 -3.796808e-01
-b_discipline6          -0.17991066 0.3977730  -0.9802213  5.637761e-01
-b_discipline7          -0.18012967 0.5624323  -1.3039927  8.828957e-01
-b_discipline8          -0.93895603 0.2708121  -1.4639436 -4.030828e-01
-b_discipline9          -0.29017909 0.3567557  -0.9958118  3.987583e-01
-b_gender2:discipline2   0.25661678 0.3748470  -0.4641953  1.000714e+00
-b_gender2:discipline3  -0.67792514 0.3516304  -1.3710119  4.594452e-05
-b_gender2:discipline4  -1.03164339 0.4330488  -1.8812883 -1.827009e-01
-b_gender2:discipline5   0.21784082 0.3461980  -0.4550456  8.927343e-01
-b_gender2:discipline6  -0.52034230 0.4488518  -1.3813462  3.860632e-01
-b_gender2:discipline7  -0.13567909 0.5863208  -1.2873476  1.036001e+00
-b_gender2:discipline8  -0.02141044 0.3252919  -0.6658650  6.178296e-01
-b_gender2:discipline9  -0.63238008 0.4127721  -1.4441915  1.592195e-01
-lprior                -22.86412838 1.2830461 -25.7406533 -2.074418e+01
-lp__                  -73.47038277 2.9541246 -80.1294901 -6.879286e+01</code></pre>
+<pre><code>                           Estimate Est.Error        Q2.5        Q97.5
+b_Intercept            -1.078234368 0.2303899  -1.5270658  -0.62815719
+b_gender2               0.297936445 0.2591385  -0.2003820   0.81048652
+b_discipline2          -0.666748193 0.3209575  -1.3003351  -0.03227239
+b_discipline3          -0.375089214 0.2897252  -0.9552153   0.19399449
+b_discipline4          -0.274910029 0.3345760  -0.9210288   0.38600334
+b_discipline5          -0.961229877 0.2911846  -1.5475964  -0.40154520
+b_discipline6          -0.200060482 0.3911083  -0.9715377   0.54594059
+b_discipline7          -0.195413842 0.5491084  -1.3098731   0.87716185
+b_discipline8          -0.947580663 0.2666272  -1.4818832  -0.41445625
+b_discipline9          -0.302035417 0.3559906  -1.0141290   0.38917720
+b_gender2:discipline2   0.254861761 0.3796901  -0.4868367   1.00741128
+b_gender2:discipline3  -0.653401020 0.3503448  -1.3308737   0.01839890
+b_gender2:discipline4  -1.022363405 0.4372698  -1.8882461  -0.18258542
+b_gender2:discipline5   0.237108469 0.3422994  -0.4125911   0.91480098
+b_gender2:discipline6  -0.491384144 0.4384877  -1.3664876   0.37809831
+b_gender2:discipline7  -0.111617948 0.5808920  -1.2189097   1.01587319
+b_gender2:discipline8  -0.008933715 0.3154888  -0.6104390   0.61421303
+b_gender2:discipline9  -0.609878395 0.4066560  -1.3954512   0.20700928
+lprior                -22.853028835 1.2696461 -25.6885815 -20.71012537
+lp__                  -73.349787741 3.0145406 -80.0337146 -68.51065115</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot effects</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional_effects</span>(m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

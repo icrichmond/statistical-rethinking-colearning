@@ -245,7 +245,7 @@ targets_h06 <- c(
       brm(formula = surv | trials(density)  ~ 1 + (1|tank), data = frogs, family = binomial(),
         prior = c(prior(normal(0, 1), class = "Intercept"), # alpha bar because only intercept (1) varies by tank (1|tank)
                   prior_string(paste0("exponential(", prior_level, ")"), class = "sd")), # sigma
-        sample_prior = TRUE)),
+        sample_prior = 'yes')),
     values = values_priors
     )
 

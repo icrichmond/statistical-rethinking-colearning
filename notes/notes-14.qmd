@@ -1,0 +1,135 @@
+---
+title: "Lecture 14 - Correlated Features"
+author: Isabella C. Richmond
+date: Apr 19, 2023
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:*
+
+*Thorn:*
+
+## Add Correlated Features
+
+-   when you build models that can identify correlation between features you can use partial pooling between those correlated features
+
+-   one prior distribution for each cluster
+
+    -   one feature: one dimensional distribution (varying intercepts)
+
+    -   two features: two-D distribution (often use multivariate normal distribution - have mean and variation but also correlation between the parameters)
+
+    -   N features: N-dimensional distribution
+
+-   hard part: learning associations
+
+```{r, eval=FALSE}
+
+###########
+# non-centered varying slopes with and without covariance
+
+dat <- list(
+    C = d$use.contraception,
+    D = as.integer(d$district),
+    U = d$urban,
+    A = standardize(d$age.centered),
+    K = d$living.children )
+
+# no covariance
+mCDUnc <- ulam(
+    alist(
+        C ~ bernoulli(p),
+        logit(p) <- a[D] + b[D]*U,
+        # define effects using other parameters
+        save> vector[61]:a <<- abar + za*sigma,
+        save> vector[61]:b <<- bbar + zb*tau,
+        # z-scored effects
+        vector[61]:za ~ normal(0,1),
+        vector[61]:zb ~ normal(0,1),
+        # ye olde hyper-priors
+        c(abar,bbar) ~ normal(0,1),
+        c(sigma,tau) ~ exponential(1)
+    ) , data=dat , chains=4 , cores=4 )
+```
+
+-   it is hard to learn the correlation from any finite sample
+
+-   LKJ correlation matrix priors - prior for correlation matrices
+
+    -   tends to have shapes
+
+    -   can be skeptical of extreme correlations
+
+```{r, eval=FALSE}
+# covariance - centered
+mCDUcov <- ulam(
+    alist(
+        C ~ bernoulli(p),
+        logit(p) <- a[D] + b[D]*U,
+        # define effects using other parameters
+        transpars> vector[61]:a <<- v[,1],
+        transpars> vector[61]:b <<- v[,2],
+        # priors - centered correlated varying effects
+        matrix[61,2]:v ~ multi_normal(abar,Rho,sigma),
+        vector[2]:abar ~ normal(0,1),
+        corr_matrix[2]:Rho ~ lkj_corr(4),
+        vector[2]:sigma ~ exponential(1)
+    ) , data=dat , chains=4 , cores=4 )
+```
+
+-   centering vs non-centering to increase efficiency of models
+
+    -   centered = priors of priors (parameters inside the priors)
+
+    -   non-centered = changing model to not have hyper-priors (but be mathematically equivalent) to have increased efficiencies
+
+```{r, eval=FALSE}
+# covariance - non-centered
+mCDUcov_nc <- ulam(
+    alist(
+        C ~ bernoulli(p),
+        logit(p) <- a[D] + b[D]*U,
+        # define effects using other parameters
+        # this is the non-centered Cholesky machine
+        transpars> vector[61]:a <<- abar[1] + v[,1],
+        transpars> vector[61]:b <<- abar[2] + v[,2],
+        transpars> matrix[61,2]:v <-
+            compose_noncentered( sigma , L_Rho , Z ),
+        # priors - note that none have parameters inside them
+        # that is what makes them non-centered
+        matrix[2,61]:Z ~ normal( 0 , 1 ),
+        vector[2]:abar ~ normal(0,1),
+        cholesky_factor_corr[2]:L_Rho ~ lkj_corr_cholesky( 4 ),
+        vector[2]:sigma ~ exponential(1),
+        # convert Cholesky to Corr matrix
+        gq> matrix[2,2]:Rho <<- Chol_to_Corr(L_Rho)
+    ) , data=dat , chains=4 , cores=4 )
+```
+
+-   nice to compare prior to posterior distribution to make sure the model learned something
+
+-   correlated varying effects models are easier to fit in Bayesian framework
+
+-   priors learn correlation structure
+
+-   varying effects can be correlated even if the prior doesn't learn the correlations
+
+## Inconvenient Posteriors
+
+-   transforming priors can help with divergent transitions because it changes the shape of the model
+
+-   brms uses non-centered priors as default in multilevel models
+
+    -   not always better
+
+-   centered and non-centered priors are better in different contexts
+
+    -   centered: lots of data in each cluster (data probability dominant)
+
+    -   non-centered: many clusters, sparse evidence (prior dominant)

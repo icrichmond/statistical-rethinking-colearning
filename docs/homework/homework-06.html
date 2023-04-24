@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.237">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -281,6 +281,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../notes/notes-13.html" class="sidebar-item-text sidebar-link">Lecture 13 - Multilevel Adventures</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes-14.html" class="sidebar-item-text sidebar-link">Lecture 14 - Correlated Features</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../notes/notes-listing.html" class="sidebar-item-text sidebar-link">Notes</a>
   </div>
 </li>
@@ -344,28 +354,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>p1_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_1)) <span class="sc">%&gt;%</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"1"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intercept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd_p =</span> <span class="fu">inv_logit_scaled</span>(sd_tank))</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>p01_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_0<span class="fl">.1</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"0.1"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intecept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd_p =</span> <span class="fu">inv_logit_scaled</span>(sd_tank))</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>p10_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_10)) <span class="sc">%&gt;%</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"10"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intercept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd_p =</span> <span class="fu">inv_logit_scaled</span>(sd_tank))</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>p100_draws <span class="ot">&lt;-</span> <span class="fu">prior_draws</span>(<span class="fu">tar_read</span>(prior_100)) <span class="sc">%&gt;%</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prior =</span> <span class="st">"100"</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">Intercept_p =</span> <span class="fu">inv_logit_scaled</span>(Intercept))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd_p =</span> <span class="fu">inv_logit_scaled</span>(sd_tank))</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">rbind</span>(p1_draws, p10_draws, p100_draws)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">rbind</span>(p01_draws, p1_draws, p10_draws, p100_draws)</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(draws, <span class="fu">aes</span>(<span class="at">x =</span> Intercept_p)) <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(draws, <span class="fu">aes</span>(<span class="at">x =</span> sd_p)) <span class="sc">+</span></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> prior, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Simulating from the prior 0.1 did not allow the model to succeed because <code>brms</code> interprets it as Exponential(0) (which is impossible). When looking at what the Exponential(0.1) prior looks like under this distribution via Richard’s homework, we see that all the probability is bunched at either tail. There is no real difference between priors 1-100 for sigma as plotted above.</p>
+<p>Okay getting closer to Richard’s solution hear after some troubleshooting - but we are missing all negative values (probability &lt; 0.5 on logit scale). Not sure why this is…</p>
 </section>
 <section id="question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment." class="level2">
 <h2 class="anchored" data-anchor-id="question-2-revisit-the-reedfrog-survival-data-datareedfrogs.-start-with-the-varying-effects-model-from-the-book-and-lecture.-then-modify-it-to-estimate-the-causal-effects-of-the-treatment-variables-pred-and-size-including-how-size-might-modify-the-effect-of-predation.-an-easy-approach-is-to-estimate-an-effect-for-each-combination-of-pred-and-size.-justify-your-model-with-a-dag-of-this-experiment.">Question 2: Revisit the Reedfrog survival data, <code>data(reedfrogs)</code>. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(reedfrogs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why" class="level2">
 <h2 class="anchored" data-anchor-id="question-3-now-estimate-the-causal-effect-of-density-on-survival.-consider-whether-pred-modifies-the-effect-of-density.-there-are-several-good-ways-to-include-density-in-your-binomial-glm.-you-could-treat-it-as-a-continuous-regression-variable-possibly-standardized.-or-you-could-convert-it-to-an-ordered-category-with-three-levels.-compare-the-σ-tank-standard-deviation-posterior-distribution-to-σ-from-your-model-in-problem-2.-how-are-they-different-why">Question 3: Now estimate the causal effect of <code>density</code> on survival. Consider whether pred modifies the effect of <code>density</code>. There are several good ways to include density in your Binomial GLM. You could treat it as a continuous regression variable (possibly standardized). Or you could convert it to an ordered category (with three levels). Compare the σ (tank standard deviation) posterior distribution to σ from your model in Problem 2. How are they different? Why?</h2>

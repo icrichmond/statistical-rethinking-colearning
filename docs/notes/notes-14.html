@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Isabella C. Richmond">
-<meta name="dcterms.date" content="2023-01-23">
+<meta name="dcterms.date" content="2023-04-19">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 01 - The Golem of Prague</title>
+<title>Statistical Rethinking colearning 2023 - Bella - Lecture 14 - Correlated Features</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -72,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Lecture 01 - The Golem of Prague</h1>
+      <h1 class="quarto-secondary-nav-title">Lecture 14 - Correlated Features</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -158,7 +221,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link active">Lecture 01 - The Golem of Prague</a>
+  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">Lecture 01 - The Golem of Prague</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -223,7 +286,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-14.html" class="sidebar-item-text sidebar-link">Lecture 14 - Correlated Features</a>
+  <a href="../notes/notes-14.html" class="sidebar-item-text sidebar-link active">Lecture 14 - Correlated Features</a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -243,11 +306,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
-  <li><a href="#third-edition" id="toc-third-edition" class="nav-link" data-scroll-target="#third-edition">Third Edition</a></li>
-  <li><a href="#causal-inference" id="toc-causal-inference" class="nav-link" data-scroll-target="#causal-inference">Causal Inference</a></li>
-  <li><a href="#dags" id="toc-dags" class="nav-link" data-scroll-target="#dags">DAGs</a></li>
-  <li><a href="#golems" id="toc-golems" class="nav-link" data-scroll-target="#golems">Golems</a></li>
-  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo">TODO</a></li>
+  <li><a href="#add-correlated-features" id="toc-add-correlated-features" class="nav-link" data-scroll-target="#add-correlated-features">Add Correlated Features</a></li>
+  <li><a href="#inconvenient-posteriors" id="toc-inconvenient-posteriors" class="nav-link" data-scroll-target="#inconvenient-posteriors">Inconvenient Posteriors</a></li>
   </ul>
 </nav>
     </div>
@@ -256,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Lecture 01 - The Golem of Prague</h1>
+<h1 class="title d-none d-lg-block">Lecture 14 - Correlated Features</h1>
 </div>
 
 
@@ -273,7 +333,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 23, 2023</p>
+      <p class="date">April 19, 2023</p>
     </div>
   </div>
   
@@ -283,64 +343,126 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<div class="cell">
+
+</div>
 <section id="rose-thorn" class="level2">
 <h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
-<p><em>Rose:</em> excited for fewer examples + sensitivity analyses<br>
-BONUS: I LOVE DAGS</p>
-<p><em>Thorn:</em> i am having a hard time imagining/extending my thinking re: causal imputation + unique null hypotheses (focus on causation)</p>
+<p><em>Rose:</em></p>
+<p><em>Thorn:</em></p>
 </section>
-<section id="third-edition" class="level2">
-<h2 class="anchored" data-anchor-id="third-edition">Third Edition</h2>
+<section id="add-correlated-features" class="level2">
+<h2 class="anchored" data-anchor-id="add-correlated-features">Add Correlated Features</h2>
 <ul>
-<li>peach boxes instead of blue boxes</li>
+<li><p>when you build models that can identify correlation between features you can use partial pooling between those correlated features</p></li>
+<li><p>one prior distribution for each cluster</p>
+<ul>
+<li><p>one feature: one dimensional distribution (varying intercepts)</p></li>
+<li><p>two features: two-D distribution (often use multivariate normal distribution - have mean and variation but also correlation between the parameters)</p></li>
+<li><p>N features: N-dimensional distribution</p></li>
+</ul></li>
+<li><p>hard part: learning associations</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">###########</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># non-centered varying slopes with and without covariance</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">C =</span> d<span class="sc">$</span>use.contraception,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">D =</span> <span class="fu">as.integer</span>(d<span class="sc">$</span>district),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">U =</span> d<span class="sc">$</span>urban,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">A =</span> <span class="fu">standardize</span>(d<span class="sc">$</span>age.centered),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">K =</span> d<span class="sc">$</span>living.children )</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># no covariance</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>mCDUnc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        C <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[D] <span class="sc">+</span> b[D]<span class="sc">*</span>U,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># define effects using other parameters</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        save<span class="sc">&gt;</span> vector[<span class="dv">61</span>]<span class="sc">:</span>a <span class="ot">&lt;&lt;-</span> abar <span class="sc">+</span> za<span class="sc">*</span>sigma,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        save<span class="sc">&gt;</span> vector[<span class="dv">61</span>]<span class="sc">:</span>b <span class="ot">&lt;&lt;-</span> bbar <span class="sc">+</span> zb<span class="sc">*</span>tau,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># z-scored effects</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">61</span>]<span class="sc">:</span>za <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">61</span>]<span class="sc">:</span>zb <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ye olde hyper-priors</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(abar,bbar) <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(sigma,tau) <span class="sc">~</span> <span class="fu">exponential</span>(<span class="dv">1</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    ) , <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>it is hard to learn the correlation from any finite sample</p></li>
+<li><p>LKJ correlation matrix priors - prior for correlation matrices</p>
+<ul>
+<li><p>tends to have shapes</p></li>
+<li><p>can be skeptical of extreme correlations</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># covariance - centered</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mCDUcov <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        C <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[D] <span class="sc">+</span> b[D]<span class="sc">*</span>U,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># define effects using other parameters</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> vector[<span class="dv">61</span>]<span class="sc">:</span>a <span class="ot">&lt;&lt;-</span> v[,<span class="dv">1</span>],</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> vector[<span class="dv">61</span>]<span class="sc">:</span>b <span class="ot">&lt;&lt;-</span> v[,<span class="dv">2</span>],</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># priors - centered correlated varying effects</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        matrix[<span class="dv">61</span>,<span class="dv">2</span>]<span class="sc">:</span>v <span class="sc">~</span> <span class="fu">multi_normal</span>(abar,Rho,sigma),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">2</span>]<span class="sc">:</span>abar <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        corr_matrix[<span class="dv">2</span>]<span class="sc">:</span>Rho <span class="sc">~</span> <span class="fu">lkj_corr</span>(<span class="dv">4</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">2</span>]<span class="sc">:</span>sigma <span class="sc">~</span> <span class="fu">exponential</span>(<span class="dv">1</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    ) , <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>centering vs non-centering to increase efficiency of models</p>
+<ul>
+<li><p>centered = priors of priors (parameters inside the priors)</p></li>
+<li><p>non-centered = changing model to not have hyper-priors (but be mathematically equivalent) to have increased efficiencies</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># covariance - non-centered</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mCDUcov_nc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        C <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[D] <span class="sc">+</span> b[D]<span class="sc">*</span>U,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># define effects using other parameters</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># this is the non-centered Cholesky machine</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> vector[<span class="dv">61</span>]<span class="sc">:</span>a <span class="ot">&lt;&lt;-</span> abar[<span class="dv">1</span>] <span class="sc">+</span> v[,<span class="dv">1</span>],</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> vector[<span class="dv">61</span>]<span class="sc">:</span>b <span class="ot">&lt;&lt;-</span> abar[<span class="dv">2</span>] <span class="sc">+</span> v[,<span class="dv">2</span>],</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        transpars<span class="sc">&gt;</span> matrix[<span class="dv">61</span>,<span class="dv">2</span>]<span class="sc">:</span>v <span class="ot">&lt;-</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">compose_noncentered</span>( sigma , L_Rho , Z ),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># priors - note that none have parameters inside them</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># that is what makes them non-centered</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        matrix[<span class="dv">2</span>,<span class="dv">61</span>]<span class="sc">:</span>Z <span class="sc">~</span> <span class="fu">normal</span>( <span class="dv">0</span> , <span class="dv">1</span> ),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">2</span>]<span class="sc">:</span>abar <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        cholesky_factor_corr[<span class="dv">2</span>]<span class="sc">:</span>L_Rho <span class="sc">~</span> <span class="fu">lkj_corr_cholesky</span>( <span class="dv">4</span> ),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        vector[<span class="dv">2</span>]<span class="sc">:</span>sigma <span class="sc">~</span> <span class="fu">exponential</span>(<span class="dv">1</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># convert Cholesky to Corr matrix</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        gq<span class="sc">&gt;</span> matrix[<span class="dv">2</span>,<span class="dv">2</span>]<span class="sc">:</span>Rho <span class="ot">&lt;&lt;-</span> <span class="fu">Chol_to_Corr</span>(L_Rho)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    ) , <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>nice to compare prior to posterior distribution to make sure the model learned something</p></li>
+<li><p>correlated varying effects models are easier to fit in Bayesian framework</p></li>
+<li><p>priors learn correlation structure</p></li>
+<li><p>varying effects can be correlated even if the prior doesn’t learn the correlations</p></li>
 </ul>
 </section>
-<section id="causal-inference" class="level2">
-<h2 class="anchored" data-anchor-id="causal-inference">Causal Inference</h2>
+<section id="inconvenient-posteriors" class="level2">
+<h2 class="anchored" data-anchor-id="inconvenient-posteriors">Inconvenient Posteriors</h2>
 <ul>
-<li>statistical models require scientific <strong>(causal)</strong> models</li>
-<li>correlation is a very limited measure of association
+<li><p>transforming priors can help with divergent transitions because it changes the shape of the model</p></li>
+<li><p>brms uses non-centered priors as default in multilevel models</p>
 <ul>
-<li>association can occur without correlation</li>
+<li>not always better</li>
 </ul></li>
-<li><em>causal prediction</em> = prediction of the consequences of an intervention (implications of changing one variable on another variable)
+<li><p>centered and non-centered priors are better in different contexts</p>
 <ul>
-<li>knowing the <strong>cause</strong> of an action allows you to create predictions</li>
+<li><p>centered: lots of data in each cluster (data probability dominant)</p></li>
+<li><p>non-centered: many clusters, sparse evidence (prior dominant)</p></li>
 </ul></li>
-<li><em>causal imputation</em> = knowing the <strong>cause</strong> of an action allows you to reconstruct possible outcomes (i.e., what if I had done something else?)</li>
-</ul>
-</section>
-<section id="dags" class="level2">
-<h2 class="anchored" data-anchor-id="dags">DAGs</h2>
-<ul>
-<li>abstract causal models: includes names of variables and their causal relationships</li>
-<li>tells you the consequences of an intervention</li>
-<li>facilitates you asking scientific questions</li>
-</ul>
-</section>
-<section id="golems" class="level2">
-<h2 class="anchored" data-anchor-id="golems">Golems</h2>
-<ul>
-<li>statistical models = golems</li>
-<li>often not possible to design and outline a null hypothesis that is meaningful to reject in observational science
-<ul>
-<li>what is a null ecological community?</li>
-</ul></li>
-<li><strong>think of good example/explanation for no null ecology/previous two slides</strong>
-<ul>
-<li>read textbook section</li>
-<li>focus on third example?</li>
-<li>takeaway is that null hypothesis does not give you cause/process behind outcome</li>
-</ul></li>
-<li>what is your null? is it unique?</li>
-</ul>
-</section>
-<section id="todo" class="level2">
-<h2 class="anchored" data-anchor-id="todo">TODO</h2>
-<ul>
-<li>read textbook section on null ecology</li>
-<li>agenda</li>
-<li>discuss code options</li>
 </ul>
 
 

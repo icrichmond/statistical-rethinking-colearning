@@ -26,32 +26,37 @@ df <- reedfrogs %>%
 
 p1_draws <- prior_draws(tar_read(prior_1)) %>%
   mutate(prior = "1",
-         Intercept_p = inv_logit_scaled(Intercept))
+         sd_p = inv_logit_scaled(sd_tank))
 p01_draws <- prior_draws(tar_read(prior_0.1)) %>%
   mutate(prior = "0.1",
-         Intecept_p = inv_logit_scaled(Intercept))
+         sd_p = inv_logit_scaled(sd_tank))
 p10_draws <- prior_draws(tar_read(prior_10)) %>%
   mutate(prior = "10",
-         Intercept_p = inv_logit_scaled(Intercept))
+         sd_p = inv_logit_scaled(sd_tank))
 p100_draws <- prior_draws(tar_read(prior_100)) %>%
   mutate(prior = "100",
-         Intercept_p = inv_logit_scaled(Intercept))
+         sd_p = inv_logit_scaled(sd_tank))
 
-draws <- rbind(p1_draws, p10_draws, p100_draws)
+draws <- rbind(p01_draws, p1_draws, p10_draws, p100_draws)
 
-ggplot(draws, aes(x = Intercept_p)) +
+ggplot(draws, aes(x = sd_p)) +
   geom_density() + 
   theme_classic() + 
-  facet_wrap(~ prior)
+  facet_wrap(~ prior, scales = "free_y")
 
 ```
 
-Simulating from the prior 0.1 did not allow the model to succeed because `brms` interprets it as Exponential(0) (which is impossible). When looking at what the Exponential(0.1) prior looks like under this distribution via Richard's homework, we see that all the probability is bunched at either tail. There is no real difference between priors 1-100 for sigma as plotted above.
+Okay getting closer to Richard's solution hear after some troubleshooting - but we are missing all negative values (probability < 0.5 on logit scale). Not sure why this is...
 
 
 ## Question 2: Revisit the Reedfrog survival data, `data(reedfrogs)`. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.
 
+```{r}
+data(reedfrogs)
 
+
+
+```
 
 
 
