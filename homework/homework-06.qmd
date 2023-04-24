@@ -19,7 +19,7 @@ $$
 $$
 To make a prior predictive simulation in `brms`, I can build the model and then sample only from the priors. This just requires me to build the model as I normally would:
 
-```{r, eval=FALSE}
+```{r}
 data("reedfrogs")
 df <- reedfrogs %>%
   mutate(tank = row_number())
