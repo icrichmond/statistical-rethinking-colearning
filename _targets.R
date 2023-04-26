@@ -247,8 +247,14 @@ targets_h06 <- c(
                   prior_string(paste0("exponential(", prior_level, ")"), class = "sd")), # sigma
         sample_prior = 'yes')),
     values = values_priors
-    )
-
+    ),
+  
+  tar_target(
+    h06_q2a,
+    brm(formula = surv | trials(density) ~ 1 + (1|tank), data = frogs, family = binomial(),
+        prior = c(prior(normal(0, 1), class = Intercept),
+                  prior(exponential(1), class = sd)))
+  )
 )
 
 
