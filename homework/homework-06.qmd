@@ -8,7 +8,9 @@ format: html
 source('R/packages.R')
 ```
 
-## Question 1: Conduct a prior predictive simulation for the Reedfrog model. By this I mean to simulate the prior distribution of tank survival probabilities αj. Start by using this prior (below). Be sure to transform the αj values to the probability scale for plotting and summary. How does increasing the width of the prior on σ change the prior distribution of αj? You might try Exponential(10) and Exponential(0.1) for example.
+## Question 1:
+
+**Conduct a prior predictive simulation for the Reedfrog model. By this I mean to simulate the prior distribution of tank survival probabilities αj. Start by using this prior (below). Be sure to transform the αj values to the probability scale for plotting and summary. How does increasing the width of the prior on σ change the prior distribution of αj? You might try Exponential(10) and Exponential(0.1) for example.**
 
 $$
 \alpha_j \sim Normal(\overline{\alpha}, \sigma)
@@ -16,13 +18,16 @@ $$
 \overline{\alpha} \sim Normal(0, 1)
 \\
 \sigma \sim Exponential(1)
-$$
-To make a prior predictive simulation in `brms`, I can build the model and then sample only from the priors. This just requires me to build the model as I normally would:
+$$ To make a prior predictive simulation in `brms`, I can build the model and then sample only from the priors. This just requires me to build the model as I normally would:
 
 ```{r}
 data("reedfrogs")
 df <- reedfrogs %>%
   mutate(tank = row_number())
+model <- tar_read(prior_1)
+
+# model formula
+model$formula
 
 p1_draws <- prior_draws(tar_read(prior_1)) %>%
   mutate(prior = "1",
@@ -46,23 +51,44 @@ ggplot(draws, aes(x = sd_p)) +
 
 ```
 
-Okay getting closer to Richard's solution hear after some troubleshooting - but we are missing all negative values (probability < 0.5 on logit scale). Not sure why this is...
+Okay getting closer to Richard's solution hear after some troubleshooting - but we are missing all negative values (probability \< 0.5 on logit scale). Not sure why this is...
 
+## Question 2:
 
-## Question 2: Revisit the Reedfrog survival data, `data(reedfrogs)`. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.
+**Revisit the Reedfrog survival data, `data(reedfrogs)`. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.**
+
+```{r, echo = F, eval = T}
+dag <- dagify(
+  S ~ T + G + D + P
+)
+
+ggdag(dag) +
+    theme_dag()
+```
+
+Model from lecture was how survival varies across tank. Modelling it in brms: 
 
 ```{r}
-data(reedfrogs)
+l_mod <- tar_read(h06_q2a)
 
+# model formula 
+l_mod$formula
 
+# posterior
+df <- as_draws_df(l_mod) %>% 
+  pivot_longer(starts_with("r_tank"), values_to = c("tank_Intercept")) %>%
+  mutate(tank = str_extract_all(name, "[0-9]+"),
+         p_Surv = inv_logit_scaled(tank_Intercept))
+  
+ggplot(df, aes(x = tank, y = b_Intercept)) + 
+  geom_point()
 
 ```
 
+## Question 3:
 
+**Now estimate the causal effect of `density` on survival. Consider whether pred modifies the effect of `density`. There are several good ways to include density in your Binomial GLM. You could treat it as a continuous regression variable (possibly standardized). Or you could convert it to an ordered category (with three levels). Compare the σ (tank standard deviation) posterior distribution to σ from your model in Problem 2. How are they different? Why?**
 
-## Question 3: Now estimate the causal effect of `density` on survival. Consider whether pred modifies the effect of `density`. There are several good ways to include density in your Binomial GLM. You could treat it as a continuous regression variable (possibly standardized). Or you could convert it to an ordered category (with three levels). Compare the σ (tank standard deviation) posterior distribution to σ from your model in Problem 2. How are they different? Why?
+## Question 4:
 
-
-
-
-## Question 4: Return to the Trolley data, `data(Trolley)`, from Chapter 12. Define and fit a varying intercepts model for these data. By this I mean to add an intercept parameter for the individual participants to the linear model. Cluster the varying intercepts on individual participants, as indicated by the unique values in the `id` variable. Include `action`, `intention`, and `contact` as treatment effects of interest. Compare the varying intercepts model and a model that ignores individuals. What is the impact of individual variation in these data?
+**Return to the Trolley data, `data(Trolley)`, from Chapter 12. Define and fit a varying intercepts model for these data. By this I mean to add an intercept parameter for the individual participants to the linear model. Cluster the varying intercepts on individual participants, as indicated by the unique values in the `id` variable. Include `action`, `intention`, and `contact` as treatment effects of interest. Compare the varying intercepts model and a model that ignores individuals. What is the impact of individual variation in these data?**
