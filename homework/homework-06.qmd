@@ -77,11 +77,12 @@ l_mod$formula
 # posterior
 df <- as_draws_df(l_mod) %>% 
   pivot_longer(starts_with("r_tank"), values_to = c("tank_Intercept")) %>%
-  mutate(tank = str_extract_all(name, "[0-9]+"),
+  mutate(tank = as.factor(as.numeric(str_extract_all(name, "[0-9]+"))),
          p_Surv = inv_logit_scaled(tank_Intercept))
   
-ggplot(df, aes(x = tank, y = p_Surv)) + 
-  geom_point()
+ggplot(df, aes(x = tank, y = mean(p_Surv))) + 
+  geom_point() + 
+  theme_classic()
 
 ```
 
