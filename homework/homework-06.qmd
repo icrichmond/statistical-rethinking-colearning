@@ -68,7 +68,7 @@ ggdag(dag) +
 
 Model from lecture was how survival varies across tank. Modelling it in brms: 
 
-```{r}
+```{r, eval = F}
 l_mod <- tar_read(h06_q2a)
 
 # model formula 
@@ -80,7 +80,7 @@ df <- as_draws_df(l_mod) %>%
   mutate(tank = str_extract_all(name, "[0-9]+"),
          p_Surv = inv_logit_scaled(tank_Intercept))
   
-ggplot(df, aes(x = tank, y = b_Intercept)) + 
+ggplot(df, aes(x = tank, y = p_Surv)) + 
   geom_point()
 
 ```
