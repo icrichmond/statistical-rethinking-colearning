@@ -1,0 +1,40 @@
+---
+title: "Lecture 17 - Measurement & Misclassification"
+author: Isabella C. Richmond
+date: May 5, 2023
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:* feels extremely relevant
+
+*Thorn:* weird log functions
+
+## Measurement Error
+
+-   many variables are proxies of the cause of interest
+-   don't consider how things are measured
+-   measurement error can have many effects on estimates
+
+## Modeling Measurement
+
+-   divorce, marriage, and age statistics are measured with error and the amount of error varies by state
+
+    -   imbalance in evidence quality
+
+    -   potential confounding through measurement error
+
+-   states with larger populations have less uncertainty/higher quality data
+
+-   confounding because measurement is influenced by population size but then effects such as divorce rate can also be influenced by population size
+
+## Misclassification
+
+-   categorical version of measurement error
+
+-   related models: hurdle models and occupancy models

@@ -1,0 +1,54 @@
+---
+title: "Lecture 18 - Missing Data"
+author: Isabella C. Richmond
+date: May 5, 2023
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:*
+
+*Thorn:*
+
+## Missing Data
+
+-   observed data is a special case - we trick ourselves into believing there is no error
+-   missing data = some cases unobserved
+-   not totally missing - they have constraints and relationships to other variables
+
+## Workflow
+
+-   dropping cases with missing values is sometimes justifiable
+-   right thing to do depends upon causal assumptions
+-   imputation is often beneficial/necessary
+-   Bayesian imputation: compute posterior probability distribution of missing values
+-   Marginalizing unknowns: averaging over distribution of missing values
+
+## Bayesian Imputation
+
+-   causal model of all variables implies strategy for imputation
+
+-   sometimes imputation is unnecessary, e.g., discrete parameters
+
+-   sometimes imputation is easier, e.g., censored observations
+
+## Imputing Primates
+
+-   missing values already have probability distributions
+
+-   express causal model for each partially-observed variable
+
+-   replace each missing value with a parameter
+
+-   not the same as non-Bayesian imputation
+
+    -   that generates datasets and runs the model multiple times
+
+    -   this estimates probability distributions using other parameters and relationships
+
+-   imputation without relationships among predictors is risky
