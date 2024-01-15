@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Isabella C. Richmond">
-<meta name="dcterms.date" content="2023-03-08">
+<meta name="dcterms.date" content="2023-05-05">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 07 - Fitting Over &amp; Under</title>
+<title>Statistical Rethinking colearning 2023 - Bella - Lecture 18 - Missing Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -110,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes-01.html">Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes-07.html">Lecture 07 - Fitting Over &amp; Under</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes-01.html">Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes-18.html">Lecture 18 - Missing Data</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -208,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link active">
+  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture 07 - Fitting Over &amp; Under</span></a>
   </div>
 </li>
@@ -262,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-18.html" class="sidebar-item-text sidebar-link">
+  <a href="../notes/notes-18.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Lecture 18 - Missing Data</span></a>
   </div>
 </li>
@@ -285,14 +251,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
-  <li><a href="#problems-of-prediction" id="toc-problems-of-prediction" class="nav-link" data-scroll-target="#problems-of-prediction">Problems of Prediction</a></li>
-  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross-Validation</a></li>
-  <li><a href="#regularization" id="toc-regularization" class="nav-link" data-scroll-target="#regularization">Regularization</a></li>
-  <li><a href="#prediction-penalty" id="toc-prediction-penalty" class="nav-link" data-scroll-target="#prediction-penalty">Prediction Penalty</a></li>
-  <li><a href="#model-mis-selection" id="toc-model-mis-selection" class="nav-link" data-scroll-target="#model-mis-selection">Model Mis-selection</a></li>
-  <li><a href="#outliers-robust-regression" id="toc-outliers-robust-regression" class="nav-link" data-scroll-target="#outliers-robust-regression">Outliers &amp; Robust Regression</a></li>
-  <li><a href="#robust-regressions" id="toc-robust-regressions" class="nav-link" data-scroll-target="#robust-regressions">Robust Regressions</a></li>
-  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction">Prediction</a></li>
+  <li><a href="#missing-data" id="toc-missing-data" class="nav-link" data-scroll-target="#missing-data">Missing Data</a></li>
+  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow">Workflow</a></li>
+  <li><a href="#bayesian-imputation" id="toc-bayesian-imputation" class="nav-link" data-scroll-target="#bayesian-imputation">Bayesian Imputation</a></li>
+  <li><a href="#imputing-primates" id="toc-imputing-primates" class="nav-link" data-scroll-target="#imputing-primates">Imputing Primates</a></li>
   </ul>
 </nav>
     </div>
@@ -301,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lecture 07 - Fitting Over &amp; Under</h1>
+<h1 class="title">Lecture 18 - Missing Data</h1>
 </div>
 
 
@@ -318,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 8, 2023</p>
+      <p class="date">May 5, 2023</p>
     </div>
   </div>
   
@@ -330,165 +292,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="rose-thorn" class="level2">
 <h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
-<p><em>Rose:</em> not trying to be perfect, just better</p>
-<p><em>Thorn:</em> thinking through prediction vs causality - when do I want prediction?</p>
+<p><em>Rose:</em></p>
+<p><em>Thorn:</em></p>
 </section>
-<section id="problems-of-prediction" class="level2">
-<h2 class="anchored" data-anchor-id="problems-of-prediction">Problems of Prediction</h2>
+<section id="missing-data" class="level2">
+<h2 class="anchored" data-anchor-id="missing-data">Missing Data</h2>
 <ul>
-<li><p>what function describes the data (fitting, compression)</p></li>
-<li><p>what functions explains these points (causal inference)</p></li>
-<li><p>what would happen if we changed the data (intervention)</p></li>
-<li><p>what is the next observation from the same process <strong>(prediction)</strong></p>
-<ul>
-<li><p>prediction is the absence of intervention</p></li>
-<li><p>prediction does not require causal inference</p></li>
-</ul></li>
-<li><p>Leave-one-out cross-validation</p>
-<ul>
-<li><div>
-<ol type="1">
-<li>drop one point</li>
-<li>fit line to remaining</li>
-<li>predict dropped point</li>
-<li>repeat (1) with next point</li>
-<li>score is error on dropped</li>
-</ol>
-</div></li>
-<li><p>task you use to assess the expected predictive accuracy of a statistical procedure</p></li>
-<li><p>score in: fit to the sample / score out: fit to prediction</p></li>
-<li><p>LPPD (log posterior probability of observation) used for cross-validation because it includes the entire posterior</p></li>
-<li><p>more flexible patterns generally perform better in sample and worse out of sample</p></li>
-</ul></li>
+<li>observed data is a special case - we trick ourselves into believing there is no error</li>
+<li>missing data = some cases unobserved</li>
+<li>not totally missing - they have constraints and relationships to other variables</li>
 </ul>
 </section>
-<section id="cross-validation" class="level2">
-<h2 class="anchored" data-anchor-id="cross-validation">Cross-Validation</h2>
+<section id="workflow" class="level2">
+<h2 class="anchored" data-anchor-id="workflow">Workflow</h2>
 <ul>
-<li><p>for simple models, more parameters improves fit to sample BUT may reduce accuracy of predictions out of sample</p></li>
-<li><p>accurate models trade off flexibility with <strong>overfitting</strong></p></li>
+<li>dropping cases with missing values is sometimes justifiable</li>
+<li>right thing to do depends upon causal assumptions</li>
+<li>imputation is often beneficial/necessary</li>
+<li>Bayesian imputation: compute posterior probability distribution of missing values</li>
+<li>Marginalizing unknowns: averaging over distribution of missing values</li>
 </ul>
 </section>
-<section id="regularization" class="level2">
-<h2 class="anchored" data-anchor-id="regularization">Regularization</h2>
+<section id="bayesian-imputation" class="level2">
+<h2 class="anchored" data-anchor-id="bayesian-imputation">Bayesian Imputation</h2>
 <ul>
-<li><p>overfitting depends upon the priors</p></li>
-<li><p>don’t be too excited about every point in the sample, because not every point in the sample is regular (not all points are representative)</p></li>
-<li><p>skeptical priors regularize models - have tighter variance that reduces flexibility</p>
-<ul>
-<li>downweights improbable values</li>
-</ul></li>
-<li><p>skeptical priors improve model prediction - regularize so that models learn regular features and ignore irregular features</p>
-<ul>
-<li>there is such a thing as too tight priors</li>
-</ul></li>
-<li><p>Regularizing priors -&gt; for pure prediction uses, you can tune the prior using cross-validation</p>
-<ul>
-<li>causal inference uses science to choose priors</li>
-</ul></li>
+<li><p>causal model of all variables implies strategy for imputation</p></li>
+<li><p>sometimes imputation is unnecessary, e.g., discrete parameters</p></li>
+<li><p>sometimes imputation is easier, e.g., censored observations</p></li>
 </ul>
 </section>
-<section id="prediction-penalty" class="level2">
-<h2 class="anchored" data-anchor-id="prediction-penalty">Prediction Penalty</h2>
+<section id="imputing-primates" class="level2">
+<h2 class="anchored" data-anchor-id="imputing-primates">Imputing Primates</h2>
 <ul>
-<li><p>For N points, cross-validation requires fitting N models</p>
+<li><p>missing values already have probability distributions</p></li>
+<li><p>express causal model for each partially-observed variable</p></li>
+<li><p>replace each missing value with a parameter</p></li>
+<li><p>not the same as non-Bayesian imputation</p>
 <ul>
-<li>feasible for few data points but for many data points gets unwieldy</li>
+<li><p>that generates datasets and runs the model multiple times</p></li>
+<li><p>this estimates probability distributions using other parameters and relationships</p></li>
 </ul></li>
-<li><p>Importance sampling (PSIS) and information criteria (WAIC) allow you to assess prediction penalty from one model posterior distribution (for predictive models)</p></li>
-<li><p>WAIC, PSIS, cross-validation (CV) measure overfitting</p>
-<ul>
-<li>regularization manages overfiting</li>
-</ul></li>
-<li><p>Causal inference is <em>not</em> addressed by measuring or addressing overfitting</p>
-<ul>
-<li><p>these tools are addressing the performance of a <strong>predictive</strong> model, not a causal model</p></li>
-<li><p>should not select causal models based on these values because they are not associated with causality</p></li>
-</ul></li>
-</ul>
-</section>
-<section id="model-mis-selection" class="level2">
-<h2 class="anchored" data-anchor-id="model-mis-selection">Model Mis-selection</h2>
-<ul>
-<li><p>Do not use predictive criteria (WAIC, PSIS, CV) to choose a causal estimate</p></li>
-<li><p>Predictive criteria <em>prefer</em> confounds and colliders</p>
-<ul>
-<li>improve predictive accuracy</li>
-</ul></li>
-</ul>
-</section>
-<section id="outliers-robust-regression" class="level2">
-<h2 class="anchored" data-anchor-id="outliers-robust-regression">Outliers &amp; Robust Regression</h2>
-<ul>
-<li><p>some points are more influential than others - ‘outliers’</p></li>
-<li><p>outliers are information - don’t necessarily want to remove them</p>
-<ul>
-<li><p>but they often have high leverage/weight because they are “surprising”</p></li>
-<li><p>dropping outliers ignores the problem - predictions will still be bad</p></li>
-<li><p>model is wrong, not the data</p></li>
-</ul></li>
-<li><p>can quantify the influence of each point on the posterior distribution using cross-validation</p></li>
-<li><p>can also use a mixture model/robust regression to address outliers</p></li>
-<li><p>divorce rate example</p>
-<ul>
-<li><p>Maine and Idaho are outliers in divorce/age relationship</p></li>
-<li><p>quantify influence of outliers using PSIS k statistic or WAIC penalty term</p></li>
-<li><p>unmodelled sources of variation cause outliers -&gt; error distributions are not constant across the sample</p>
-<ul>
-<li><p>assuming that the dataset has multiple error distributions, with the same mean but different variations indicates that you are using a <strong>student t-test</strong></p></li>
-<li><p>Gaussian distribution has extremely thin tails - very skeptical</p></li>
-<li><p>student t distribution is much less skeptical, wider tails, much less influenced by outliers + more robust</p></li>
-</ul></li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(WaffleDivorce)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> WaffleDivorce</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">D =</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Divorce),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">M =</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Marriage),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">A =</span> <span class="fu">standardize</span>(d<span class="sc">$</span>MedianAgeMarriage)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>m5<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma), </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bM<span class="sc">*</span>M <span class="sc">+</span> bA<span class="sc">*</span>A,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>m5<span class="fl">.3</span>t <span class="ot">&lt;-</span> <span class="fu">quap</span>(<span class="fu">alist</span>(</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  D <span class="sc">~</span> <span class="fu">dstudent</span>(<span class="dv">2</span>, mu, sigma), </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bM<span class="sc">*</span>M <span class="sc">+</span> bA<span class="sc">*</span>A,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.2</span>),</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), </span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="robust-regressions" class="level2">
-<h2 class="anchored" data-anchor-id="robust-regressions">Robust Regressions</h2>
-<ul>
-<li><p>unobserved heterogeneity in sample -&gt; mixture of Gaussian errors</p>
-<ul>
-<li>thicker tails means model is less surprised/more robust</li>
-</ul></li>
-<li><p>student-t regression can be a good default for undertheorized domains</p>
-<ul>
-<li>because Gaussian distribution is so skeptical</li>
-</ul></li>
-</ul>
-</section>
-<section id="prediction" class="level2">
-<h2 class="anchored" data-anchor-id="prediction">Prediction</h2>
-<ul>
-<li><p>possible to make very good predictions without knowing causes</p></li>
-<li><p>optimizing prediction does not reliably reveal causes</p></li>
+<li><p>imputation without relationships among predictors is risky</p></li>
 </ul>
 
 

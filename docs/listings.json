@@ -1,14 +1,7 @@
 [
   {
     "listing": "/homework/homework-listing.html",
-    "items": [
-      "/homework/homework-01.html",
-      "/homework/homework-02.html",
-      "/homework/homework-03.html",
-      "/homework/homework-04.html",
-      "/homework/homework-05.html",
-      "/homework/homework-06.html"
-    ]
+    "items": []
   },
   {
     "listing": "/notes/notes-listing.html",
@@ -26,7 +19,9 @@
       "/notes/notes-11.html",
       "/notes/notes-12.html",
       "/notes/notes-13.html",
-      "/notes/notes-14.html"
+      "/notes/notes-14.html",
+      "/notes/notes-17.html",
+      "/notes/notes-18.html"
     ]
   }
 ]
