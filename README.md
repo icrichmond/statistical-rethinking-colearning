@@ -15,7 +15,7 @@
 
 ------------------------------------------------------------------------
 
-Second round of [Statistical Rethinking](https://github.com/rmcelreath/stat_rethinking_2024/tree/main) colearning, this time with 2024 [lectures](https://www.youtube.com/playlist?list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus) and [homework](https://github.com/rmcelreath/stat_rethinking_2024/tree/main/homework).
+Third round of [Statistical Rethinking](https://github.com/rmcelreath/stat_rethinking_2024/tree/main) colearning, this time with 2024 [lectures](https://www.youtube.com/playlist?list=PLDcUM9US4XdPz-KxHM4XHt7uUVGWWVSus) and [homework](https://github.com/rmcelreath/stat_rethinking_2024/tree/main/homework).
 
 The first round of Statistical Rethinking colearning (2022) is available [here](https://github.com/robitalec/statistical-rethinking-colearning-2022).
 
