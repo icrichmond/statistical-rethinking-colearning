@@ -1,7 +1,7 @@
 ---
 title: "Lecture 01 - The Golem of Prague"
 author: Isabella C. Richmond
-date: Jan 23, 2023
+date: Jan 23, 2023 / Jan 22, 2024
 format: html
 ---
 
@@ -21,15 +21,20 @@ BONUS: I LOVE DAGS
 -   statistical models require scientific **(causal)** models
 -   correlation is a very limited measure of association
     -   association can occur without correlation
+-   causation requires **intervention** - it is not just the behaviour without intervention
 -   *causal prediction* = prediction of the consequences of an intervention (implications of changing one variable on another variable)
     -   knowing the **cause** of an action allows you to create predictions
+    -   what happens if I do this?
 -   *causal imputation* = knowing the **cause** of an action allows you to reconstruct possible outcomes (i.e., what if I had done something else?)
+-   Even for description, causal models are required
 
 ## DAGs
 
 -   abstract causal models: includes names of variables and their causal relationships
 -   tells you the consequences of an intervention
+-   tells you what you can decide/ask without additional assumptions
 -   facilitates you asking scientific questions
+-   each causal query requires a different model
 
 ## Golems
 
@@ -37,13 +42,9 @@ BONUS: I LOVE DAGS
 -   often not possible to design and outline a null hypothesis that is meaningful to reject in observational science
     -   what is a null ecological community?
 -   **think of good example/explanation for no null ecology/previous two slides**
-    -   read textbook section
-    -   focus on third example?
     -   takeaway is that null hypothesis does not give you cause/process behind outcome
 -   what is your null? is it unique?
 
 ## TODO
 
--   read textbook section on null ecology
--   agenda
--   discuss code options
+-   
