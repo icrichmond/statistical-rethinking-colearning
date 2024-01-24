@@ -7,17 +7,30 @@ format: html
 
 ## Rose / Thorn
 
-*Rose:* remembering that posterior distributions are relative probabilities is a great foundation to move forward on
+*Rose:* understanding the predictive posterior this time
 
-*Thorn:* equations are harddd + baseR + installing `rstan` + misclassification ahh
+*Thorn:* what if you don't know your misclassification rate
 
 ## Globe Example
 
 *estimand:* proportion of the globe covered in water - do people know what an estimand is?
 
+-   a research/scientific question
+
+*estimator*: statistical way of producing an estimate
+
+-   generative model tests your estimator
+
 ## Generative Model (globe)
 
+-   *p* = proportion of water
+-   W = water observations
+-   N = number of tosses
+-   L = land observations
+-   N influences W and L because higher tosses means higher numbers
 -   start with how the variables influence each other, i.e., causal model
+    -   start conceptually, with science
+    -   intervention on N is also an intervention on W and L
 
 ```{r}
 library(dagitty)
@@ -38,12 +51,14 @@ W,L = f(p,N)
 $$
 
 -   W and L are functions of *p* and N
+-   DAGs are not generative, but they make causal models which allow us to make generative models
+    -   they represent functional relationships
 
 ## Bayesian Data Analysis
 
 For each possible explanation of the sample,
 
-1.  count all the ways the sample could happen
+1.  count all the ways the sample could happen (given a particular explanation)
 
 2.  explanations with more ways to produce the sample are more plausible
 
@@ -57,8 +72,6 @@ For each possible explanation of the sample,
 
 -   collection of probabilities is a posterior distribution
 
-ADD CODE (minute 35):
-
 ```{r}
 sample <- c("W", "L", "W", "W", "W", "L", "W", "L", "W")
 
@@ -68,12 +81,19 @@ p <- c(0, 0.25, 0.5, 0.75, 1)
 ways <- sapply(p, function(q) (q*4)^W * ((1-q)*4)^L)
 prob <- ways/sum(ways)
 cbind(p, ways, prob)
+
+sim_globe <- function(p = 0.7, N = 9){
+  sample(c("W", "L"), size = N, prob = c(p, 1-p), replace = T)
+}
+
+sim_globe()
 ```
 
 ## Testing
 
 -   have to test
 -   test using extreme values where you intuitively know the right answer
+-   explore different sampling design
 
 ```{r}
 sim_globe <- function(p = 0.7, N = 9){
@@ -218,6 +238,3 @@ sim_globe2 <- function(p = 0.7, N = 9, x = 0.1){
 -   don't understand mechanism behind incorporating x but understand why x needs to be incorporated + consequences of not
 
 ## TODO
-
--   DAG coords
--   Read misclassification in 3rd ed.

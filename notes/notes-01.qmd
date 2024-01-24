@@ -7,10 +7,9 @@ format: html
 
 ## Rose / Thorn
 
-*Rose:* excited for fewer examples + sensitivity analyses\
-BONUS: I LOVE DAGS
+*Rose:* I LOVE DAGS. Really interesting to think about the non-uniqueness of null models in ecology.
 
-*Thorn:* i am having a hard time imagining/extending my thinking re: causal imputation + unique null hypotheses (focus on causation)
+*Thorn:* the difference between regression/intervention -- have i always just done regression?
 
 ## Third Edition
 
