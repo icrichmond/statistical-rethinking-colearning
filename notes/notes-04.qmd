@@ -7,9 +7,9 @@ format: html
 
 ## Rose / Thorn
 
-*Rose:* learning what GAMs are , thinking of age/time as a cause
+*Rose:*
 
-*Thorn:* I haven't taken time to fix the plot code from the lectures
+*Thorn:*
 
 ## Drawing Inferences
 

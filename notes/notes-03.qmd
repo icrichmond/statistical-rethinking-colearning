@@ -7,9 +7,9 @@ format: html
 
 ## Rose / Thorn
 
-*Rose:* flow reminder! Retrograde explanation
+*Rose:* Non-independent variables in a summary table
 
-*Thorn:* installing rethinking on windows 
+*Thorn:* Stupid resolution to my plot coding issue
 
 ## Linear Regressions
 
@@ -42,25 +42,13 @@ data(Howell1)
 
 ## Describing Models
 
-$$
-W_{i}= \beta H_{i} + U_{i}
-$$
-
-$$
-U_{i} \sim Normal(0, \sigma)
-$$
-
-$$
-H_{i} \sim Uniform(130, 170)
-$$
-
--   = is deterministic
+= is deterministic
 
 -   \~ is distributional
 
 ## Howell Example
 
-1.  Question: Describe association between **adult** weight and height
+1.  Question/Estimand: Describe association between **adult** weight and height
 
 ```{r}
 d2 <- Howell1[Howell1$age>=18,]
@@ -106,6 +94,14 @@ W <- sim_weight(H, b = 0.5, sd = 5)
 plot(W ~ H, col = 2, lwd = 3)
 ```
 
+-   can adjust to produce biologically unrealistic relationships by adjusting b to be large or small
+
+$$ W_i = \beta H_i + U_i \\ U_i \sim Normal(0, \sigma) \\ H_i \sim Uniform(130, 170) $$
+
+-   \~ indicates distribution
+
+-   = is deterministic
+
 -   we want to estimate how the average weight changes with height
 
     $$
@@ -124,21 +120,29 @@ plot(W ~ H, col = 2, lwd = 3)
         Pr(\alpha,\beta,\sigma| H_{i}, W_{i}) = \frac{Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)Pr(\alpha,\beta,\sigma)}{Z}
         $$
 
-    -   $W_{i} \sim Normal(\mu _{i}), \sigma)$
+    -   alpha, beta, sigma are our three unknowns: alpha and beta define the line and sigma defines the error around it
 
-    -   $\mu _{i} = \alpha + \beta H_{i}$
+    -   unknowns are conditional (\|) on the data H~i~ and W~i~
 
     -   alpha, sigma, beta are unknown so we need a posterior distribution for them (and they are dependent on the data)
 
     -   $Pr(\alpha,\beta,\sigma| H_{i}, W_{i})$ = posterior probability of specific line
 
-    -   $Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)$ = probability of each weight dependent on height value, alpha, beta, sigma
+    -   $Pr(W_{i}|H_{i}, \alpha,\beta,\sigma)$ = probability of each weight dependent on height value, alpha, beta, sigma (garden of forking data)
 
     -   $Pr(\alpha,\beta,\sigma)$ = prior
 
-**Statistical Model**
+    -   Z = normalizing constant
 
--   Quadratic approximation
+    -   $W_{i} \sim Normal(\mu _{i}), \sigma)$: linear model
+
+    -   $\mu _{i} = \alpha + \beta H_{i}$
+
+-   Quadratic approximation (continuous version of grid approximation)
+
+    -   approximate posterior distribution as a multivariate Gaussian distrubution
+
+    -   posteriors are often Gaussian
 
     -   $W_{i} \sim Normal(\mu _{i}), \sigma)$
 
@@ -151,6 +155,9 @@ plot(W ~ H, col = 2, lwd = 3)
     -   $\sigma \sim Uniform(0, 10)$
 
 ```{r}
+H <- runif(10, 130, 170)
+W <- sim_weight(H, b = 0.5, sd = 5)
+
 m3.1 <- quap(alist(
   W ~ dnorm(mu, sigma),
   mu <- a + b*H,
@@ -164,13 +171,14 @@ m3.1 <- quap(alist(
 
     -   we want to constrain to scientifically plausible values
     -   justify with information outside the data - **like the rest of model**
+    -   priors have no essential differences from posteriors except for data -- we can use them as generative models and ensure that our assumptions are reasonable
 
 ```{r}
 n <- 1e3
 a <- rnorm(n, 0, 10)
 b <- runif(n, 0, 1)
-plot(NULL, xlim = c(130, 170), ylim = c(50, 90))
-#for (j in 1:50) abline(a=a[j], b=b[j])
+plot(NULL, xlim = c(130, 170), ylim = c(50, 90)) + 
+for (j in 1:50) abline(a=a[j], b=b[j], col = 'red') 
 ```
 
 4.  Validate model
@@ -203,19 +211,21 @@ precis(m3.2)
 
     -   use posterior predictions and describe/interpret those by sampling the posterior distribution
 
+-   Posterior Predictive Distribution
+
 ```{r}
 post <- extract.samples(m3.2)
-plot(d2$height, d2$weight)
-#for (j in 1:20)
-#  abline(a=post$a[j], b=post$b[j])
+plot(d2$height, d2$weight) + 
+for (j in 1:20) abline(a=post$a[j], b=post$b[j])
 
 height_seq <- seq(130, 190, len = 20)
 W_postpred <- sim(m3.2, data = list(H=height_seq))
 W_PI <- apply(W_postpred, 2, PI)
-lines(height_seq, W_PI[1,])
-lines(height_seq, W_PI[2,])
+
+plot(d2$height, d2$weight) + 
+for (j in 1:20) abline(a=post$a[j], b=post$b[j]) +
+lines(height_seq, W_PI[1,], lty = 2) +
+lines(height_seq, W_PI[2,], lty = 2)
 ```
 
 ## TODO:
-
--   figure out plot erroring
