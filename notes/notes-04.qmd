@@ -7,7 +7,7 @@ format: html
 
 ## Rose / Thorn
 
-*Rose:*
+*Rose: "*Unobserved causes are ignorable unless they are shared"
 
 *Thorn:*
 
@@ -15,7 +15,7 @@ format: html
 
 -   linear model can accomodate anything, thus we need to think carefully about our scientific model
 -   generative model + multiple estimands = multiple estimators
--   quite often the estimate we want is not in a summary table because it depends on multiple unknowns, so we often need to do post-processing
+-   quite often the estimate we want is not in a summary table because it depends on multiple unknowns in the posterior distribution or making assumptions about the population, so we often need to do post-processing
 
 ## Categories
 
@@ -32,6 +32,7 @@ data(Howell1)
 ```
 
 -   how are height, weight, and sex causally related?
+-   how are height, weight, and sex statistically related?
 
 ```{r}
 d <- dagitty("dag {
@@ -49,7 +50,7 @@ drawdag(d)
 -   influence of sex is both direct and indirect on weight
 -   $H = f_{H}(S)$
 -   $W = f_{W}(H,S)$
--   Unobserved causes are ignorable unless they are shared between variables (common cause) = confound
+-   **Unobserved causes are ignorable unless they are shared** between variables (common cause) = confound
 
 ```{r}
 sim_HW <- function(S, b, a){
@@ -59,6 +60,7 @@ sim_HW <- function(S, b, a){
   data.frame(S, H, W)
 }
 
+# S = 1 female : S = 2 male
 S <- rbern(100)+1
 dat <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0))
 head(dat)
@@ -82,11 +84,18 @@ head(dat)
 
     -   index variables are generally preferable
 
--   index variables
+## Index Variables
 
-    -   often we want to give each index the same prior
+-   often we want to give each index the same prior
+-   Influence of colour coded by: $\alpha = [\alpha_1 , \alpha_2, \alpha_3, \alpha_4 ]$
+-   $y_i \sim Normal(\mu_i, \sigma)$
+-   $\mu_i = \alpha_{S[i]}$
+-   Priors
+    -   $\alpha_j \sim Normal(60, 10)$
+    -   $\sigma \sim Uniform(0, 10)$
+    -   If you use indicator variables, one becomes the default and the other is the adjustment so you must set separate priors for both
 
--   total causal effect of sex
+## Total Causal Effect of Sex on Weight
 
 ```{r}
 S <- rep(1, 100)
@@ -135,26 +144,30 @@ m_SW <- quap(alist(
 ```
 
 -   posterior means and predictions
+-   a1 and a2 are often not what we are after
+    -   difference in mean weight is not in the posterior - must calculate a contrast
+    -   but the mean weight of each category does exist in the posterior
+-   first plot is just mean weight for each sex
+-   distributions of weights is the posterior predicted, second figure
+-   contrast is usually what we are after, third figure
 
 ```{r}
 # posterior mean W
 post <- extract.samples(m_SW)
-dens(post$a[,1])
-#dens(post$a[,2], add = T)
+density_f <- density(post$a[, 1])
+density_m <- density(post$a[, 2])
+plot(density_f, col=2, xlim = c(min(density_f$x,density_m$x), max(density_f$x,density_m$x)), main = "Posterior Mean Weight (kg)") + 
+lines(density_m, col=4)
 
 # posterior W predictions
 W1 <- rnorm(1000, post$a[,1], post$sigma)
 W2 <- rnorm(1000, post$a[,2], post$sigma)
-dens(W1)
-#dens(W2, add = T)
+predict_f <- density(W1)
+predict_m <- density(W2)
+plot(predict_f, col=2, xlim = c(min(predict_f$x,predict_m$x), max(predict_f$x,predict_m$x)), main = "Posterior Predicted Weight (kg)") + 
+lines(predict_m, col=4)
 
-# contrast
-W_contrast <- W2 - W1
-dens(W_contrast)
 
-# proportion above zero
-sum(W_contrast > 0)/1000
-sum(W_contrast < 0)/1000
 ```
 
 -   contrasting
@@ -165,12 +178,31 @@ sum(W_contrast < 0)/1000
 
     -   we must compute **contrast distribution**
 
+    -   overlap in distributions does not indicate that they are the same (or different)
+
+-   average difference between men and women in this sample:
+
 ```{r}
 mu_contrast <- post$a[,2] - post$a[,1]
 dens(mu_contrast)
 ```
 
+-   weight contrasting:
+
+```{r}
+# contrast
+W_contrast <- W2 - W1
+dens(W_contrast)
+
+# proportion above zero
+sum(W_contrast > 0)/1000
+sum(W_contrast < 0)/1000
+```
+
+## Direct Causal Effect of Sex on Weight
+
 -   "controlling" for the indirect effect of sex through height
+-   want to "block" association through H
 
 ```{r}
 S <- rbern(100)+1
@@ -186,6 +218,8 @@ dat <- sim_HW(S, b = c(0.5, 0.5), a = c(0, 10))
     -   This equation centers the height $(H_{i} - \bar H)$
 
     -   Centering H means that alpha represents the average weight of a person with average height
+
+    -   Centering also makes priors easier for alpha
 
     -   $\alpha = [\alpha _{1}, \alpha _{2}]$ , $\beta = [\beta _{1}, \beta _{2}]$
 
@@ -206,23 +240,29 @@ m_SHW <- quap(alist(
 ```
 
 -   we need to compute the difference of expected weight at each height to get the actual estimate that we are looking for (for the direct effect of sex on weight)
+-   compute posterior predictive for each group, calculate contrast, plot
 
 ```{r}
 xseq <- seq(from=130, to=190, len=50)
 
 muF <- link(m_SHW, data = list(S=rep(1,50), H=xseq, Hbar=mean(d$height)))
-#lines(xseq, apply(muF, 2, mean))
 
 muM <- link(m_SHW, data = list(S=rep(2,50), H=xseq, Hbar = mean(d$height)))
-#lines(xseq, apply(muM, 2, mean))
 
 mu_contrast <- muF - muM
 
-#plot(NULL, xlim=range(xseq))
-#for (p in c(0.5, 0.6, 0.7, 0.8, 0.9, 0.99))
-#  shade(apply(mu_contrast, 2, PI, prob = p), xseq)
-#abline(h=0)
+plot(NULL, xlim=range(xseq), ylim = range(-6, 8), xlab = "height (cm)", ylab = "weight contrast (F-M)") +
+lines(xseq, apply(muF, 2, mean)) + 
+lines(xseq, apply(muM, 2, mean)) + 
+for (p in c(0.5, 0.6, 0.7, 0.8, 0.9, 0.99)) {
+  shade(apply(mu_contrast, 2, PI, prob = p), xseq)
+  abline(h=0)
+  }
 ```
+
+-   women tend to be heavier at high heights and vice versa for men
+
+-   but most of the effect is centered around zero, therefore:
 
 -   nearly all of the causal effects of S acts through H
 
@@ -240,38 +280,43 @@ mu_contrast <- muF - muM
 
 ## Curves from Lines
 
--   many non linear relationships
+-   many non linear relationships, which can be fit my linear models easily (but not mechanistic, like a geocentric model)
 
 -   linear models can easily fit curves: 2 strategies
 
     -   polynomials (bad)
 
-    -   splines and GAMs (less bad)
+    -   splines and GAMs (less bad + useful)
 
--   polynomial models
+## Polynomial Models
 
-    -   still linear because its an additive function of the parameters
+-   still linear because its an additive function of the parameters
 
-    -   create strange symmetries and explosive uncertainty
+-   create strange symmetries and explosive uncertainty
 
-    -   no local smoothing, only global smoothing
+-   no local smoothing, only global smoothing
 
-    -   do not use
+-   any data point at any part of the x-axis can significantly change the curve even at arbitrarily far distances
 
--   splines
+-   can't predict anything outside of the data with any certainty
 
-    -   great for locally inferred function
+-   **do not use**
 
-    -   add together a bunch of locally trained terms
+## Splines + GAMs
 
-    -   can add as many locally trained terms as you want
+-   great for locally inferred function
 
-    -   each term has a weight and slope and only affects its own region
+-   add together a bunch of locally trained terms
+
+-   can add as many locally trained terms as you want
+
+-   each term has a weight and slope and only affects its own region
 
 ## Full Luxury Bayes
 
 -   instead of two models for two estimands, use one model for full causal model
 -   can simulate interventions with this approach
+-   requires more simulations
 
 ```{r, eval = F}
 m_SHW_full <- quap(alist(
@@ -314,5 +359,3 @@ W_do_S_auto <- HWsim$W[,2] - HWsim$W[,1]
 -   you can either do one statistical model for each estimand OR one simulation for each estimand (full luxury Bayes)
 
 ## TODO:
-
--   fix weird plot erroring
