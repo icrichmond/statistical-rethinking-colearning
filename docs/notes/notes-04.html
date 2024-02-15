@@ -9,7 +9,7 @@
 <meta name="author" content="Isabella C. Richmond">
 <meta name="dcterms.date" content="2023-02-08">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 04 - Categories &amp; Curves</title>
+<title>Statistical Rethinking colearning 2024 - Bella - Lecture 04 - Categories &amp; Curves</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Statistical Rethinking colearning 2023 - Bella</a> 
+      <a href="../">Statistical Rethinking colearning 2024 - Bella</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -159,6 +159,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Homework - Week 01</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 02</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -459,12 +465,12 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  S        H        W
-1 2 159.3816 98.60949
-2 2 159.0705 99.91792
-3 2 160.5331 91.31716
-4 1 140.8750 67.57970
-5 2 159.6841 93.36216
-6 1 153.8269 80.43557</code></pre>
+1 2 166.8772 95.38070
+2 2 160.4192 97.05679
+3 1 147.8812 71.07869
+4 2 162.7070 98.27628
+5 1 152.2120 82.54825
+6 1 150.4895 68.52635</code></pre>
 </div>
 </div>
 <ul>
@@ -510,7 +516,7 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 20.60525</code></pre>
+<pre><code>[1] 21.06315</code></pre>
 </div>
 </div>
 <ul>
@@ -529,10 +535,10 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           mean        sd      5.5%     94.5%
-a[1]  74.146647 0.8146886 72.844617 75.448676
-a[2]  95.390673 0.8152587 94.087733 96.693614
-sigma  5.779165 0.4090514  5.125422  6.432908</code></pre>
+<pre><code>          mean        sd      5.5%     94.5%
+a[1]  74.35341 0.8198703 73.043102 75.663725
+a[2]  94.64240 0.8204187 93.331216 95.953592
+sigma  5.81613 0.4116514  5.158231  6.474028</code></pre>
 </div>
 </div>
 <ul>
@@ -622,11 +628,11 @@ sigma  5.779165 0.4090514  5.125422  6.432908</code></pre>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.803</code></pre>
+<pre><code>[1] 0.796</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.197</code></pre>
+<pre><code>[1] 0.204</code></pre>
 </div>
 </div>
 </section>

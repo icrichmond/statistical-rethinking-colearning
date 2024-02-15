@@ -1,0 +1,166 @@
+---
+title: "Homework - Week 02"
+author: "Isabella C. Richmond"
+format: html
+---
+
+```{r}
+#| label: setup
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+library(rethinking)
+library(ggplot2)
+library(ggdag)
+library(dplyr)
+```
+
+## Q1
+
+> From the Howell1 dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume that age influences weight through two paths. First, age influences height. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.
+
+DAG:
+
+```{r}
+#| label: DAG
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+dagified <- dagify(
+    # outline relationships between your variables
+    Weight ~ Age + Height,
+    Height ~ Age,
+   # assign exposure and outcome
+    exposure = 'Age',
+    outcome = 'Weight', 
+   # assign coordinates so they aren't randomly assigned
+    coords = list(x = c(Age = -1, Height = 0, Weight = 0),
+                  y = c(Age = 0, Height = 1, Weight = -1))) %>%
+    # tidy_dagitty makes dag into tidy table format
+    tidy_dagitty() %>%
+    # add column that assigns variables to groups that you want to colour code
+    mutate(status = case_when(name == "Age" ~ 'exposure',
+                              name == "Weight" ~ 'outcome',
+                              .default = 'NA'))
+
+  ggplot(dagified, aes(x = x, y = y, xend = xend, yend = yend)) +
+    theme_dag() +
+    # colour nodes by the column you made in previous step
+    geom_dag_point(aes(color = status)) +
+    # add labels so you can have more readable variable names
+    geom_dag_label_repel(aes(label = name, fill = status),
+                         color = "white", fontface = "bold") +
+    # adding geom_dag_edges here so that the arrows will go over the labels
+    geom_dag_edges() +
+    # assign the colours that you want
+    scale_fill_manual(values = c('darkseagreen', 'grey', 'lightblue')) +
+    scale_colour_manual(values = c('darkseagreen', 'grey', 'lightblue')) +
+   # removing colour legend here
+    theme(legend.position = 'none')
+
+```
+
+-   $$
+    Weight = f_{Weight}(Age, Height) 
+    $$
+
+Generative Simulation:
+
+```{r}
+#| label: sim
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+N <- 1e3
+
+# generate 1000 youth ranging from 1-12
+age <- sample(seq(from = 1, to = 12), size = N, replace = T)
+
+# generate heights that are variable but increase with increasing age 
+# height is 8 * age with 2 SD (maybe too small for babies but generally okay)
+bAH <- 8
+height <- rnorm(N, bAH*age, 2)
+
+# generate weights that are variable but increase with increasing height and age (but are smaller than heights)
+bAW <- 0.1
+bHW <- 0.5
+weight <- rnorm(N, bAW*age + bHW*height, 2)
+
+gen <- data.frame(age, height, weight)
+
+head(gen)
+```
+
+## Q2
+
+> Estimate the **total** causal effect of each year of growth on weight.
+
+-   Total causal effect does not stratify by height, it includes both direct and indirect effects
+
+Prior predictive:
+
+```{r}
+#| label: prior-predictive
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+tar_load(h02_mAW_prior)
+
+gen_sub <- gen %>% select(c(age))
+
+epred <- add_epred_draws(gen_sub, h02_mAW_prior, ndraws = 100)
+    
+ggplot(epred, aes(x = age, y = .epred)) +
+      geom_line(aes(group=.draw), alpha = 0.1) +
+      labs(y = "Predicted Weight", x = "Age") +
+      theme_classic()
+
+
+```
+
+Posterior Distribution:
+
+```{r}
+#| label: posterior
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+tar_load(h02_mAW)
+data(Howell1)
+youth <- Howell1 %>% filter(age < 13)
+
+avg_youth <- youth %>% 
+  summarize(age = mean(age))
+
+
+pred_mean <- h02_mAW %>% 
+  epred_draws(newdata = avg_youth)
+
+
+ggplot(pred_mean, aes(x = .epred)) + 
+  stat_halfeye() +
+  labs(x = "Weight (kg) for kid of average age", y = "") + 
+  theme_classic() 
+```
+
+Posterior Predictive:
+
+```{r}
+pred_mean <- h02_mAW %>% 
+  predicted_draws(newdata = avg_youth)
+
+
+ggplot(pred_mean, aes(x = .predicted)) + 
+  stat_halfeye() +
+  labs(x = "Weight (kg) for kid of average age", y = "") + 
+  theme_classic() 
+```
+
+## Q3 (optional):
+
+> The data in `data(Oxboys)` (`rethinking` package) are growth records for 26 boys measured over 9 periods. I want you to model their growth. Specifically, model the increments in growth from one period (Occassion in the data table) to the next. Each increment is simply the difference between height in one occasion and height in the previous occasion. Since none of these boys shrunk during the study, all of the growth increments are greater than zero. Estimate the posterior distribution of these increments. Constrain the distribution so it is always positive - it should not be possible for the model to think that boys can shrink from year to year. Finally compute the posterior distribution of the total growth over all 9 occasions.

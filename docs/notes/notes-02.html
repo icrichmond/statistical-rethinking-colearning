@@ -9,7 +9,7 @@
 <meta name="author" content="Isabella C. Richmond">
 <meta name="dcterms.date" content="2023-01-23">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 02 - The Garden of Forking Data</title>
+<title>Statistical Rethinking colearning 2024 - Bella - Lecture 02 - The Garden of Forking Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Statistical Rethinking colearning 2023 - Bella</a> 
+      <a href="../">Statistical Rethinking colearning 2024 - Bella</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -159,6 +159,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Homework - Week 01</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 02</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -486,7 +492,7 @@ W,L = f(p,N)
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "W" "W" "W" "W" "W" "W" "L" "W" "W"</code></pre>
+<pre><code>[1] "L" "W" "L" "W" "L" "W" "W" "L" "W"</code></pre>
 </div>
 </div>
 </section>
@@ -505,7 +511,7 @@ W,L = f(p,N)
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "W" "W" "L" "W" "W" "W" "W" "W" "W"</code></pre>
+<pre><code>[1] "W" "W" "W" "L" "W" "W" "W" "L" "L"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>(<span class="at">p=</span><span class="dv">1</span>, <span class="at">N=</span><span class="dv">11</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -513,7 +519,7 @@ W,L = f(p,N)
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">sim_globe</span>(<span class="at">p=</span><span class="fl">0.5</span>, <span class="at">N=</span><span class="fl">1e4</span>) <span class="sc">==</span> <span class="st">"W"</span>)<span class="sc">/</span><span class="fl">1e4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5011</code></pre>
+<pre><code>[1] 0.496</code></pre>
 </div>
 </div>
 <p>Function:</p>
@@ -540,9 +546,9 @@ W,L = f(p,N)
 <div class="cell-output cell-output-stdout">
 <pre><code>  poss ways  post                 bars
 1 0.00    0 0.000                     
-2 0.25    9 0.003                     
-3 0.50  512 0.189 ####                
-4 0.75 2187 0.808 ################    
+2 0.25    3 0.000                     
+3 0.50  512 0.072 #                   
+4 0.75 6561 0.927 ################### 
 5 1.00    0 0.000                     </code></pre>
 </div>
 </div>

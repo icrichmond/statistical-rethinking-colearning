@@ -9,7 +9,7 @@
 <meta name="author" content="Isabella C. Richmond">
 <meta name="dcterms.date" content="2023-02-08">
 
-<title>Statistical Rethinking colearning 2023 - Bella - Lecture 03 - Geocentric Models</title>
+<title>Statistical Rethinking colearning 2024 - Bella - Lecture 03 - Geocentric Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Statistical Rethinking colearning 2023 - Bella</a> 
+      <a href="../">Statistical Rethinking colearning 2024 - Bella</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -159,6 +159,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Homework - Week 01</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 02</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -518,10 +524,10 @@ Pr(\alpha,\beta,\sigma| H_{i}, W_{i}) = \frac{Pr(W_{i}|H_{i}, \alpha,\beta,\sigm
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model summary</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           mean         sd        5.5%      94.5%
-a     1.2508639 9.47623652 -13.8939923 16.3957201
-b     0.5060533 0.06383068   0.4040396  0.6080671
-sigma 6.8526424 1.53444846   4.4002974  9.3049874</code></pre>
+<pre><code>          mean         sd       5.5%      94.5%
+a     2.845659 7.84531353 -9.6926668 15.3839857
+b     0.475005 0.05266873  0.3908302  0.5591798
+sigma 3.646689 0.81955557  2.3368813  4.9564975</code></pre>
 </div>
 </div>
 <ol start="5" type="1">
@@ -540,9 +546,9 @@ sigma 6.8526424 1.53444846   4.4002974  9.3049874</code></pre>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             mean         sd        5.5%       94.5%
-a     -43.3729992 4.16867670 -50.0353498 -36.7106487
-b       0.5717157 0.02693731   0.5286647   0.6147667
-sigma   4.2500254 0.16148270   3.9919448   4.5081059</code></pre>
+a     -43.3800239 4.17118712 -50.0463865 -36.7136612
+b       0.5717624 0.02695353   0.5286854   0.6148393
+sigma   4.2531611 0.16178117   3.9946035   4.5117186</code></pre>
 </div>
 </div>
 <ul>

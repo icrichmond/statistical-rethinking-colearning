@@ -19,9 +19,49 @@ options(mc.cores = 2,
 
 
 # Data --------------------------------------------------------------------
+data(Howell1)
+
 
 
 # Targets: homework   -----------------------------------------------------
+targets_homework <- c(
+  
+  tar_target(
+    d,
+    Howell1 %>% 
+      filter(age <= 13) %>%
+      select(c(weight, age))
+  ),
+  
+  tar_target(
+    h02_mAW_prior,
+    brm(formula = weight ~ age, 
+        data = d, 
+        family = gaussian(),
+        sample_prior = "only",
+        prior = c(set_prior("normal(35, 2)", class = "Intercept"),
+                  set_prior("uniform(0, 10)", class = "b"), # uniform so it stays positive
+                  set_prior("exponential(1)", class = "sigma")),
+        chains = 4,
+        cores = 1,
+        iter = 2000)),
+  
+  tar_target(
+    h02_mAW,
+    brm(formula = weight ~ age, 
+    data = d, 
+    family = gaussian(),
+    prior = c(set_prior("normal(35, 2)", class = "Intercept"),
+              set_prior("uniform(0, 10)", class = "b"), # uniform so it stays positive
+              set_prior("exponential(1)", class = "sigma")),
+    chains = 4,
+    cores = 1,
+    iter = 2000))
+  
+  
+  
+  
+)
 
 
 # Quarto ------------------------------------------------------------------
