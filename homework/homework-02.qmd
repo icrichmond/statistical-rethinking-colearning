@@ -14,6 +14,8 @@ library(rethinking)
 library(ggplot2)
 library(ggdag)
 library(dplyr)
+library(targets)
+library(tidybayes)
 ```
 
 ## Q1
@@ -155,7 +157,7 @@ pred_mean <- h02_mAW %>%
   predicted_draws(newdata = avg_youth)
 
 
-ggplot(pred_mean, aes(x = .predicted)) + 
+ggplot(pred_mean, aes(x = .prediction)) + 
   stat_halfeye() +
   labs(x = "Weight (kg) for kid of average age", y = "") + 
   theme_classic() 
