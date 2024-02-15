@@ -398,13 +398,13 @@ Weight = f_{Weight}(Age, Height)
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  age    height    weight
-1   4 30.140591 17.263167
-2   9 77.664589 38.752190
-3  10 78.292629 40.672597
-4   1  4.909924  2.431746
-5   7 52.595862 23.877328
-6  12 94.216504 48.401283</code></pre>
+<pre><code>  age   height   weight
+1   6 48.55207 27.55233
+2   5 41.85212 20.37010
+3   6 48.83520 26.41977
+4   6 47.97738 26.53236
+5   9 71.40918 37.43588
+6   8 63.39039 33.07189</code></pre>
 </div>
 </div>
 </section>
@@ -580,6 +580,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
 </div>
 <p>Hmm… maybe not a success …</p>
+<p>Total growth over 8 occasions:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to randomly sample the posterior 8 times and then sum the samples, 1000 times </span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>

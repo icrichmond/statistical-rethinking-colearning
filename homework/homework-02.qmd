@@ -261,6 +261,8 @@ ggplot(post_growth, aes(x = .prediction)) +
 
 Hmm... maybe not a success ...
 
+Total growth over 8 occasions:
+
 ```{r}
 #| label: bonus-posterior-sum
 #| echo: TRUE
