@@ -111,6 +111,7 @@ Prior predictive:
 #| warning: FALSE
 
 tar_load(h02_mAW_prior)
+print(h02_mAW_prior$formula)
 
 gen_sub <- gen %>% select(c(age))
 
@@ -133,6 +134,9 @@ Posterior Distribution:
 #| warning: FALSE
 
 tar_load(h02_mAW)
+print(h02_mAW)
+
+
 data(Howell1)
 youth <- Howell1 %>% filter(age < 13)
 
@@ -148,11 +152,30 @@ ggplot(pred_mean, aes(x = .epred)) +
   stat_halfeye() +
   labs(x = "Weight (kg) for kid of average age", y = "") + 
   theme_classic() 
+
+
+# prediction for relationship between age and weight
+epred <- h02_mAW %>% 
+      epred_draws(youth)
+
+# plot slopes
+ggplot(data = youth, aes(x = age)) +
+  stat_lineribbon(aes(x = age, y = .epred), data = epred) +
+  geom_jitter(aes(y = weight), width = .1, height = 0, alpha = 0.7) +
+  scale_fill_brewer(palette = "Greys") +
+  labs(y = 'Linear Model Predicted Weight (kg)', x = "Age (yrs)", fill = "Credible Interval") + 
+  theme_classic()
 ```
 
 Posterior Predictive:
 
 ```{r}
+#| label: posterior-predictive
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+# prediction for average kid
 pred_mean <- h02_mAW %>% 
   predicted_draws(newdata = avg_youth)
 
@@ -161,8 +184,94 @@ ggplot(pred_mean, aes(x = .prediction)) +
   stat_halfeye() +
   labs(x = "Weight (kg) for kid of average age", y = "") + 
   theme_classic() 
+
+
+# prediction for relationship between age and weight
+pred <- h02_mAW %>% 
+      predicted_draws(youth)
+
+# plot slopes
+ggplot(data = youth, aes(x = age)) +
+  stat_lineribbon(aes(x = age, y = .prediction), data = pred) +
+  geom_jitter(aes(y = weight), width = .1, height = 0, alpha = 0.7) +
+  scale_fill_brewer(palette = "Greys") +
+  labs(y = 'Predicted Weight (kg)', x = "Age (yrs)", fill = "Credible Interval") + 
+  theme_classic()
 ```
 
 ## Q3 (optional):
 
 > The data in `data(Oxboys)` (`rethinking` package) are growth records for 26 boys measured over 9 periods. I want you to model their growth. Specifically, model the increments in growth from one period (Occassion in the data table) to the next. Each increment is simply the difference between height in one occasion and height in the previous occasion. Since none of these boys shrunk during the study, all of the growth increments are greater than zero. Estimate the posterior distribution of these increments. Constrain the distribution so it is always positive - it should not be possible for the model to think that boys can shrink from year to year. Finally compute the posterior distribution of the total growth over all 9 occasions.
+
+-   $$Growth = f(Time)$$
+    -   where Growth = $$\Delta Height$$
+    -   and Time = Occasion
+    -   $$
+        \Delta Height = f(Occasion)
+        $$
+
+Check that our priors are constrained to positive values:
+
+```{r}
+#| label: bonus-prior
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+data(Oxboys)
+
+ox <- Oxboys %>% 
+  group_by(Subject) %>% 
+  mutate(growth = height - lag(height, default = first(height), order_by = Occasion)) %>% 
+  # remove first occasion because there is no growth 
+  filter(Occasion != 1)
+
+tar_load(h02_mGO_prior)
+
+posprior <- add_epred_draws(ox, h02_mGO_prior, ndraws = 100)
+    
+ggplot(posprior, aes(x = .epred)) +
+  geom_histogram() +
+  labs(x = "Intercept")+ 
+  theme_classic()
+
+```
+
+Success! We see no negative intercept values in our prior.
+
+Investigate posterior distribution:
+
+```{r}
+#| label: bonus-posterior
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+tar_load(h02_mGO)
+h02_mGO$formula
+
+post_growth <- h02_mGO %>% 
+  predicted_draws(newdata = ox)
+
+
+ggplot(post_growth, aes(x = .prediction)) + 
+  stat_halfeye() +
+  labs(x = "Growth", y = "") + 
+  theme_classic() 
+```
+
+Hmm... maybe not a success ...
+
+```{r}
+#| label: bonus-posterior-sum
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+# need to randomly sample the posterior 8 times and then sum the samples, 1000 times 
+
+ggplot(post_growth, aes(x = .prediction)) + 
+  stat_halfeye() +
+  labs(x = "Growth", y = "") + 
+  theme_classic() 
+```

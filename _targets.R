@@ -20,6 +20,7 @@ options(mc.cores = 2,
 
 # Data --------------------------------------------------------------------
 data(Howell1)
+data(Oxboys)
 
 
 
@@ -34,6 +35,15 @@ targets_homework <- c(
   ),
   
   tar_target(
+    ox,
+    Oxboys %>% 
+      group_by(Subject) %>% 
+      mutate(growth = height - lag(height, default = first(height), order_by = Occasion)) %>% 
+      # remove first occasion because there is no growth 
+      filter(Occasion != 1)
+  ),
+  
+  tar_target(
     h02_mAW_prior,
     brm(formula = weight ~ age, 
         data = d, 
@@ -44,7 +54,8 @@ targets_homework <- c(
                   set_prior("exponential(1)", class = "sigma")),
         chains = 4,
         cores = 1,
-        iter = 2000)),
+        iter = 2000)
+    ),
   
   tar_target(
     h02_mAW,
@@ -56,9 +67,33 @@ targets_homework <- c(
               set_prior("exponential(1)", class = "sigma")),
     chains = 4,
     cores = 1,
-    iter = 2000))
+    iter = 2000)
+    ),
   
+  tar_target(
+    h02_mGO_prior,
+    brm(formula = growth ~ 1,
+        data = ox, 
+        family = gaussian(), 
+        sample_prior = "only",
+        prior = c(prior(normal(1.6, 0.5), class = "Intercept", lb = 0),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
   
+  tar_target(
+    h02_mGO,
+    brm(formula = growth ~ 1,
+        data = ox, 
+        family = gaussian(), 
+        prior = c(prior(normal(1.6, 0.5), class = "Intercept", lb = 0),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  )
   
   
 )
