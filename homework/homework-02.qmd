@@ -253,7 +253,6 @@ h02_mGO$formula
 post_growth <- h02_mGO %>% 
   predicted_draws(newdata = ox)
 
-
 ggplot(post_growth, aes(x = .prediction)) + 
   stat_halfeye() +
   labs(x = "Growth", y = "") + 
@@ -270,7 +269,9 @@ Hmm... maybe not a success ...
 
 # need to randomly sample the posterior 8 times and then sum the samples, 1000 times 
 
-ggplot(post_growth, aes(x = .prediction)) + 
+t <- data.frame(total_growth = replicate(1000, {sum(sample(post_growth$.prediction, 8, replace = T))}))
+
+ggplot(t, aes(x = total_growth)) + 
   stat_halfeye() +
   labs(x = "Growth", y = "") + 
   theme_classic() 
