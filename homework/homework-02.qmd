@@ -16,6 +16,7 @@ library(ggdag)
 library(dplyr)
 library(targets)
 library(tidybayes)
+library(brms)
 ```
 
 ## Q1
@@ -112,6 +113,7 @@ Prior predictive:
 
 tar_load(h02_mAW_prior)
 print(h02_mAW_prior$formula)
+prior_summary(h02_mAW_prior)
 
 gen_sub <- gen %>% select(c(age))
 
@@ -134,7 +136,7 @@ Posterior Distribution:
 #| warning: FALSE
 
 tar_load(h02_mAW)
-print(h02_mAW)
+print(h02_mAW$formula)
 
 
 data(Howell1)
@@ -227,6 +229,7 @@ ox <- Oxboys %>%
   filter(Occasion != 1)
 
 tar_load(h02_mGO_prior)
+prior_summary(h02_mGO_prior)
 
 posprior <- add_epred_draws(ox, h02_mGO_prior, ndraws = 100)
     
