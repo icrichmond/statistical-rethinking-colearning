@@ -1,7 +1,7 @@
 ---
 title: "Lecture 06 - Good & Bad Controls"
 author: Isabella C. Richmond
-date: Feb 22, 2023
+date: Feb 22, 2024
 format: html
 ---
 
@@ -11,13 +11,14 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* identifying and working through bad controls
+*Rose:* identifying and working through bad controls, table 2 fallacy
 
 *Thorn:*
 
 ## Randomization
 
 -   randomizing the treatment can remove the confound (only available for experiments)
+-   effectively removes all the other arrows in X
 
 ## Causal Thinking
 
@@ -48,6 +49,7 @@ ggdag(dag) +
 -   marginalize or average over control variables
 
     -   the coefficient is not usually satisfactory, need to marginalize
+    -   the causal effect of X on Y is the distribution of Y when we change X, averaged over the distributions of the control variables
 
 ```{r}
 dag <- dagify(
@@ -74,6 +76,8 @@ ggdag(dag) +
 ## Do-Calculus
 
 -   allows us to determine if it is possible to answer our question using a DAG
+
+-   do-calculus tells us if we need to make additional functional assumptions
 
 -   backdoor criterion
 
@@ -124,13 +128,37 @@ m_YXZ <- quap(alist(
 
 post <- extract.samples(m_YX)
 post2 <- extract.samples(m_YXZ)
-dens(post$b_XY)
-#dens(post2$b_XY, add = TRUE)
+
+density_1 <- density(post$b_XY)
+density_2 <- density(post2$b_XY)
+plot(density_1, col=2, xlim = c(min(density_1$x,density_2$x), max(density_1$x,density_2$x)), xlab = "posterior b_XY", main = "red = confounded, blue = stratified") + 
+lines(density_2, col=4)
 ```
 
 -   any variable you add to a model as part of the adjustment set (ie to control for), its coefficients are usually not interpretable
 
 -   minimum adjustment set is not always the best set
+
+    -   doesn't consider statistical efficiency
+
+    -   sometimes want to stratify by things that are not in the minimum adjustment set to make your model more efficient
+
+```{r}
+dag <- dagify(
+
+    P ~ G + U,
+    C ~ P + G + U
+
+)
+
+ggdag(dag) +
+
+    theme_dag()
+```
+
+-   P is a mediator and collider, so we can't get the direct effect of G on C because we don't have U
+
+    -   can estimate of total effect of G on C
 
 ## Good & Bad Controls
 
@@ -140,7 +168,7 @@ dens(post$b_XY)
 
 -   variables not being collinear is not a good reason for including/excluding variables
 
-    -   collinearity can arise from many statistical processes
+    -   collinearity can arise from many causal processes
 
 -   post-treatment variables are often risky controls
 
@@ -159,10 +187,13 @@ f <- function(n=100,bXZ=1,bZY=1) {
     return( c(bX,bXZ) )
 }
 
-sim <- mcreplicate( 1e4 , f(bZY=0), mc.cores = 1)
+sim <- mcreplicate( 1e4 , f(), mc.cores = 1)
 
-dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(-1,0.8) , ylim=c(0,2.7)  )
-#dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
+
+density_1 <- density(sim[1,])
+density_2 <- density(sim[2,])
+plot(density_1,  xlim=c(-1,0.8) , ylim=c(0,2.7), xlab = "posterior mean", main = "red = confounded, black = correct") + 
+lines(density_2, col=2)
 ```
 
 -   case control bias (selection on outcome)
@@ -193,8 +224,11 @@ f <- function(n=100,bXY=1,bYZ=1) {
 
 sim <- mcreplicate( 1e4 , f(), mc.cores = 1 )
 
-dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(0,1.5) , ylim=c(0,5)  )
-#dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
+
+density_1 <- density(sim[1,])
+density_2 <- density(sim[2,])
+plot(density_1,  xlim=c(-1,0.8) , ylim=c(0,2.7), xlab = "posterior mean", main = "red = confounded, black = correct") + 
+lines(density_2, col=2)
 ```
 
 -   precision parasite
@@ -225,8 +259,11 @@ f <- function(n=100,bZX=1,bXY=1) {
 
 sim <- mcreplicate( 1e4 , f(n=50), mc.cores = 1 )
 
-dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(0.5,1.5) , ylim=c(0,4.5)  )
-dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
+
+density_1 <- density(sim[1,])
+density_2 <- density(sim[2,])
+plot(density_1,  xlim=c(-1,0.8) , ylim=c(0,2.7), xlab = "posterior mean", main = "red = confounded, black = correct") + 
+lines(density_2, col=2)
 ```
 
 -   bias amplification
@@ -257,11 +294,24 @@ f <- function(n=100,bZX=1,bXY=1) {
     return( c(bX,bXZ) )
 }
 
+# true value zero
 sim <- mcreplicate( 1e4 , f(bXY=0), mc.cores = 1)
 
-dens( sim[1,] , lwd=3 , xlab="posterior mean" , xlim=c(-0.5,1) , ylim=c(0,5.5)  )
-#dens( sim[2,] , lwd=3 , col=2 , add=TRUE )
+density_1 <- density(sim[1,])
+density_2 <- density(sim[2,])
+plot(density_1,  xlim=c(0,1) , ylim=c(0,6), xlab = "posterior mean", main = "red = more biased, black = biased") + 
+lines(density_2, col=2)
+```
 
+-    covariation in X & Y requires variation in their causes
+
+-   within each level of Z, less variation in X
+
+-   additionally, the confound u becomes relatively more important within each level of Z
+
+-   double biasing
+
+```{r}
 abline_w <- function(...,col=1,lwd=1,dlwd=2) {
     abline(...,col="white",lwd=lwd+dlwd)
     abline(...,col=col,lwd=lwd)
@@ -274,14 +324,13 @@ X <- rnorm(n, 7*Z + u )
 Y <- rnorm(n, 0*X + u )
 
 cols <- c( col.alpha(2,0.5) , col.alpha(4,0.5) )
-plot( X , Y  , col=cols[Z+1] , lwd=2 )
-
-#abline_w( lm(Y~X) , lwd=3 )
-#
-#abline_w( lm(Y[Z==1]~X[Z==1]) , lwd=3 , col=4 )
-#
-#abline_w( lm(Y[Z==0]~X[Z==0]) , lwd=3 , col=2 )
+plot( X , Y  , col=cols[Z+1] , lwd=2 ) + 
+  abline_w( lm(Y~X) , lwd=3 ) + 
+  abline_w( lm(Y[Z==1]~X[Z==1]) , lwd=3 , col=4 ) + 
+  abline_w( lm(Y[Z==0]~X[Z==0]) , lwd=3 , col=2 )
 ```
+
+-   the damage increases once stratified by Z (red and blue lines)
 
 ## Summary
 
@@ -308,3 +357,4 @@ plot( X , Y  , col=cols[Z+1] , lwd=2 )
 ## TODO
 
 -   read Table 2 Fallacy paper
+-   what are other types of causal inference that are not multiple regression?

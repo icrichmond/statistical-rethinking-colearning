@@ -1,19 +1,20 @@
 ---
 title: "Lecture 05 - Elemental Confounds"
 author: Isabella C. Richmond
-date: Feb 22, 2023
+date: Feb 22, 2024
 format: html
 ---
 
 ## Rose / Thorn
 
-*Rose:* so helpful and relevant
+*Rose:* completely changed my approach to science
 
-*Thorn:* is all my science wrong
+*Thorn:* why set M and not A in intervention?
 
 ## Correlation
 
 -   correlation is common in nature, causation is sparse
+-   correlation over time series especially common
 -   scientific question/estimand -\> recipe/estimator -\> result/estimate
 
 ## Association & Causation
@@ -29,7 +30,7 @@ source("R/packages.R")
 
 ## The Fork
 
--   X and Y are associated $Y \not\!\perp\!\!\!\perp X$
+-   X and Y are associated $Y \not\!\perp\!\!\!\perp X$ (not independent)
 -   Share a common cause Z
 -   Once stratified by Z, no association $Y \perp\!\!\!\perp X | Z$
 
@@ -50,6 +51,13 @@ n <- 1000
 Z <- rbern(n, 0.5)
 X <- rbern(n, (1-Z)*0.01 + Z*0.9)
 Y <- rbern(n, (1-Z)*0.01 + Z*0.9)
+
+# correlated
+cor(X, Y)
+
+# no longer correlated when we pull out Z
+cor(X[Z==0], Y[Z==0])
+cor(X[Z==1], Y[Z==1])
 ```
 
 ```{r}
@@ -59,11 +67,10 @@ Z <- rbern(n, 0.5)
 X <- rnorm(n, (1-Z)*0.01 + Z*0.9)
 Y <- rnorm(n, (1-Z)*0.01 + Z*0.9)
 
-plot(X, Y, col=cols[Z+1])
-# abline(lm(Y[Z==1]))
-#
-#
-
+plot(X, Y, col=cols[Z+1]) + 
+  abline(lm(Y[Z==1] ~ X[Z==1]), col = 2) + 
+  abline(lm(Y[Z==0] ~X[Z==0]), col = 4) + 
+  abline(lm(Y~ X))
 ```
 
 -   example:
@@ -91,9 +98,22 @@ ggdag(dag) +
 
 -   continuous variable stratification means that we are adding to that variable essentially to the intercept
 
+    -   stratifying means for every level of the stratified value, what is the association between the other two variables?
+
+    -   what does this mean for continuous variables?
+
+    -   every value of A produces a different relationship between D and M
+
+    -   $$
+        \mu_i = (\alpha + \beta_A*A) + B_D*D
+        $$
+
 -   standardizing variables is almost always helpful in linear regression
 
+    -   **transform measurement scales to the scale we want, as long as we remember how we changed them**
     -   make the mean zero and divide by sd
+    -   alpha prior is the value of average divorce rate (when standardized = 0)
+    -   beta is within 1 and -1 for standardized variables because outside of those values the variable would be explaining all of the variation
 
 -   to stratify by A, include as a term in the linear model:
 
@@ -139,6 +159,7 @@ plot(precis(m_DMA))
 -   distribution of D when we intervene ("do") M $p(D|do(M))$
 
     -   implies deleting all arrows into M and simulating D
+    -   set values of M while holding A constant
 
 ```{r}
 post <- extract.samples(m_DMA)
@@ -163,7 +184,7 @@ dens(M10_contrast, lwd=4, col=2, xlab="effect of increase in M")
 
 -   X and Y are associated $Y \not\!\perp\!\!\!\perp X$
 
--   Influence of X on Y trasmitted through Z
+-   Influence of X on Y transmitted through Z
 
 -   Once stratified by Z, no association $Y \perp\!\!\!\perp X | Z$
 
@@ -182,6 +203,9 @@ n <- 1000
 X <- rbern(n, 0.5)
 Z <- rbern(n, (1-X)*0.01 + X*0.9)
 Y <- rbern(n, (1-Z)*0.01 + Z*0.9)
+cor(X,Y)
+
+
 ```
 
 -   everything that Y knows about X, is already known by Z
@@ -216,7 +240,7 @@ ggdag(dag) +
 
 -   Treat -\> Fungus -\> H1 is a pipe, should **not** stratify by F
 
--   poost-treatment bias
+-   post-treatment bias
 
     -   if you stratify by a consquence of the treatment, it can induce post-treatment bias - gives you a misleading estimate of what you're after
 
@@ -255,8 +279,10 @@ X <- rnorm(N)
 Y <- rnorm(N)
 Z <- rbern(N, inv_logit(2*X+2*Y-2))
 
-plot(X,Y, cols = cols[Z+1])
-# lines
+plot(X,Y, cols = cols[Z+1]) + 
+  abline(lm(Y[Z==1] ~ X[Z==1]), col = 2) + 
+  abline(lm(Y[Z==0] ~X[Z==0]), col = 4) + 
+  abline(lm(Y~ X))
 ```
 
 -   sometimes samples come already stratified by collider
