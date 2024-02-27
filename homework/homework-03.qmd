@@ -1,0 +1,185 @@
+---
+title: "Homework - Week 03"
+author: "Isabella C. Richmond"
+format: html
+---
+
+```{r}
+#| label: setup
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+library(rethinking)
+library(ggplot2)
+library(ggdag)
+library(dplyr)
+library(targets)
+library(tidybayes)
+library(brms)
+```
+
+## Q1
+
+> The first two problems are based on the same data. The data in `data(foxes)` are 116 foxes from 30 different urban groups in England. These fox groups are like street gangs. Group size (`groupsize`) varies from 2 to 8 individuals. Each group maintains its own (almost exclusive) urban territory. Some territories are larger than others. The `area` variable encodes this information. Some territories also have more `avgfood` than others. And food influences the `weight` of each fox. Assume this DAG:
+
+```{r}
+#| label: DAG-q1
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+dagified <- dagify(
+    # outline relationships between your variables
+    `F` ~ A,
+    G ~ `F`,
+    W ~ `F` + G,
+   # assign exposure and outcome
+    exposure = 'A',
+    outcome = 'F', 
+   # assign coordinates so they aren't randomly assigned
+    coords = list(x = c(`F` = -1, A = 0, W = 0, G = 1),
+                  y = c(A = 1, `F` = 0, G = 0, W = -1))) %>%
+    # tidy_dagitty makes dag into tidy table format
+    tidy_dagitty() %>%
+    # add column that assigns variables to groups that you want to colour code
+    mutate(status = case_when(name == "A" ~ 'exposure',
+                              name == "F" ~ 'outcome',
+                              .default = 'NA'))
+
+  ggplot(dagified, aes(x = x, y = y, xend = xend, yend = yend)) +
+    theme_dag() +
+    # colour nodes by the column you made in previous step
+    geom_dag_point(aes(color = status)) +
+    # add labels so you can have more readable variable names
+    geom_dag_label_repel(aes(label = name, fill = status),
+                         color = "white", fontface = "bold") +
+    # adding geom_dag_edges here so that the arrows will go over the labels
+    geom_dag_edges() +
+    # assign the colours that you want
+    scale_fill_manual(values = c('darkseagreen', 'grey', 'lightblue')) +
+    scale_colour_manual(values = c('darkseagreen', 'grey', 'lightblue')) +
+   # removing colour legend here
+    theme(legend.position = 'none')
+
+```
+> where F is `avgfood`, G is `groupsize`, A is `area`, and W is `weight`. Use the backdoor criterion and estimate the total causal influence of A on F. What effect would increasing the area of a territory have on the amount of food inside it?
+
+To estimate the total effect of A on F, we just need to model F ~ A because there are no shared causes. 
+
+```{r}
+#| label: Q1
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+tar_load(fox)
+tar_load(h03_q1_brms_prior)
+
+# look at priors we selected
+prior_summary(h03_q1_brms_prior)
+
+# prior predictive
+epred <- add_epred_draws(fox, h03_q1_brms_prior, ndraws = 100)
+    
+ggplot(epred, aes(x = area_s, y = .epred)) +
+      geom_line(aes(group=.draw), alpha = 0.1) +
+      labs(y = "Predicted Food (standardized)", x = "Area (standardized)") +
+      theme_classic()
+
+# posterior distribution
+tar_load(h03_q1_brms_data)
+
+# make dataset sequencing from -3 to 3 (very large range of values for standardized numbers)
+df <- data.frame(area_s = seq(-3, 3, length.out = 1000))
+
+epred_data <- h03_q1_brms_data %>% 
+  epred_draws(df)
+    
+# plot slopes
+p <- ggplot(data = fox, aes(x = area)) +
+  geom_jitter(aes(y = avgfood), width = .1, height = 0, alpha = 0.7) +
+  stat_lineribbon(aes(x = area_s, y = .epred, color = factor(tod)), data = epred) +
+  scale_fill_brewer(palette = "Greys") +
+  scale_color_manual(values = c("#CFA35E","#45A291"), labels = c("Day", "Night")) +
+  theme_classic() + 
+  scale_y_continuous(limits = c(-6, 6), breaks = c(-2, -1, 0.5, 0, 0.5, 1, 2, 5))
+      
+# extract plot breaks on x and y axes
+atx <- c(as.numeric(na.omit(layer_scales(p)$x$break_positions())))
+aty <- c(as.numeric(na.omit(layer_scales(p)$y$break_positions())))
+    
+# calculate sd and mean of original variable
+    sdx <- sd(relvar[[1]], na.rm = T)
+    meanx <- mean(relvar[[1]], na.rm = T)
+    
+# unscale axis labels for interpretation
+p +
+  coord_cartesian(xlim = range(relvar_s, na.rm = TRUE), expand = F) + 
+    scale_x_continuous(breaks = atx,
+                       labels = round(aty * sd(fox$area) + mean(fox$area), 1))  +
+    scale_y_continuous(name = "Average Food", 
+                       breaks = aty,
+                       labels = round(aty * sd(fox$avgfood) + mean(fox$avgfood), 1)) + 
+    labs(x = label, colour = NULL, fill = "Credible Interval") + 
+    theme(plot.title = element_text(hjust = 0.5, size = 14, face = 'bold',
+                                          color = "black"))
+```
+
+
+
+## Q2
+
+> Infer the total causal effect of adding food F to a territory on the weight W of foxes. Can you calculate the causal effect by simulating an intervention on food?
+
+
+## Q3 
+
+> Infer the direct causal effect of adding food F to a territory on the weight W of foxes. In light of your estimates from this problem and the previous one, what do you think is going on with these foxes?
+
+## Q4 (optional)
+> Suppose there is an unobserved confound that influences F and G, like this:
+
+```{r}
+#| label: DAG-q4
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+dagified <- dagify(
+    # outline relationships between your variables
+  `F` ~ A + U,
+  G ~ `F` + U,
+  W ~ `F` + G,
+  # assign exposure and outcome
+  exposure = 'A',
+  outcome = 'F',
+  latent = 'U',
+  # assign coordinates so they aren't randomly assigned
+  coords = list(x = c(`F` = -1, A = -1, W = 0, G = 1, U = 1),
+                y = c(A = 1, U = 1, `F` = 0, G = 0, W = -1))) %>%
+  # tidy_dagitty makes dag into tidy table format
+  tidy_dagitty() %>%
+  # add column that assigns variables to groups that you want to colour code
+  mutate(status = case_when(name == "F" ~ 'exposure',
+                            name == "W" ~ 'outcome',
+                            name == "U" ~ 'latent',
+                            .default = 'NA'))
+
+
+ggplot(dagified, aes(x = x, y = y, xend = xend, yend = yend)) +
+  theme_dag() +
+  # colour nodes by the column you made in previous step
+  geom_dag_point(aes(color = status)) +
+  # add labels so you can have more readable variable names
+  geom_dag_label_repel(aes(label = name, fill = status),
+                       color = "white", fontface = "bold") +
+  # adding geom_dag_edges here so that the arrows will go over the labels
+  geom_dag_edges() +
+  # assign the colours that you want
+  scale_fill_manual(values = c('darkseagreen','goldenrod3', 'grey', 'lightblue' )) +
+  scale_colour_manual(values = c('darkseagreen', 'goldenrod3', 'grey', 'lightblue' )) +
+  # removing colour legend here
+  theme(legend.position = 'none')
+
+```
+> Assuming the DAG above is correct, again estimate both the total and direct causal effects of F on W. What impact does the unobserved confound have?

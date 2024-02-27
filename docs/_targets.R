@@ -21,6 +21,7 @@ options(mc.cores = 2,
 # Data --------------------------------------------------------------------
 data(Howell1)
 data(Oxboys)
+data(foxes)
 
 
 
@@ -41,6 +42,13 @@ targets_homework <- c(
       mutate(growth = height - lag(height, default = first(height), order_by = Occasion)) %>% 
       # remove first occasion because there is no growth 
       filter(Occasion != 1)
+  ),
+  
+  tar_target(
+    fox,
+    foxes %>% 
+      mutate(avgfood_s = scale(avgfood),
+             area_s = scale(area))
   ),
   
   tar_target(
@@ -93,6 +101,19 @@ targets_homework <- c(
         chains = 4,
         cores = 2, 
         iter = 2000)
+  ),
+  
+  zar_brms(
+    h03_q1,
+    formula = avgfood_s ~ area_s,
+    data = fox,
+    family = gaussian(),
+    prior = c(prior(normal(0, 0.5), class = "Intercept"),
+              prior(normal(0, 0.5), class = "b"),
+              prior(exponential(1), class = "sigma")),
+    chains = 4,
+    cores = 2, 
+    iter = 2000
   )
   
   
