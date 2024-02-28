@@ -48,7 +48,9 @@ targets_homework <- c(
     fox,
     foxes %>% 
       mutate(avgfood_s = scale(avgfood),
-             area_s = scale(area))
+             area_s = scale(area),
+             weight_s = scale(weight),
+             groupsize_s = scale(groupsize))
   ),
   
   tar_target(
@@ -103,19 +105,87 @@ targets_homework <- c(
         iter = 2000)
   ),
   
-  zar_brms(
-    h03_q1,
-    formula = avgfood_s ~ area_s,
-    data = fox,
-    family = gaussian(),
-    prior = c(prior(normal(0, 0.5), class = "Intercept"),
+  tar_target(
+    h03_q1_prior,
+    brm(formula = avgfood_s ~ area_s,
+      data = fox,
+      sample_prior = "only",
+      family = gaussian(),
+      prior = c(prior(normal(0, 0.5), class = "Intercept"),
               prior(normal(0, 0.5), class = "b"),
               prior(exponential(1), class = "sigma")),
-    chains = 4,
-    cores = 2, 
-    iter = 2000
-  )
+      chains = 4,
+      cores = 2, 
+      iter = 2000)
+  ),
   
+  tar_target(
+    h03_q1,
+    brm(formula = avgfood_s ~ area_s,
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h03_q2_prior,
+    brm(formula = weight_s ~ avgfood_s,
+        sample_prior = "only",
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h03_q2,
+    brm(formula = weight_s ~ avgfood_s,
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  
+  tar_target(
+    h03_q3_prior,
+    brm(formula = weight_s ~ avgfood_s + groupsize_s,
+        sample_prior = "only",
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h03_q3,
+    brm(formula = weight_s ~ avgfood_s + groupsize_s,
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  )
   
 )
 
