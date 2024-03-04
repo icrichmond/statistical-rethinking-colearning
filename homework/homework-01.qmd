@@ -80,8 +80,8 @@ compute_posterior <- function(the_sample, poss = seq(0, 1, length.out = 1000)){
   L <- sum(the_sample=="L")
   ways <- sapply(poss, function(q) (q*4)^W * ((1-q)*4)^L)
   post <- ways/sum(ways)
-  bars <- sapply(post, function(q) make_bar(q))
-  data.frame(poss, ways, post = round(post, 3), bars)
+  #bars <- sapply(post, function(q) make_bar(q))
+  data.frame(poss, ways, post = round(post, 3))
 }
 
 post <- compute_posterior(sample)
