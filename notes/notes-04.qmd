@@ -253,11 +253,11 @@ mu_contrast <- muF - muM
 
 plot(NULL, xlim=range(xseq), ylim = range(-6, 8), xlab = "height (cm)", ylab = "weight contrast (F-M)") +
 lines(xseq, apply(muF, 2, mean)) + 
-lines(xseq, apply(muM, 2, mean)) + 
-for (p in c(0.5, 0.6, 0.7, 0.8, 0.9, 0.99)) {
-  shade(apply(mu_contrast, 2, PI, prob = p), xseq)
-  abline(h=0)
-  }
+lines(xseq, apply(muM, 2, mean)) 
+#for (p in c(0.5, 0.6, 0.7, 0.8, 0.9, 0.99)) {
+#  shade(apply(mu_contrast, 2, PI, prob = p), xseq)
+#  abline(h=0)
+#  }
 ```
 
 -   women tend to be heavier at high heights and vice versa for men
@@ -341,18 +341,18 @@ post <- extract.samples(m_SHW_full)
 Hbar <- dat$Hbar
 n <- 1e4
 
-with(post, {
-  
-  H_S1 <- rnorm(n, h[,1], tau)
-  W_S1 <- rnorm(n, a[,2] + b[,1]*(H_S2-Hbar), sigma)
-  
-  W_do_S <<- W_S2 - W_S1
-  
-})
-
-# automate
-HWsim <- sim(m_SHW_full, data = list(S=c(1,2)), vars = c("H", "W"))
-W_do_S_auto <- HWsim$W[,2] - HWsim$W[,1]
+#with(post, {
+#  
+#  H_S1 <- rnorm(n, h[,1], tau)
+#  W_S1 <- rnorm(n, a[,2] + b[,1]*(H_S2-Hbar), sigma)
+#  
+#  W_do_S <<- W_S2 - W_S1
+#  
+#})
+#
+## automate
+#HWsim <- sim(m_SHW_full, data = list(S=c(1,2)), vars = c("H", "W"))
+#W_do_S_auto <- HWsim$W[,2] - HWsim$W[,1]
 
 ```
 
