@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* skateboarding metaphor
+*Rose:* 
 
-*Thorn:* not understanding parameters in model specification
+*Thorn:* 
 
 ## Modelling Approaches
 

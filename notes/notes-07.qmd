@@ -1,7 +1,7 @@
 ---
 title: "Lecture 07 - Fitting Over & Under"
 author: Isabella C. Richmond
-date: Mar 8, 2023
+date: Mar 6, 2024
 format: html
 ---
 
@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* not trying to be perfect, just better
+*Rose:* prediction is different from causal inference
 
-*Thorn:* thinking through prediction vs causality - when do I want prediction?
+*Thorn:* could be clearer that this is all about prediction/have an example for prediction
 
 ## Problems of Prediction
 
@@ -47,27 +47,35 @@ source("R/packages.R")
 
     -   LPPD (log posterior probability of observation) used for cross-validation because it includes the entire posterior
 
-    -   more flexible patterns generally perform better in sample and worse out of sample
+    -   more flexible patterns generally perform better in sample and worse out of sample (at least for simple models)
 
 ## Cross-Validation
 
--   for simple models, more parameters improves fit to sample BUT may reduce accuracy of predictions out of sample
+-   for simple models (no hyperparameters), more parameters improves fit to sample BUT may reduce accuracy of predictions out of sample
 
 -   accurate models trade off flexibility with **overfitting**
 
+-   there's usually an optimal flexibility
+
 ## Regularization
+
+-   regular means learning the important/regular features of the sample - not getting too excited by every datapoint
+
+-   regularization improves models, where loo just compares models (can both be bad)
 
 -   overfitting depends upon the priors
 
 -   don't be too excited about every point in the sample, because not every point in the sample is regular (not all points are representative)
 
--   skeptical priors regularize models - have tighter variance that reduces flexibility
+-   skeptical priors regularize models/inference - have tighter variance that reduces flexibility
 
     -   downweights improbable values
 
 -   skeptical priors improve model prediction - regularize so that models learn regular features and ignore irregular features
 
-    -   there is such a thing as too tight priors
+    -   there is such a thing as too tight priors for model prediction (unless you have a small sample size)
+
+-   In sample gets worse with tighter priors, out of sample gets better with tighter priors
 
 -   Regularizing priors -\> for pure prediction uses, you can tune the prior using cross-validation
 
@@ -83,7 +91,7 @@ source("R/packages.R")
 
 -   WAIC, PSIS, cross-validation (CV) measure overfitting
 
-    -   regularization manages overfiting
+    -   regularization manages overfitting
 
 -   Causal inference is *not* addressed by measuring or addressing overfitting
 
@@ -91,7 +99,9 @@ source("R/packages.R")
 
     -   should not select causal models based on these values because they are not associated with causality
 
-## Model Mis-selection 
+-   these are all **predictive metrics**
+
+## Model Mis-selection
 
 -   Do not use predictive criteria (WAIC, PSIS, CV) to choose a causal estimate
 
@@ -99,7 +109,7 @@ source("R/packages.R")
 
     -   improve predictive accuracy
 
-## Outliers & Robust Regression 
+## Outliers & Robust Regression
 
 -   some points are more influential than others - 'outliers'
 
@@ -166,11 +176,15 @@ m5.3t <- quap(alist(
 
     -   thicker tails means model is less surprised/more robust
 
+-   hard to choose distribution of student t-test because extreme values are rare - can test multiple values and select based on that, reporting all after
+
 -   student-t regression can be a good default for undertheorized domains
 
     -   because Gaussian distribution is so skeptical
 
 ## Prediction
+
+-   what is the next observation from the same process? = prediction
 
 -   possible to make very good predictions without knowing causes
 
