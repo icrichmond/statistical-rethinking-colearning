@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* 
+*Rose:*
 
-*Thorn:* 
+*Thorn:*
 
 ## Modelling Approaches
 
@@ -31,6 +31,8 @@ source("R/packages.R")
 
 ## Hamiltonian Monte Carlo
 
+-   probability space is essentially a skate park
+-   
 -   uses random pathways that follow the distribution of the variables
 
 ```{r}
@@ -75,7 +77,7 @@ precis(mQ, 2)
 
 -   want more than one chain in order to check convergence
 
-    -   convergence: each chain explores the right distribution and every chain explores the same distribution
+    -   convergence: each chain explores the right distribution **and** the same distribution
 
 -   R-hat is chain convergence diagnostic
 
@@ -85,15 +87,19 @@ precis(mQ, 2)
 
     -   as total variance (among chains) approaches average variance within chains, R-hat approaches 1
 
+    -   if chains were exploring different regions, the total variance would be bigger and Rhat is larger than 1
+
     -   does not guarantee convergence but gives an idea that the chains are working when \~ 1
 
 -   n_eff = effective samples
 
-    -   approximation of how long the chain would be if each sample was completely independent of the one before it
+    -   approximation of how long the chain would be if each sample was completely independent of the one before it (perfectly uncorrelated, truly random)
 
     -   when samples are autocorrelated, you have fewer *effective* samples
 
     -   typically n_eff is smaller than number of samples you actually took
+
+        -   because perfect chain will need fewer samples/be shorter
 
 ```{r, eval = F, echo = T}
 mQO <- ulam(alist(
@@ -118,6 +124,8 @@ mQOJ <- ulam(alist(
 
 plot(precis(mQOJ, 2))
 ```
+
+-   adding judges adds information to the model and allows for better estimates
 
 -   often if there is an issue, it is with your model
 

@@ -359,6 +359,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="hamiltonian-monte-carlo" class="level2">
 <h2 class="anchored" data-anchor-id="hamiltonian-monte-carlo">Hamiltonian Monte Carlo</h2>
 <ul>
+<li>probability space is essentially a skate park</li>
+<li></li>
 <li>uses random pathways that follow the distribution of the variables</li>
 </ul>
 <div class="cell">
@@ -405,20 +407,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>trace plots: visualization of the Markov chain</p></li>
 <li><p>want more than one chain in order to check convergence</p>
 <ul>
-<li>convergence: each chain explores the right distribution and every chain explores the same distribution</li>
+<li>convergence: each chain explores the right distribution <strong>and</strong> the same distribution</li>
 </ul></li>
 <li><p>R-hat is chain convergence diagnostic</p>
 <ul>
 <li><p>variance ratio</p></li>
 <li><p>if chains do converge, beginning of the chain and end of chain should be exploring the same place and therefore the chain is stationary</p></li>
 <li><p>as total variance (among chains) approaches average variance within chains, R-hat approaches 1</p></li>
+<li><p>if chains were exploring different regions, the total variance would be bigger and Rhat is larger than 1</p></li>
 <li><p>does not guarantee convergence but gives an idea that the chains are working when ~ 1</p></li>
 </ul></li>
 <li><p>n_eff = effective samples</p>
 <ul>
-<li><p>approximation of how long the chain would be if each sample was completely independent of the one before it</p></li>
+<li><p>approximation of how long the chain would be if each sample was completely independent of the one before it (perfectly uncorrelated, truly random)</p></li>
 <li><p>when samples are autocorrelated, you have fewer <em>effective</em> samples</p></li>
-<li><p>typically n_eff is smaller than number of samples you actually took</p></li>
+<li><p>typically n_eff is smaller than number of samples you actually took</p>
+<ul>
+<li>because perfect chain will need fewer samples/be shorter</li>
+</ul></li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -445,6 +451,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(mQOJ, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
+<li><p>adding judges adds information to the model and allows for better estimates</p></li>
 <li><p>often if there is an issue, it is with your model</p>
 <ul>
 <li><p>loop back to basic scientific questions and assumptions</p></li>
