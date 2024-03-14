@@ -12,12 +12,12 @@ format: html
 
 library(rethinking)
 library(ggplot2)
-library(ggdag)
 library(dplyr)
 library(targets)
 library(tidybayes)
-library(emmeans)
 library(brms)
+
+data(Dinosaurs)
 ```
 
 ## Q1
@@ -38,7 +38,7 @@ m6.9 <- add_criterion(m6.9, criterion = "loo")
 m6.10 <- add_criterion(m6.10, criterion = "waic") 
 m6.10 <- add_criterion(m6.10, criterion = "loo")
 
-data.frame(model = c('age + marriage', 'age'), waic = c(m6.9$criteria$waic$waic, m6.10$criteria$waic$waic), psis = c(m6.9$criteria$loo$looic, m6.10$criteria$loo$looic))
+loo_compare(m6.9, m6.10)
 
 ```
 
@@ -67,7 +67,7 @@ food_groupsize <- add_criterion(food_groupsize, criterion = "loo")
 food_groupsize_area <- add_criterion(food_groupsize_area, criterion = "waic")
 food_groupsize_area <- add_criterion(food_groupsize_area, criterion = "loo")
 
-data.frame(model = c('food', 'food + group size', 'food + group size + area'), waic = c(food$criteria$waic$waic, food_groupsize$criteria$waic$waic, food_groupsize_area$criteria$waic$waic), psis = c(food$criteria$loo$looic, food_groupsize$criteria$loo$looic, food_groupsize_area$criteria$loo$looic))
+loo_compare(food, food_groupsize, food_groupsize_area)
 
 ```
 
@@ -77,3 +77,82 @@ For prediction, the best model is the model with food, group size, and area incl
 
 > The data in data(Dinosaurs) are body mass estimates at different estimated ages for six different dinosaur species. See ?Dinosaurs for more details. Choose one or more of these species (at least
 one, but as many as you like) and model its growth. To be precise: Make a predictive model of body mass using age as a predictor. Consider two or more model types for the function relating age to body mass and score each using PSIS and WAIC. Which model do you think is best, on predictive grounds? On scientific grounds? If your answers to these questions differ, why? This is a challenging exercise, because the data are so scarce. But it is also a realistic example, because people publish Nature papers with even less data. So do your best, and I look forward to seeing your growth curves.
+
+Going to attempt to use the Von Bertanaffy growth equation in brms ([source](https://aammd.github.io/posts/2023-10-23-discrete-vb-brms-stan/#can-it-be-written-in-brms)): 
+
+$$
+L_T = L_0e^{-rt} + L_{max}(1 - e^{-rt})
+$$
+
+```{r}
+#| label: q3
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+soi <- Dinosaurs %>% 
+  filter(species == "Massospondylus carinatus")
+
+## Model 1: Linear Model 
+linear <- tar_read(h04_q3a)
+
+epred <- linear %>% 
+  epred_draws(soi)
+
+ggplot(data = soi, aes(x = age)) + 
+  stat_lineribbon(aes(x = age, y = .epred), data = epred) +
+  geom_jitter(aes(y = mass), width = .1, height = 0, alpha = 0.7) +
+  scale_fill_brewer(palette = "Greys") +
+  labs(y = 'Linear Model Predicted Mass (kg)', x = "Age (yrs)", fill = "Credible Interval") + 
+  theme_classic()
+
+
+## Model 2: Growth Curve
+lagged_obs <- Dinosaurs %>% 
+  filter(species == "Massospondylus carinatus") %>% 
+  mutate(time_diff = age - lag(age),
+         sizelast = lag(mass)) %>% 
+  slice(-1)
+
+# Von Bertanaffy growth equation
+vb_formula <- bf(mass ~ sizelast * exp(- exp(logR) * time_diff) + 
+                   sizeMax * (1 - exp(-exp(logR) * time_diff)),
+                 logR ~ 1,
+                 sizeMax ~ 1, nl = TRUE)
+
+
+growth <- tar_read(h04_q3b)
+
+epredg <- growth %>% 
+  epred_draws(lagged_obs)
+
+ggplot(data = lagged_obs, aes(x = age)) + 
+  stat_lineribbon(aes(x = age, y = .epred), data = epredg) +
+  geom_jitter(aes(y = mass), width = .1, height = 0, alpha = 0.7) +
+  scale_fill_brewer(palette = "Greys") +
+  labs(y = 'Growth Model Predicted Mass (kg)', x = "Age (yrs)", fill = "Credible Interval") + 
+  theme_classic()
+
+
+## Model 3: Exponential
+exponential <- tar_read(h04_q3c)
+
+eprede <- exponential %>% 
+  epred_draws(soi)
+
+ggplot(data = soi, aes(x = age)) + 
+  stat_lineribbon(aes(x = age, y = .epred), data = eprede) +
+  geom_jitter(aes(y = mass), width = .1, height = 0, alpha = 0.7) +
+  scale_fill_brewer(palette = "Greys") +
+  labs(y = 'Exponential Model Predicted Mass (kg)', x = "Age (yrs)", fill = "Credible Interval") + 
+  theme_classic()
+
+
+# Compare performance
+data.frame(model = c('linear', 'growth', 'exponential'), 
+           waic = c(waic(linear)[[3]], waic(growth)[[3]], waic(exponential)[[3]]),
+           psis = c(loo(linear)[[1]][[3]], loo(growth)[[1]][[3]], loo(exponential)[[1]][[3]]))
+
+```
+
+Growth model performs best predictively. On scientific grounds, maybe the growth model as well since it is rooted in literature and an established equation? 
