@@ -13,6 +13,7 @@ library(stringr)
 library(tidybayes)
 library(MetBrewer)
 library(modelr)
+library(brms)
 
 library(rstan)
 library(zarg)
