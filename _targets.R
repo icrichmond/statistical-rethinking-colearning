@@ -23,6 +23,10 @@ data(Howell1)
 data(Oxboys)
 data(foxes)
 
+marriage <- sim_happiness(seed = 1977, N_years = 1000) %>% 
+  filter(age > 17) %>% 
+  mutate(A = (age - 18)/(65-18))
+
 
 
 # Targets: homework   -----------------------------------------------------
@@ -177,6 +181,45 @@ targets_homework <- c(
   tar_target(
     h03_q3,
     brm(formula = weight_s ~ avgfood_s + groupsize_s,
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q1a,
+    brm(formula = happiness ~ A + (1|married),
+    data = marriage,
+    family = gaussian(),
+    prior = c(prior(normal(0, 1), class = "Intercept"),
+              prior(normal(0, 2), class = "b"),
+              prior(exponential(1), class = "sigma")),
+    chains = 4,
+    cores = 2, 
+    iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q1b,
+    brm(formula = happiness ~ A,
+    data = marriage,
+    family = gaussian(),
+    prior = c(prior(normal(0, 1), class = "Intercept"),
+              prior(normal(0, 2), class = "b"),
+              prior(exponential(1), class = "sigma")),
+    chains = 4,
+    cores = 2, 
+    iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q2,
+    brm(formula = weight_s ~ avgfood_s + groupsize_s + area_s,
         data = fox,
         family = gaussian(),
         prior = c(prior(normal(0, 0.5), class = "Intercept"),

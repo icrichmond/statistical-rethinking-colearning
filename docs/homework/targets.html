@@ -245,6 +245,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 04</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../homework/targets.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">_targets.R</span></a>
   </div>
@@ -301,6 +307,10 @@ options(mc.cores = 2,
 data(Howell1)
 data(Oxboys)
 data(foxes)
+
+marriage &lt;- sim_happiness(seed = 1977, N_years = 1000) %&gt;% 
+  filter(age &gt; 17) %&gt;% 
+  mutate(A = (age - 18)/(65-18))
 
 
 
@@ -456,6 +466,45 @@ targets_homework &lt;- c(
   tar_target(
     h03_q3,
     brm(formula = weight_s ~ avgfood_s + groupsize_s,
+        data = fox,
+        family = gaussian(),
+        prior = c(prior(normal(0, 0.5), class = "Intercept"),
+                  prior(normal(0, 0.5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q1a,
+    brm(formula = happiness ~ A + (1|married),
+    data = marriage,
+    family = gaussian(),
+    prior = c(prior(normal(0, 1), class = "Intercept"),
+              prior(normal(0, 2), class = "b"),
+              prior(exponential(1), class = "sigma")),
+    chains = 4,
+    cores = 2, 
+    iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q1b,
+    brm(formula = happiness ~ A,
+    data = marriage,
+    family = gaussian(),
+    prior = c(prior(normal(0, 1), class = "Intercept"),
+              prior(normal(0, 2), class = "b"),
+              prior(exponential(1), class = "sigma")),
+    chains = 4,
+    cores = 2, 
+    iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q2,
+    brm(formula = weight_s ~ avgfood_s + groupsize_s + area_s,
         data = fox,
         family = gaussian(),
         prior = c(prior(normal(0, 0.5), class = "Intercept"),

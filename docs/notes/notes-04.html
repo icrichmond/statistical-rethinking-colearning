@@ -283,6 +283,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 04</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../homework/targets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">_targets.R</span></a>
   </div>
@@ -461,12 +467,12 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  S        H         W
-1 2 167.5664 104.50046
-2 2 161.3200  93.71283
-3 1 152.1727  72.11616
-4 2 161.3496  94.13211
-5 1 145.5392  73.21117
-6 2 152.8727  91.88890</code></pre>
+1 2 155.7365  89.90449
+2 2 159.7119  95.54283
+3 1 143.3699  76.43177
+4 2 161.5158  96.37623
+5 2 161.1619  98.05150
+6 2 156.0887 101.83704</code></pre>
 </div>
 </div>
 <ul>
@@ -512,7 +518,7 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of sex (male-female)</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 20.21632</code></pre>
+<pre><code>[1] 20.3673</code></pre>
 </div>
 </div>
 <ul>
@@ -531,10 +537,10 @@ Attaching package: 'rethinking'</code></pre>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           mean        sd      5.5%    94.5%
-a[1]  73.118418 0.7599036 71.903945 74.33289
-a[2]  96.970193 0.8402930 95.627243 98.31314
-sigma  5.651372 0.4000379  5.012034  6.29071</code></pre>
+<pre><code>           mean        sd     5.5%     94.5%
+a[1]  74.818580 0.7550402 73.61188 76.025280
+a[2]  95.115182 0.8020309 93.83338 96.396982
+sigma  5.511816 0.3901006  4.88836  6.135272</code></pre>
 </div>
 </div>
 <ul>
@@ -624,11 +630,11 @@ sigma  5.651372 0.4000379  5.012034  6.29071</code></pre>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion above zero</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.808</code></pre>
+<pre><code>[1] 0.809</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast <span class="sc">&lt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.192</code></pre>
+<pre><code>[1] 0.191</code></pre>
 </div>
 </div>
 </section>

@@ -8,7 +8,7 @@
 
 <meta name="author" content="Isabella C. Richmond">
 
-<title>Statistical Rethinking colearning 2024 - Bella - Lecture 01 - The Golem of Prague</title>
+<title>Statistical Rethinking colearning 2024 - Bella - Homework - Week 04</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -75,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes-01.html">Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes-01.html">Lecture 01 - The Golem of Prague</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../homework/homework-01.html">Homework</a></li><li class="breadcrumb-item"><a href="../homework/homework-04.html">Homework - Week 04</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -121,7 +155,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link active">
+  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lecture 01 - The Golem of Prague</span></a>
   </div>
 </li>
@@ -246,7 +280,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Homework - Week 04</span></a>
   </div>
 </li>
@@ -268,21 +302,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
-  <li><a href="#third-edition" id="toc-third-edition" class="nav-link" data-scroll-target="#third-edition">Third Edition</a></li>
-  <li><a href="#causal-inference" id="toc-causal-inference" class="nav-link" data-scroll-target="#causal-inference">Causal Inference</a></li>
-  <li><a href="#dags" id="toc-dags" class="nav-link" data-scroll-target="#dags">DAGs</a></li>
-  <li><a href="#golems" id="toc-golems" class="nav-link" data-scroll-target="#golems">Golems</a></li>
-  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo">TODO</a></li>
+  <li><a href="#q1" id="toc-q1" class="nav-link active" data-scroll-target="#q1">Q1</a></li>
+  <li><a href="#q2" id="toc-q2" class="nav-link" data-scroll-target="#q2">Q2</a></li>
+  <li><a href="#q3-optional" id="toc-q3-optional" class="nav-link" data-scroll-target="#q3-optional">Q3 (optional)</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/robitalec/statistical-rethinking-colearning-2024/edit/main/notes/notes-01.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/robitalec/statistical-rethinking-colearning-2024/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/robitalec/statistical-rethinking-colearning-2024/edit/main/homework/homework-04.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/robitalec/statistical-rethinking-colearning-2024/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lecture 01 - The Golem of Prague</h1>
+<h1 class="title">Homework - Week 04</h1>
 </div>
 
 
@@ -296,12 +327,6 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">Invalid Date</p>
-    </div>
-  </div>
   
     
   </div>
@@ -309,65 +334,64 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="rose-thorn" class="level2">
-<h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
-<p><em>Rose:</em> I LOVE DAGS. Really interesting to think about the non-uniqueness of null models in ecology.</p>
-<p><em>Thorn:</em> the difference between regression/intervention – have i always just done regression?</p>
+<section id="q1" class="level2">
+<h2 class="anchored" data-anchor-id="q1">Q1</h2>
+<blockquote class="blockquote">
+<p>Revisit the marriage, age, and happiness collider bias example from Chapter 6. Run models m6.9 and m6.10 again (pages 178–179). Compare these two models using both PSIS and WAIC. Which model is expected to make better predictions, according to these criteria, and which model yields the correct causal inference?</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.9</span> <span class="ot">&lt;-</span> <span class="fu">tar_read</span>(h04_q1a)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.10</span> <span class="ot">&lt;-</span> <span class="fu">tar_read</span>(h04_q1b)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.9</span> <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m6<span class="fl">.9</span>, <span class="at">criterion =</span> <span class="st">"waic"</span>) </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.9</span> <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m6<span class="fl">.9</span>, <span class="at">criterion =</span> <span class="st">"loo"</span>) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.10</span> <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m6<span class="fl">.10</span>, <span class="at">criterion =</span> <span class="st">"waic"</span>) </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.10</span> <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(m6<span class="fl">.10</span>, <span class="at">criterion =</span> <span class="st">"loo"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">model =</span> <span class="fu">c</span>(<span class="st">'age + marriage'</span>, <span class="st">'age'</span>), <span class="at">waic =</span> <span class="fu">c</span>(m6<span class="fl">.9</span><span class="sc">$</span>criteria<span class="sc">$</span>waic<span class="sc">$</span>waic, m6<span class="fl">.10</span><span class="sc">$</span>criteria<span class="sc">$</span>waic<span class="sc">$</span>waic), <span class="at">psis =</span> <span class="fu">c</span>(m6<span class="fl">.9</span><span class="sc">$</span>criteria<span class="sc">$</span>loo<span class="sc">$</span>looic, m6<span class="fl">.10</span><span class="sc">$</span>criteria<span class="sc">$</span>loo<span class="sc">$</span>looic))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           model     waic     psis
+1 age + marriage 2713.727 2713.737
+2            age 3102.023 3102.029</code></pre>
+</div>
+</div>
+<p>We see that the model with both age and marriage is the best predictor using both metrics. Causally, marriage status in this problem is a collider because it is a common consquence of age and happiness. Therefore, the model with just age is the causally correct model.</p>
 </section>
-<section id="third-edition" class="level2">
-<h2 class="anchored" data-anchor-id="third-edition">Third Edition</h2>
-<ul>
-<li>peach boxes instead of blue boxes</li>
-</ul>
+<section id="q2" class="level2">
+<h2 class="anchored" data-anchor-id="q2">Q2</h2>
+<blockquote class="blockquote">
+<p>Reconsider the urban fox analysis from last week’s homework. On the basis of PSIS and WAIC scores, which combination of variables best predicts body weight (W, weight)? What causal interpretation can you assign each coefficient (parameter) from the best scoring model??</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>food <span class="ot">&lt;-</span> <span class="fu">tar_read</span>(h03_q2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>food_groupsize <span class="ot">&lt;-</span> <span class="fu">tar_read</span>(h03_q3)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>food_groupsize_area <span class="ot">&lt;-</span> <span class="fu">tar_read</span>(h04_q2)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>food <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(food, <span class="at">criterion =</span> <span class="st">"waic"</span>) </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>food <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(food, <span class="at">criterion =</span> <span class="st">"loo"</span>) </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>food_groupsize <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(food_groupsize, <span class="at">criterion =</span> <span class="st">"waic"</span>) </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>food_groupsize <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(food_groupsize, <span class="at">criterion =</span> <span class="st">"loo"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>food_groupsize_area <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(food_groupsize_area, <span class="at">criterion =</span> <span class="st">"waic"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>food_groupsize_area <span class="ot">&lt;-</span> <span class="fu">add_criterion</span>(food_groupsize_area, <span class="at">criterion =</span> <span class="st">"loo"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">model =</span> <span class="fu">c</span>(<span class="st">'food'</span>, <span class="st">'food + group size'</span>, <span class="st">'food + group size + area'</span>), <span class="at">waic =</span> <span class="fu">c</span>(food<span class="sc">$</span>criteria<span class="sc">$</span>waic<span class="sc">$</span>waic, food_groupsize<span class="sc">$</span>criteria<span class="sc">$</span>waic<span class="sc">$</span>waic, food_groupsize_area<span class="sc">$</span>criteria<span class="sc">$</span>waic<span class="sc">$</span>waic), <span class="at">psis =</span> <span class="fu">c</span>(food<span class="sc">$</span>criteria<span class="sc">$</span>loo<span class="sc">$</span>looic, food_groupsize<span class="sc">$</span>criteria<span class="sc">$</span>loo<span class="sc">$</span>looic, food_groupsize_area<span class="sc">$</span>criteria<span class="sc">$</span>loo<span class="sc">$</span>looic))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     model     waic     psis
+1                     food 333.6311 333.6414
+2        food + group size 323.6838 323.7057
+3 food + group size + area 323.2265 323.2617</code></pre>
+</div>
+</div>
+<p>For prediction, the best model is the model with food, group size, and area included (though it is very similar to the food + group size model). Food is a descendent of area, which means that conditioning on both means we are estimating the effect of area independent of food availability. In this model, we are only causally assessing the effect of food on weight, independent of area.</p>
 </section>
-<section id="causal-inference" class="level2">
-<h2 class="anchored" data-anchor-id="causal-inference">Causal Inference</h2>
-<ul>
-<li>statistical models require scientific <strong>(causal)</strong> models</li>
-<li>correlation is a very limited measure of association
-<ul>
-<li>association can occur without correlation</li>
-</ul></li>
-<li>causation requires <strong>intervention</strong> - it is not just the behaviour without intervention</li>
-<li><em>causal prediction</em> = prediction of the consequences of an intervention (implications of changing one variable on another variable)
-<ul>
-<li>knowing the <strong>cause</strong> of an action allows you to create predictions</li>
-<li>what happens if I do this?</li>
-</ul></li>
-<li><em>causal imputation</em> = knowing the <strong>cause</strong> of an action allows you to reconstruct possible outcomes (i.e., what if I had done something else?)</li>
-<li>Even for description, causal models are required</li>
-</ul>
-</section>
-<section id="dags" class="level2">
-<h2 class="anchored" data-anchor-id="dags">DAGs</h2>
-<ul>
-<li>abstract causal models: includes names of variables and their causal relationships</li>
-<li>tells you the consequences of an intervention</li>
-<li>tells you what you can decide/ask without additional assumptions</li>
-<li>facilitates you asking scientific questions</li>
-<li>each causal query requires a different model</li>
-</ul>
-</section>
-<section id="golems" class="level2">
-<h2 class="anchored" data-anchor-id="golems">Golems</h2>
-<ul>
-<li>statistical models = golems</li>
-<li>often not possible to design and outline a null hypothesis that is meaningful to reject in observational science
-<ul>
-<li>what is a null ecological community?</li>
-</ul></li>
-<li><strong>think of good example/explanation for no null ecology/previous two slides</strong>
-<ul>
-<li>takeaway is that null hypothesis does not give you cause/process behind outcome</li>
-</ul></li>
-<li>what is your null? is it unique?</li>
-</ul>
-</section>
-<section id="todo" class="level2">
-<h2 class="anchored" data-anchor-id="todo">TODO</h2>
-<ul>
-<li></li>
-</ul>
+<section id="q3-optional" class="level2">
+<h2 class="anchored" data-anchor-id="q3-optional">Q3 (optional)</h2>
+<blockquote class="blockquote">
+<p>The data in data(Dinosaurs) are body mass estimates at different estimated ages for six different dinosaur species. See ?Dinosaurs for more details. Choose one or more of these species (at least one, but as many as you like) and model its growth. To be precise: Make a predictive model of body mass using age as a predictor. Consider two or more model types for the function relating age to body mass and score each using PSIS and WAIC. Which model do you think is best, on predictive grounds? On scientific grounds? If your answers to these questions differ, why? This is a challenging exercise, because the data are so scarce. But it is also a realistic example, because people publish Nature papers with even less data. So do your best, and I look forward to seeing your growth curves.</p>
+</blockquote>
 
 
 </section>
