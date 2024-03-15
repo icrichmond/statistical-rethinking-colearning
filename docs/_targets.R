@@ -22,11 +22,17 @@ options(mc.cores = 2,
 data(Howell1)
 data(Oxboys)
 data(foxes)
+data(Dinosaurs)
 
 marriage <- sim_happiness(seed = 1977, N_years = 1000) %>% 
   filter(age > 17) %>% 
   mutate(A = (age - 18)/(65-18))
 
+lagged_obs <- Dinosaurs %>% 
+  filter(species == "Massospondylus carinatus") %>% 
+  mutate(time_diff = age - lag(age),
+         sizelast = lag(mass)) %>% 
+  slice(-1)
 
 
 # Targets: homework   -----------------------------------------------------
@@ -225,6 +231,51 @@ targets_homework <- c(
         prior = c(prior(normal(0, 0.5), class = "Intercept"),
                   prior(normal(0, 0.5), class = "b"),
                   prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q3a, 
+    brm(formula = mass ~ age,
+        data = Dinosaurs %>% filter(species == "Massospondylus carinatus"),
+        prior = c(prior(normal(90, 20), class = "Intercept"),
+                  prior(normal(0, 5), class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q3b,
+    brm(formula = bf(mass ~ sizelast * exp(- exp(logR) * time_diff) + 
+                       sizeMax * (1 - exp(-exp(logR) * time_diff)),
+                     logR ~ 1,
+                     sizeMax ~ 1, nl = TRUE),
+        data = lagged_obs,
+        prior = c(prior(normal(245, 50), nlpar = "sizeMax", class = "b"),
+                  prior(normal(0, 5), nlpar = "logR", class = "b"),
+                  prior(exponential(1), class = "sigma")),
+        chains = 4,
+        cores = 2, 
+        iter = 2000)
+  ),
+  
+  tar_target(
+    h04_q3c,
+    brm(formula = bf(mass ~ a * b ^ (c * age + d),
+                     a + b + c + d ~ 1,
+                     nl = TRUE),
+        data = Dinosaurs %>% filter(species == "Massospondylus carinatus"),
+        prior = c(
+          prior(normal(0, 20), nlpar = 'a'),
+          prior(normal(0, 20), nlpar = 'b'),
+          prior(normal(0, 20), nlpar = 'c', lb = 0),
+          prior(normal(0, 20), nlpar = 'd'),
+          prior(exponential(1), sigma)
+        ),
         chains = 4,
         cores = 2, 
         iter = 2000)
