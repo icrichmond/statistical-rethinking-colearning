@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* starting to understand what a generalized linear model actually is
+*Rose:* understanding exponential distributions a bit more
 
-*Thorn:* algebra and links
+*Thorn:* this lecture really would have helped with last week's homework
 
 ## Modeling Events
 
@@ -157,7 +157,15 @@ m2_bin <- ulam(
 precis(m2_bin,3)
 ```
 
-Model real data:
+## Logistic & Binomial Regression with Data
+
+-   logistic is Bernoulli - binary 0, 1
+
+-   binomial is count 0, N
+
+-   both have logit link and are equivalent for inference
+
+-   
 
 ```{r, eval = FALSE}
 data(UCBadmit)
@@ -211,6 +219,7 @@ plot(NULL,xlim=c(-0.2,0.3),ylim=c(0,25),xlab="Gender contrast (probability)",yla
 for ( i in 1:6 ) dens( diff_prob_D_[,i] , lwd=4 , col=1+i , add=TRUE )
 abline(v=0,lty=3)
 
+
 # marginal effect of gender perception (direct effect)
 
 # compute department weights via simulation
@@ -262,10 +271,58 @@ abline(v=0,lty=3)
 
 -   post-stratification = re-weighting estimates for target population
 
+-   for university example, we would reweight the application numbers to each department
+
+## Discrimination
+
+-   there are large structural effects
+
+-   distribution of applications can also be a consequence of discrimination but data cannot respond to this question
+
+-   confounds here are likely
+
 ## Survival Analysis
 
 -   another way of modelling events but we care about the time it took for an event to happen instead of number of times it happened
 
 -   cannot ignore censored cases (left-censored = don't know when time started, right-censored = observation ended before event)
 
+    -   ignoring leads to inferential error
+
 -   exponential or gamma distribution
+
+    -   exponential for single part failure
+
+    -   gamma for multiple part failure
+
+-   inverse rate is average waiting time in this example
+
+-   $$
+    D_i \sim Exponential(\lambda_i)
+    \\
+    p(D_i|\lambda_i) = \lambda_iexp(-\lambda_iD_i)
+    $$
+
+-   If the event happened we use the cumulative distribution (CDF) from the exponential - probability event before-or-at time x
+
+-   if the event didn't happen yet (censored) use complementary cumulative distribution (CCDF) - probability not-event before-or-at time x
+
+    -   for any time on the x axis, how many cats have not yet been adopted
+
+-   $$
+    D_i |A_i = 1\sim Exponential(\lambda_i)
+    \\
+    D_i|A_i = 0 \sim Exponential-CCDF(\lambda_i)
+    \\
+    \lambda_i = 1/\mu_i
+    \\
+    log\ \mu_i = \alpha_{CID[i]}
+    $$
+
+-   First line is observed adoptions, second line is not-yet adoptions
+
+-   CID = colour id
+
+-   $1/\mu_i$ is to get average waiting time for each cat
+
+-   D = days at shelter, A = day at adoption

@@ -1,7 +1,7 @@
 ---
 title: "Lecture 10 - Counts & Hidden Confounds"
 author: Isabella C. Richmond
-date: Mar 22, 2023
+date: Mar 21, 2024
 format: html
 ---
 
@@ -11,15 +11,17 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:*
+*Rose:* qualitative data!!
 
 *Thorn:*
 
 ## Generalized Linear Models
 
--   Expected value is *some function* of an additive combination of parameters
+-   Expected value is *some function **(***link function) of an additive combination of parameters
 
--   uniform changes in predictor not uniform changes in prediction
+-   interpretation that changes, not computation - no longer simply an additive combination of parameters
+
+    -   uniform changes in predictor not uniform changes in prediction
 
 -   all predictor variables interact and moderate one another
 
@@ -27,7 +29,7 @@ source("R/packages.R")
 
 ## Confounded Admissions
 
--   ability is a confound for admissions
+-   ability is the most easy to imagine confound for admissions
 
     ```{r, echo=FALSE}
     dag <- dagify(
@@ -39,7 +41,11 @@ source("R/packages.R")
         theme_dag()
     ```
 
--   include confound in the model:
+-   include confound in the model (u):
+
+    -   Bernoulli variable 0, 1 - 1 is extremely high achieving individuals that are 10% of the population, everyone else is average
+
+-   gender 1 individuals anticipate gender discrimination in department 2, so if they are average they will avoid it but if they are exceptional they will still apply
 
 ```{r, eval=FALSE}
 # continuing from UCBadmit example
@@ -50,6 +56,7 @@ N <- 2000 # number of applicants
 # even gender distribution
 G <- sample( 1:2 , size=N , replace=TRUE )
 # sample ability, high (1) to average (0)
+# unobserved common cause 
 u <- rbern(N,0.1)
 # gender 1 tends to apply to department 1, 2 to 2
 # and G=1 with greater ability tend to apply to 2 as well
@@ -88,7 +95,11 @@ m2 <- ulam(
     ), data=dat_sim , chains=4 , cores=4 )
 
 precis(m2,3)
+```
 
+-   second model stratifies through department is now confounded because we've added a common cause, ability
+
+```{r, eval = FALSE}
 # contrast
 post2 <- extract.samples(m2)
 post2$fm_contrast_D1 <- post2$a[,1,1] - post2$a[,2,1]
@@ -108,9 +119,49 @@ dens( post2$a[,2,2] , lwd=4 , col=4 , add=TRUE , lty=4)
 dens( post2$fm_contrast_D2 , lwd=4 , add=TRUE , lty=4)
 ```
 
--   sorting can mask a lot of things through collider bias
+-   probability distribution of probabilities because we're modelling probability
+
+-   confound happens because exceptional individuals don't apply to department 1, they apply to department 2 and so it looks like department 1 is discriminating when its not because its getting lower quality applicants
+
+    -   department 2 appears to have no discrimination but it does have it, for the opposite reason. they are only admitting higher ability applicants of a certain gender
+
+-   masking effect - sorting can mask a lot of things
+
+## Collider Bias
+
+-   We can estimate total causal effect of G but it isn't what we want (not useful for policy)
+
+-   We cannot estimate direct effect of department or gender
+
+## Citation vs Membership  
+
+```{r, echo=FALSE}
+dag <- dagify(
+    C ~ G)
+
+ggdag(dag) +
+    theme_dag()
+
+dag <- dagify(
+    C ~ G,
+    M ~ G + C
+)
+
+ggdag(dag) +
+    theme_dag()
+```
+
+-   paper one concludes that gender results in lower citation rates for women
+
+-   paper two concludes that women get elected more controlling for citations
 
 ## Citation Networks
+
+-   very plausible that there is quality differences among members of the academy but they are often hidden
+
+-   citations is a post-treatment variable (and stratifying by post-treatment variable is dangerous because it can activate collider bias)
+
+    -   if women are less likely to get citations because of discrimination, it is probably that women elected to the NAS with less citations have a higher quality
 
 ```{r, echo=FALSE}
 dag <- dagify(
@@ -139,6 +190,26 @@ ggdag(dag) +
 -   include quality as an unobserved variable
 
     -   change parameter size/strength to test the effect of unobserved confound
+
+-   $$
+    A_i \sim Bernoulli(p_i)
+    \\
+    logit(p_i) = \alpha[G_i, D_i] +\beta_{G[i]}u_i
+    $$
+
+    -   first model models total effect of gender on admissions with an unknown confound (quality)
+
+-   $$
+    (D_i = 2) \sim Bernoulli(q_i)
+    \\
+    logit(q_i) = \delta[G_i] + \gamma_{G[i]}u_i
+    $$
+
+    -   second model investigates the effect of how people apply to departments
+
+-   $u_j \sim Normal(0, 1)$
+
+-   $u_i$ = ability
 
 ```{r, eval=FALSE}
 # sensitivity
@@ -211,6 +282,26 @@ ggdag(dag) +
     -   large priors makes extremely long tails with very large values
 
     -   want higher mean, lower variance
+
+-   $$
+    Y_i \sim Poisson(\lambda_i)
+    \\
+    log(\lambda_i) = \alpha + \beta x_i
+    \\
+    \lambda_i = exp(\alpha + \beta x_i)
+    $$
+
+-   To add contact as an interaction term where C is contact:
+
+    -   $$
+        Y_i \sim Poisson(\lambda_i)
+        \\
+        log(\lambda_i) = \alpha_{C[i]} + \beta_{C[i]} log(P_i)
+        \\
+        \alpha_j \sim Normal(3, 0.5)
+        \\
+        \beta_j \sim Normal(0, 0.2)
+        $$
 
 ```{r, eval=FALSE}
 # model
@@ -296,7 +387,39 @@ identify( d$population , d$total_tools , d$culture )
 
     -   therefore models with more parameters often have lower effective parameters
 
--   gamma-Poisson is the appropriate analog to a student t-test - wider tails
+-   gamma-Poisson is the appropriate analog to a student t-test - wider tails and more robust
+
+-   improve *scientific* model
+
+    -   people produce innovations so population and contact both innovate but there is also loss
+
+    -   $$
+        \Delta T = \alpha_C P^{\beta_C} - \gamma T
+        $$
+
+    -   $\Delta T$ = change in tools
+
+    -   $\alpha$ = innovation rate
+
+    -   $\beta$ = diminishing returns
+
+    -   $\gamma$ = loss
+
+    -   T = number of tools
+
+    -   C = contact
+
+-   set equation to 0 and solve for T then insert into your model
+
+    -   $$
+        \hat{T} = \frac {\alpha_C P^{\beta_C}} {\gamma}
+        \\
+        T_i \sim Poisson (\lambda_i)
+        \\
+        \lambda_i = \hat{T}
+        $$
+
+    -    must constrain all parameters to be positive
 
 ```{r, eval=FALSE}
 # innovation/loss model
@@ -319,6 +442,8 @@ plot( d$population , d$total_tools , xlab="population" , ylab="total tools" ,
 P_seq <- seq( from=-5 , to=3 , length.out=100 )
 ```
 
+-   still need to deal with location as confound
+
 ## Count GLMs
 
 -   distributions from constraints
@@ -326,3 +451,15 @@ P_seq <- seq( from=-5 , to=3 , length.out=100 )
 -   maximum entropy priors: binomial, Poisson, and extensions
 
 -   robust regressions: beta-binomial, gamma-Poisson
+
+## Simpson's Paradox
+
+-   reversal of an association when groups are combined or separated within the dataset
+
+-   the reversal is purely statistical - no way to understand it without causal assumptions
+
+-   non-linear haunting
+
+    -   there's a positive effect in both groups but it cannot be estimated from this sample
+
+    -   just because your distribution overlaps zero, doesn't mean the effect is null
