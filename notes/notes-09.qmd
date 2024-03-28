@@ -1,7 +1,7 @@
 ---
 title: "Lecture 09 - Modeling Events"
 author: Isabella C. Richmond
-date: Mar 22, 2023
+date: Mar 20, 2024
 format: html
 ---
 
@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* understanding exponential distributions a bit more
+*Rose:*
 
-*Thorn:* this lecture really would have helped with last week's homework
+*Thorn:*
 
 ## Modeling Events
 
@@ -25,7 +25,9 @@ NOTE: read causal foundations of bias, fairness, and ...
 
 -   everything is interacting
 
-What is the effect of gender on university admissions?
+-   "log-odds" scale
+
+Estimand: what is the effect of gender on university admissions?
 
 ```{r, echo=FALSE}
 dag <- dagify(
@@ -38,9 +40,19 @@ ggdag(dag) +
     theme_dag()
 ```
 
+-   perception of gender by admissions officer is what truly matters here
+
 -   total effect of discrimination is what people experience
 
--   quite often, the thing we are able to estimate is what we want (total effects are easier to estimate but subpaths are interesting and important to understanding equity)
+-   direct discrimination: status-based (referees are biased for or against certain gender)
+
+-   indirect discrimination: structural (gender influences what discipline you are interested in and that discipline is underfunded)
+
+-   quite often, the thing we are able to estimate is not what we want (total effects are easier to estimate but subpaths are interesting and important to understanding equity)
+
+-   many unobserved confounds in this setup
+
+Generative Model:
 
 ```{r}
 N <- 1000 # number of applicants
@@ -49,6 +61,8 @@ D <- rbern(N, ifelse(G==1, 0.3, 0.8)) + 1 #gener 1 tends to apply to appartment 
 accept_rate <- matrix(c(0.1, 0.3, 0.1, 0.3), nrow = 2) # matrix of acceptance rates [dept, gender]
 A <- rbern(N, accept_rate[D,G]) # simulate acceptance
 ```
+
+## Modeling Events
 
 -   we observe: count of events
 
@@ -62,13 +76,35 @@ A <- rbern(N, accept_rate[D,G]) # simulate acceptance
 
 -   generalized linear models: expected value is *some function* of an additive combination of parameters
 
+    -   works because normal distribution is unbounded on both sides
+
+    -   when you have probabilities, which are bounded by 0 and 1, you make the expected value a **function** of the additive model
+
+    -   choosing the function so that it works well is the art of linear models
+
+$$
+Y_i \sim Bernoulli (p_i) 
+\\
+f(p_i) = \alpha + \beta_XX_i + \beta_Z Z_i 
+\\
+p_i = f^{-1}(\alpha + \beta_XX_i + \beta_Z Z_i )
+$$
+
+-   p = probability of the event
+
+<!-- -->
+
 -   f is the link function - links parameters of distribution to linear model
+
+-   f-1 is the inverse link function
+
+    -   the probability = inverse link function
 
 -   distributions: relative number of ways to observe data, given assumptions about rates, probabilities, slopes, etc.
 
 -   distributions are matched to constraints on observed variables
 
--   link functions are matched to distributions
+-   link functions are matched to distributions, essentially automatically matched to distributions
 
 -   exponential distribution - the time to an event that has a constant rate. Values you sample from exponential distribution are latencies/rates (continuous data above one)
 
@@ -90,9 +126,25 @@ A <- rbern(N, accept_rate[D,G]) # simulate acceptance
 
 -   log-odds = logit link
 
+-   $$
+    logit(p_i) = log \frac{p_i}{1-p_i}
+    $$
+
 -   Bernoulli/binomial models most often use the logit link
 
+-   $$
+    Y_i \sim Bernoulli (p_i) 
+    \\
+    logit(p_i) = \alpha + \beta_XX_i + \beta_Z Z_i 
+    \\
+    p_i = logit^{-1}(\alpha + \beta_XX_i + \beta_Z Z_i )
+    $$
+
 -   linear model output is on the "log-odds scale"
+
+    -   harsh scale (S-shaped curve)
+
+    -   by the time you reach -4 on the scale it means hardly ever, and -6 is never (opposite on the other side)
 
 ## Logistic Priors
 
@@ -101,6 +153,16 @@ A <- rbern(N, accept_rate[D,G]) # simulate acceptance
 -   on log-odds scale, above +4 = almost always, below -4 = almost never
 
     -   therefore, tighter priors are better
+
+Statistical Model:
+
+-   $A_i \sim Bernoulli(p_i)$
+
+-   $logit(p_i) = \alpha [G_i, D_i]$
+
+    -   this creates a matrix
+
+-   $\alpha_{j,k} \sim Normal(0,1)$
 
 ```{r, eval = FALSE}
 # generative model, basic mediator scenario
