@@ -351,6 +351,7 @@ window.Quarto = {
   <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
   <li><a href="#logit-link" id="toc-logit-link" class="nav-link" data-scroll-target="#logit-link">Logit Link</a></li>
   <li><a href="#logistic-priors" id="toc-logistic-priors" class="nav-link" data-scroll-target="#logistic-priors">Logistic Priors</a></li>
+  <li><a href="#logistic-binomial-regression-with-data" id="toc-logistic-binomial-regression-with-data" class="nav-link" data-scroll-target="#logistic-binomial-regression-with-data">Logistic &amp; Binomial Regression with Data</a></li>
   <li><a href="#post-stratification" id="toc-post-stratification" class="nav-link" data-scroll-target="#post-stratification">Post-Stratification</a></li>
   <li><a href="#discrimination" id="toc-discrimination" class="nav-link" data-scroll-target="#discrimination">Discrimination</a></li>
   <li><a href="#survival-analysis" id="toc-survival-analysis" class="nav-link" data-scroll-target="#survival-analysis">Survival Analysis</a></li>
@@ -581,15 +582,15 @@ p_i = logit^{-1}(\alpha + \beta_XX_i + \beta_Z Z_i )
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m2_bin,<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; Updated upstream ## Logistic &amp; Binomial Regression with Data</p>
+</section>
+<section id="logistic-binomial-regression-with-data" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-binomial-regression-with-data">Logistic &amp; Binomial Regression with Data</h2>
 <ul>
 <li><p>logistic is Bernoulli - binary 0, 1</p></li>
 <li><p>binomial is count 0, N</p></li>
 <li><p>both have logit link and are equivalent for inference</p></li>
-<li><p>=======</p></li>
-<li><p>estimates are on the log-odd scales - hard to interpret</p></li>
+<li></li>
 </ul>
-<p>Model real data: &gt;&gt;&gt;&gt;&gt;&gt;&gt; Stashed changes</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UCBadmit)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> UCBadmit</span>

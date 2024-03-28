@@ -166,8 +166,18 @@ Weight the sample based on number of applications (post-stratification):
 #| eval: TRUE
 #| warning: FALSE
 
+post <- NWOGrants %>%
+  group_by(discipline) %>% 
+  summarize(n_app = sum(applications)) %>% 
+  ungroup() %>% 
+  mutate(prop_app = n_app / sum(n_app)) %>% 
+  right_join(., direct_gender_effect, by = "discipline") %>% 
+  group_by(discipline, .draw) %>% 
+  summarize(post_predict = sum(.value * prop_app)) %>% 
+  mean_qi(post_predict)
 
-
+ggplot(data = post, aes(x = post_predict, xmin = .lower, xmax = .upper, y = discipline)) + 
+  geom_pointrange(color = "orange2", linewidth = 0.8, fatten = 2)
 ```
 
 ## Q3 (optional)

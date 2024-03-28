@@ -448,16 +448,16 @@ window.Quarto = {
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># correlated</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X, Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7837328</code></pre>
+<pre><code>[1] 0.7529316</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># no longer correlated when we pull out Z</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X[Z<span class="sc">==</span><span class="dv">0</span>], Y[Z<span class="sc">==</span><span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.005262138</code></pre>
+<pre><code>[1] -0.008403361</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X[Z<span class="sc">==</span><span class="dv">1</span>], Y[Z<span class="sc">==</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.01603458</code></pre>
+<pre><code>[1] -0.04403996</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -631,7 +631,7 @@ window.Quarto = {
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">rbern</span>(n, (<span class="dv">1</span><span class="sc">-</span>Z)<span class="sc">*</span><span class="fl">0.01</span> <span class="sc">+</span> Z<span class="sc">*</span><span class="fl">0.9</span>)</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(X,Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8242245</code></pre>
+<pre><code>[1] 0.8152234</code></pre>
 </div>
 </div>
 <ul>
