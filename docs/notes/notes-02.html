@@ -323,6 +323,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../homework/homework-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 05</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../homework/targets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">_targets.R</span></a>
   </div>
@@ -518,7 +524,7 @@ W,L = f(p,N)
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "L" "W" "W" "W" "L" "W" "W" "W" "W"</code></pre>
+<pre><code>[1] "W" "W" "L" "L" "W" "W" "W" "W" "W"</code></pre>
 </div>
 </div>
 </section>
@@ -537,7 +543,7 @@ W,L = f(p,N)
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "W" "W" "L" "W" "W" "L" "W" "L" "L"</code></pre>
+<pre><code>[1] "W" "W" "W" "L" "L" "W" "W" "W" "W"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>(<span class="at">p=</span><span class="dv">1</span>, <span class="at">N=</span><span class="dv">11</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -545,7 +551,7 @@ W,L = f(p,N)
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">sim_globe</span>(<span class="at">p=</span><span class="fl">0.5</span>, <span class="at">N=</span><span class="fl">1e4</span>) <span class="sc">==</span> <span class="st">"W"</span>)<span class="sc">/</span><span class="fl">1e4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5013</code></pre>
+<pre><code>[1] 0.5059</code></pre>
 </div>
 </div>
 <p>Function:</p>
@@ -572,9 +578,9 @@ W,L = f(p,N)
 <div class="cell-output cell-output-stdout">
 <pre><code>  poss ways  post                 bars
 1 0.00    0 0.000                     
-2 0.25    3 0.000                     
-3 0.50  512 0.072 #                   
-4 0.75 6561 0.927 ################### 
+2 0.25  243 0.291 ######              
+3 0.50  512 0.612 ############        
+4 0.75   81 0.097 ##                  
 5 1.00    0 0.000                     </code></pre>
 </div>
 </div>

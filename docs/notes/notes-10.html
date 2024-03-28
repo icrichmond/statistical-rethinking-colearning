@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Isabella C. Richmond">
-<meta name="dcterms.date" content="2023-03-22">
+<meta name="dcterms.date" content="2024-03-21">
 
 <title>Statistical Rethinking colearning 2024 - Bella - Lecture 10 - Counts &amp; Hidden Confounds</title>
 <style>
@@ -105,6 +105,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -294,6 +323,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../homework/homework-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework - Week 05</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../homework/targets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">_targets.R</span></a>
   </div>
@@ -313,10 +348,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#rose-thorn" id="toc-rose-thorn" class="nav-link active" data-scroll-target="#rose-thorn">Rose / Thorn</a></li>
   <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
   <li><a href="#confounded-admissions" id="toc-confounded-admissions" class="nav-link" data-scroll-target="#confounded-admissions">Confounded Admissions</a></li>
+  <li><a href="#collider-bias" id="toc-collider-bias" class="nav-link" data-scroll-target="#collider-bias">Collider Bias</a></li>
+  <li><a href="#citation-vs-membership" id="toc-citation-vs-membership" class="nav-link" data-scroll-target="#citation-vs-membership">Citation vs Membership</a></li>
   <li><a href="#citation-networks" id="toc-citation-networks" class="nav-link" data-scroll-target="#citation-networks">Citation Networks</a></li>
   <li><a href="#sensitivity-analysis" id="toc-sensitivity-analysis" class="nav-link" data-scroll-target="#sensitivity-analysis">Sensitivity Analysis</a></li>
   <li><a href="#poisson-counts" id="toc-poisson-counts" class="nav-link" data-scroll-target="#poisson-counts">Poisson Counts</a></li>
   <li><a href="#count-glms" id="toc-count-glms" class="nav-link" data-scroll-target="#count-glms">Count GLMs</a></li>
+  <li><a href="#simpsons-paradox" id="toc-simpsons-paradox" class="nav-link" data-scroll-target="#simpsons-paradox">Simpson’s Paradox</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/robitalec/statistical-rethinking-colearning-2024/edit/main/notes/notes-10.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/robitalec/statistical-rethinking-colearning-2024/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -342,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 22, 2023</p>
+      <p class="date">March 21, 2024</p>
     </div>
   </div>
   
@@ -356,14 +394,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="rose-thorn" class="level2">
 <h2 class="anchored" data-anchor-id="rose-thorn">Rose / Thorn</h2>
-<p><em>Rose:</em></p>
+<p><em>Rose:</em> qualitative data!!</p>
 <p><em>Thorn:</em></p>
 </section>
 <section id="generalized-linear-models" class="level2">
 <h2 class="anchored" data-anchor-id="generalized-linear-models">Generalized Linear Models</h2>
 <ul>
-<li><p>Expected value is <em>some function</em> of an additive combination of parameters</p></li>
-<li><p>uniform changes in predictor not uniform changes in prediction</p></li>
+<li><p>Expected value is <em>some function <strong>(</strong></em>link function) of an additive combination of parameters</p></li>
+<li><p>interpretation that changes, not computation - no longer simply an additive combination of parameters</p>
+<ul>
+<li>uniform changes in predictor not uniform changes in prediction</li>
+</ul></li>
 <li><p>all predictor variables interact and moderate one another</p></li>
 <li><p>inlfuences predictions and uncertainty of predictions</p></li>
 </ul>
@@ -371,7 +412,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="confounded-admissions" class="level2">
 <h2 class="anchored" data-anchor-id="confounded-admissions">Confounded Admissions</h2>
 <ul>
-<li><p>ability is a confound for admissions</p>
+<li><p>ability is the most easy to imagine confound for admissions</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -381,7 +422,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div></li>
-<li><p>include confound in the model:</p></li>
+<li><p>include confound in the model (u):</p>
+<ul>
+<li>Bernoulli variable 0, 1 - 1 is extremely high achieving individuals that are 10% of the population, everyone else is average</li>
+</ul></li>
+<li><p>gender 1 individuals anticipate gender discrimination in department 2, so if they are average they will avoid it but if they are exceptional they will still apply</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># continuing from UCBadmit example</span></span>
@@ -392,74 +437,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># even gender distribution</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>G <span class="ot">&lt;-</span> <span class="fu">sample</span>( <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span> , <span class="at">size=</span>N , <span class="at">replace=</span><span class="cn">TRUE</span> )</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># sample ability, high (1) to average (0)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">rbern</span>(N,<span class="fl">0.1</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># gender 1 tends to apply to department 1, 2 to 2</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># and G=1 with greater ability tend to apply to 2 as well</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">rbern</span>( N , <span class="fu">ifelse</span>( G<span class="sc">==</span><span class="dv">1</span> , u<span class="sc">*</span><span class="fl">0.5</span> , <span class="fl">0.8</span> ) ) <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># matrix of acceptance rates [dept,gender]</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>accept_rate_u0 <span class="ot">&lt;-</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.3</span>) , <span class="at">nrow=</span><span class="dv">2</span> )</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>accept_rate_u1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.2</span>,<span class="fl">0.5</span>) , <span class="at">nrow=</span><span class="dv">2</span> )</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate acceptance</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span>N , <span class="cf">function</span>(i) </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>( u[i]<span class="sc">==</span><span class="dv">0</span> , accept_rate_u0[D[i],G[i]] , accept_rate_u1[D[i],G[i]] ) )</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">rbern</span>( N , p )</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(G,D)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(G,A)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>dat_sim <span class="ot">&lt;-</span> <span class="fu">list</span>( <span class="at">A=</span>A , <span class="at">D=</span>D , <span class="at">G=</span>G )</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># total effect gender</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[G],</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        a[G] <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_sim , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>post1 <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m1)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>post1<span class="sc">$</span>fm_contrast <span class="ot">&lt;-</span> post1<span class="sc">$</span>a[,<span class="dv">1</span>] <span class="sc">-</span> post1<span class="sc">$</span>a[,<span class="dv">2</span>]</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(post1)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># direct effects - now confounded!</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[G,D],</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        matrix[G,D]<span class="sc">:</span>a <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_sim , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m2,<span class="dv">3</span>)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># contrast</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>post2 <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m2)</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>post2<span class="sc">$</span>fm_contrast_D1 <span class="ot">&lt;-</span> post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">1</span>] <span class="sc">-</span> post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>post2<span class="sc">$</span>fm_contrast_D2 <span class="ot">&lt;-</span> post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">2</span>] <span class="sc">-</span> post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(post2)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">xlab=</span><span class="st">"F-M contrast in each department"</span> )</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">3</span>)</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">1</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">1</span>) )</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">1</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">2</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> , <span class="at">lty=</span><span class="dv">4</span> )</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">2</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> , <span class="at">lty=</span><span class="dv">4</span>)</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> , <span class="at">lty=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># unobserved common cause </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">rbern</span>(N,<span class="fl">0.1</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># gender 1 tends to apply to department 1, 2 to 2</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># and G=1 with greater ability tend to apply to 2 as well</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">rbern</span>( N , <span class="fu">ifelse</span>( G<span class="sc">==</span><span class="dv">1</span> , u<span class="sc">*</span><span class="fl">0.5</span> , <span class="fl">0.8</span> ) ) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># matrix of acceptance rates [dept,gender]</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>accept_rate_u0 <span class="ot">&lt;-</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.3</span>) , <span class="at">nrow=</span><span class="dv">2</span> )</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>accept_rate_u1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.2</span>,<span class="fl">0.5</span>) , <span class="at">nrow=</span><span class="dv">2</span> )</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate acceptance</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span>N , <span class="cf">function</span>(i) </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>( u[i]<span class="sc">==</span><span class="dv">0</span> , accept_rate_u0[D[i],G[i]] , accept_rate_u1[D[i],G[i]] ) )</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">rbern</span>( N , p )</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(G,D)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(G,A)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>dat_sim <span class="ot">&lt;-</span> <span class="fu">list</span>( <span class="at">A=</span>A , <span class="at">D=</span>D , <span class="at">G=</span>G )</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># total effect gender</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[G],</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        a[G] <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_sim , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>post1 <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m1)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>post1<span class="sc">$</span>fm_contrast <span class="ot">&lt;-</span> post1<span class="sc">$</span>a[,<span class="dv">1</span>] <span class="sc">-</span> post1<span class="sc">$</span>a[,<span class="dv">2</span>]</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(post1)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># direct effects - now confounded!</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[G,D],</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        matrix[G,D]<span class="sc">:</span>a <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_sim , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m2,<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>sorting can mask a lot of things through collider bias</li>
+<li>second model stratifies through department is now confounded because we’ve added a common cause, ability</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contrast</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>post2 <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>post2<span class="sc">$</span>fm_contrast_D1 <span class="ot">&lt;-</span> post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">1</span>] <span class="sc">-</span> post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>post2<span class="sc">$</span>fm_contrast_D2 <span class="ot">&lt;-</span> post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">2</span>] <span class="sc">-</span> post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(post2)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">xlab=</span><span class="st">"F-M contrast in each department"</span> )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">3</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">1</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">1</span>) )</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">1</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">2</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> , <span class="at">lty=</span><span class="dv">4</span> )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">2</span>] , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> , <span class="at">lty=</span><span class="dv">4</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> , <span class="at">lty=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>probability distribution of probabilities because we’re modelling probability</p></li>
+<li><p>confound happens because exceptional individuals don’t apply to department 1, they apply to department 2 and so it looks like department 1 is discriminating when its not because its getting lower quality applicants</p>
+<ul>
+<li>department 2 appears to have no discrimination but it does have it, for the opposite reason. they are only admitting higher ability applicants of a certain gender</li>
+</ul></li>
+<li><p>masking effect - sorting can mask a lot of things</p></li>
 </ul>
 </section>
-<section id="citation-networks" class="level2">
-<h2 class="anchored" data-anchor-id="citation-networks">Citation Networks</h2>
+<section id="collider-bias" class="level2">
+<h2 class="anchored" data-anchor-id="collider-bias">Collider Bias</h2>
+<ul>
+<li><p>We can estimate total causal effect of G but it isn’t what we want (not useful for policy)</p></li>
+<li><p>We cannot estimate direct effect of department or gender</p></li>
+</ul>
+</section>
+<section id="citation-vs-membership" class="level2">
+<h2 class="anchored" data-anchor-id="citation-vs-membership">Citation vs Membership</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="notes-10_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="notes-10_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="notes-10_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>paper one concludes that gender results in lower citation rates for women</p></li>
+<li><p>paper two concludes that women get elected more controlling for citations</p></li>
+</ul>
+</section>
+<section id="citation-networks" class="level2">
+<h2 class="anchored" data-anchor-id="citation-networks">Citation Networks</h2>
+<ul>
+<li><p>very plausible that there is quality differences among members of the academy but they are often hidden</p></li>
+<li><p>citations is a post-treatment variable (and stratifying by post-treatment variable is dangerous because it can activate collider bias)</p>
+<ul>
+<li>if women are less likely to get citations because of discrimination, it is probably that women elected to the NAS with less citations have a higher quality</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="notes-10_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -480,44 +572,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>change parameter size/strength to test the effect of unobserved confound</li>
 </ul></li>
+<li><p><span class="math display">\[
+A_i \sim Bernoulli(p_i)
+\\
+logit(p_i) = \alpha[G_i, D_i] +\beta_{G[i]}u_i
+\]</span></p>
+<ul>
+<li>first model models total effect of gender on admissions with an unknown confound (quality)</li>
+</ul></li>
+<li><p><span class="math display">\[
+(D_i = 2) \sim Bernoulli(q_i)
+\\
+logit(q_i) = \delta[G_i] + \gamma_{G[i]}u_i
+\]</span></p>
+<ul>
+<li>second model investigates the effect of how people apply to departments</li>
+</ul></li>
+<li><p><span class="math inline">\(u_j \sim Normal(0, 1)\)</span></p></li>
+<li><p><span class="math inline">\(u_i\)</span> = ability</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sensitivity</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>D2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( D<span class="sc">==</span><span class="dv">2</span> , <span class="dv">1</span> , <span class="dv">0</span> )</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>N <span class="ot">&lt;-</span> <span class="fu">length</span>(dat_sim<span class="sc">$</span>D2)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>m3s <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>( </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># A model</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[G,D] <span class="sc">+</span> b[G]<span class="sc">*</span>u[i],</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        matrix[G,D]<span class="sc">:</span>a <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># D model</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        D2 <span class="sc">~</span> <span class="fu">bernoulli</span>(q),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(q) <span class="ot">&lt;-</span> delta[G] <span class="sc">+</span> g[G]<span class="sc">*</span>u[i],</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        delta[G] <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># declare unobserved u</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        vector[N]<span class="sc">:</span>u <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_sim , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3s,<span class="dv">3</span>,<span class="at">pars=</span><span class="fu">c</span>(<span class="st">"a"</span>,<span class="st">"delta"</span>))</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>post3s <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m3s)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>post3s<span class="sc">$</span>fm_contrast_D1 <span class="ot">&lt;-</span> post3s<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">1</span>] <span class="sc">-</span> post3s<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>post3s<span class="sc">$</span>fm_contrast_D2 <span class="ot">&lt;-</span> post3s<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">2</span>] <span class="sc">-</span> post3s<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">1</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">xlab=</span><span class="st">"F-M contrast in each department"</span> , <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">1</span>) )</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">1</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">3</span>)</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post3s<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post3s<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( <span class="fu">jitter</span>(u) , <span class="fu">apply</span>(post3s<span class="sc">$</span>u,<span class="dv">2</span>,mean) , <span class="at">col=</span><span class="fu">ifelse</span>(G<span class="sc">==</span><span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>) , <span class="at">lwd=</span><span class="dv">3</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sensitivity</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>D2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( D<span class="sc">==</span><span class="dv">2</span> , <span class="dv">1</span> , <span class="dv">0</span> )</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>dat_sim<span class="sc">$</span>N <span class="ot">&lt;-</span> <span class="fu">length</span>(dat_sim<span class="sc">$</span>D2)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>m3s <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>( </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># A model</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        A <span class="sc">~</span> <span class="fu">bernoulli</span>(p),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p) <span class="ot">&lt;-</span> a[G,D] <span class="sc">+</span> b[G]<span class="sc">*</span>u[i],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        matrix[G,D]<span class="sc">:</span>a <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># D model</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        D2 <span class="sc">~</span> <span class="fu">bernoulli</span>(q),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(q) <span class="ot">&lt;-</span> delta[G] <span class="sc">+</span> g[G]<span class="sc">*</span>u[i],</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        delta[G] <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># declare unobserved u</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        vector[N]<span class="sc">:</span>u <span class="sc">~</span> <span class="fu">normal</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat_sim , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> )</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3s,<span class="dv">3</span>,<span class="at">pars=</span><span class="fu">c</span>(<span class="st">"a"</span>,<span class="st">"delta"</span>))</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>post3s <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m3s)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>post3s<span class="sc">$</span>fm_contrast_D1 <span class="ot">&lt;-</span> post3s<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">1</span>] <span class="sc">-</span> post3s<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>post3s<span class="sc">$</span>fm_contrast_D2 <span class="ot">&lt;-</span> post3s<span class="sc">$</span>a[,<span class="dv">1</span>,<span class="dv">2</span>] <span class="sc">-</span> post3s<span class="sc">$</span>a[,<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">1</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">xlab=</span><span class="st">"F-M contrast in each department"</span> , <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">1</span>) )</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post2<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">1</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>,<span class="at">lty=</span><span class="dv">3</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post3s<span class="sc">$</span>fm_contrast_D1 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">4</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>( post3s<span class="sc">$</span>fm_contrast_D2 , <span class="at">lwd=</span><span class="dv">4</span> , <span class="at">col=</span><span class="dv">2</span> , <span class="at">add=</span><span class="cn">TRUE</span> )</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( <span class="fu">jitter</span>(u) , <span class="fu">apply</span>(post3s<span class="sc">$</span>u,<span class="dv">2</span>,mean) , <span class="at">col=</span><span class="fu">ifelse</span>(G<span class="sc">==</span><span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>) , <span class="at">lwd=</span><span class="dv">3</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>you can say the strength of the confound needed to undo the results you found</p>
@@ -534,7 +644,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="notes-10_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="notes-10_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -550,113 +660,159 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>large priors makes extremely long tails with very large values</p></li>
 <li><p>want higher mean, lower variance</p></li>
 </ul></li>
+<li><p><span class="math display">\[
+Y_i \sim Poisson(\lambda_i)
+\\
+log(\lambda_i) = \alpha + \beta x_i
+\\
+\lambda_i = exp(\alpha + \beta x_i)
+\]</span></p></li>
+<li><p>To add contact as an interaction term where C is contact:</p>
+<ul>
+<li><span class="math display">\[
+Y_i \sim Poisson(\lambda_i)
+\\
+log(\lambda_i) = \alpha_{C[i]} + \beta_{C[i]} log(P_i)
+\\
+\alpha_j \sim Normal(3, 0.5)
+\\
+\beta_j \sim Normal(0, 0.2)
+\]</span></li>
+</ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Kline)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Kline</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>P <span class="ot">&lt;-</span> <span class="fu">scale</span>( <span class="fu">log</span>(d<span class="sc">$</span>population) )</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>contact_id <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( d<span class="sc">$</span>contact<span class="sc">==</span><span class="st">"high"</span> , <span class="dv">2</span> , <span class="dv">1</span> )</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">T =</span> d<span class="sc">$</span>total_tools ,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">P =</span> d<span class="sc">$</span>P ,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">C =</span> d<span class="sc">$</span>contact_id )</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># intercept only</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>m11<span class="fl">.9</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>( lambda ),</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">log</span>(lambda) <span class="ot">&lt;-</span> a,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">3</span> , <span class="fl">0.5</span> )</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">log_lik=</span><span class="cn">TRUE</span> )</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction model</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>m11<span class="fl">.10</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>( lambda ),</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">log</span>(lambda) <span class="ot">&lt;-</span> a[C] <span class="sc">+</span> b[C]<span class="sc">*</span>P,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        a[C] <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">3</span> , <span class="fl">0.5</span> ),</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        b[C] <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="fl">0.2</span> )</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">log_lik=</span><span class="cn">TRUE</span> )</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>( m11<span class="fl">.9</span> , m11<span class="fl">.10</span> , <span class="at">func=</span>PSIS )</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">PSIS</span>( m11<span class="fl">.10</span> , <span class="at">pointwise=</span><span class="cn">TRUE</span> )<span class="sc">$</span>k</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( dat<span class="sc">$</span>P , dat<span class="sc">$</span>T , <span class="at">xlab=</span><span class="st">"log population (std)"</span> , <span class="at">ylab=</span><span class="st">"total tools"</span> ,</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">col=</span><span class="fu">ifelse</span>( dat<span class="sc">$</span>C<span class="sc">==</span><span class="dv">1</span> , <span class="dv">4</span> , <span class="dv">2</span> ) , <span class="at">lwd=</span><span class="dv">4</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span><span class="fu">normalize</span>(k) ,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>) , <span class="at">cex=</span><span class="dv">1</span><span class="sc">+</span><span class="fu">normalize</span>(k) )</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># set up the horizontal axis values to compute predictions at</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>P_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="fl">1.4</span> , <span class="at">to=</span><span class="dv">3</span> , <span class="at">len=</span><span class="dv">100</span> )</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for C=1 (low contact)</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">1</span> ) )</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( P_seq , lmu , <span class="at">lty=</span><span class="dv">2</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , P_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">4</span>,<span class="fl">0.3</span>) )</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for C=2 (high contact)</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">2</span> ) )</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( P_seq , lmu , <span class="at">lty=</span><span class="dv">1</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , P_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">2</span>,<span class="fl">0.3</span>))</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="fu">identify</span>( dat<span class="sc">$</span>P , dat<span class="sc">$</span>T , d<span class="sc">$</span>culture )</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co"># natural scale now</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( d<span class="sc">$</span>population , d<span class="sc">$</span>total_tools , <span class="at">xlab=</span><span class="st">"population"</span> , <span class="at">ylab=</span><span class="st">"total tools"</span> ,</span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">col=</span><span class="fu">ifelse</span>( dat<span class="sc">$</span>C<span class="sc">==</span><span class="dv">1</span> , <span class="dv">4</span> , <span class="dv">2</span> ) , <span class="at">lwd=</span><span class="dv">4</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span><span class="fu">normalize</span>(k) ,</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>) , <span class="at">cex=</span><span class="dv">1</span><span class="sc">+</span><span class="fu">normalize</span>(k) )</span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>P_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="dv">5</span> , <span class="at">to=</span><span class="dv">3</span> , <span class="at">length.out=</span><span class="dv">100</span> )</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co"># 1.53 is sd of log(population)</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co"># 9 is mean of log(population)</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>pop_seq <span class="ot">&lt;-</span> <span class="fu">exp</span>( P_seq<span class="sc">*</span><span class="fl">1.53</span> <span class="sc">+</span> <span class="dv">9</span> )</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">1</span> ) )</span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( pop_seq , lmu , <span class="at">lty=</span><span class="dv">2</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , pop_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">4</span>,<span class="fl">0.3</span>))</span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">2</span> ) )</span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( pop_seq , lmu , <span class="at">lty=</span><span class="dv">1</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , pop_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">2</span>,<span class="fl">0.3</span>) )</span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a><span class="fu">identify</span>( d<span class="sc">$</span>population , d<span class="sc">$</span>total_tools , d<span class="sc">$</span>culture )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Kline)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Kline</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>P <span class="ot">&lt;-</span> <span class="fu">scale</span>( <span class="fu">log</span>(d<span class="sc">$</span>population) )</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>contact_id <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( d<span class="sc">$</span>contact<span class="sc">==</span><span class="st">"high"</span> , <span class="dv">2</span> , <span class="dv">1</span> )</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">T =</span> d<span class="sc">$</span>total_tools ,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">P =</span> d<span class="sc">$</span>P ,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">C =</span> d<span class="sc">$</span>contact_id )</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># intercept only</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>m11<span class="fl">.9</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>( lambda ),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">log</span>(lambda) <span class="ot">&lt;-</span> a,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">3</span> , <span class="fl">0.5</span> )</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">log_lik=</span><span class="cn">TRUE</span> )</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># interaction model</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>m11<span class="fl">.10</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>( lambda ),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">log</span>(lambda) <span class="ot">&lt;-</span> a[C] <span class="sc">+</span> b[C]<span class="sc">*</span>P,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        a[C] <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">3</span> , <span class="fl">0.5</span> ),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        b[C] <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="fl">0.2</span> )</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">log_lik=</span><span class="cn">TRUE</span> )</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>( m11<span class="fl">.9</span> , m11<span class="fl">.10</span> , <span class="at">func=</span>PSIS )</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">PSIS</span>( m11<span class="fl">.10</span> , <span class="at">pointwise=</span><span class="cn">TRUE</span> )<span class="sc">$</span>k</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( dat<span class="sc">$</span>P , dat<span class="sc">$</span>T , <span class="at">xlab=</span><span class="st">"log population (std)"</span> , <span class="at">ylab=</span><span class="st">"total tools"</span> ,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">col=</span><span class="fu">ifelse</span>( dat<span class="sc">$</span>C<span class="sc">==</span><span class="dv">1</span> , <span class="dv">4</span> , <span class="dv">2</span> ) , <span class="at">lwd=</span><span class="dv">4</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span><span class="fu">normalize</span>(k) ,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>) , <span class="at">cex=</span><span class="dv">1</span><span class="sc">+</span><span class="fu">normalize</span>(k) )</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co"># set up the horizontal axis values to compute predictions at</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>P_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="fl">1.4</span> , <span class="at">to=</span><span class="dv">3</span> , <span class="at">len=</span><span class="dv">100</span> )</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for C=1 (low contact)</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">1</span> ) )</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( P_seq , lmu , <span class="at">lty=</span><span class="dv">2</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , P_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">4</span>,<span class="fl">0.3</span>) )</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for C=2 (high contact)</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">2</span> ) )</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( P_seq , lmu , <span class="at">lty=</span><span class="dv">1</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , P_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">2</span>,<span class="fl">0.3</span>))</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="fu">identify</span>( dat<span class="sc">$</span>P , dat<span class="sc">$</span>T , d<span class="sc">$</span>culture )</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co"># natural scale now</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( d<span class="sc">$</span>population , d<span class="sc">$</span>total_tools , <span class="at">xlab=</span><span class="st">"population"</span> , <span class="at">ylab=</span><span class="st">"total tools"</span> ,</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">col=</span><span class="fu">ifelse</span>( dat<span class="sc">$</span>C<span class="sc">==</span><span class="dv">1</span> , <span class="dv">4</span> , <span class="dv">2</span> ) , <span class="at">lwd=</span><span class="dv">4</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span><span class="fu">normalize</span>(k) ,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>) , <span class="at">cex=</span><span class="dv">1</span><span class="sc">+</span><span class="fu">normalize</span>(k) )</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>P_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="dv">5</span> , <span class="at">to=</span><span class="dv">3</span> , <span class="at">length.out=</span><span class="dv">100</span> )</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co"># 1.53 is sd of log(population)</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co"># 9 is mean of log(population)</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>pop_seq <span class="ot">&lt;-</span> <span class="fu">exp</span>( P_seq<span class="sc">*</span><span class="fl">1.53</span> <span class="sc">+</span> <span class="dv">9</span> )</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">1</span> ) )</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( pop_seq , lmu , <span class="at">lty=</span><span class="dv">2</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , pop_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">4</span>,<span class="fl">0.3</span>))</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">link</span>( m11<span class="fl">.10</span> , <span class="at">data=</span><span class="fu">data.frame</span>( <span class="at">P=</span>P_seq , <span class="at">C=</span><span class="dv">2</span> ) )</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>lmu <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , mean )</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>lci <span class="ot">&lt;-</span> <span class="fu">apply</span>( lambda , <span class="dv">2</span> , PI )</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( pop_seq , lmu , <span class="at">lty=</span><span class="dv">1</span> , <span class="at">lwd=</span><span class="fl">1.5</span> )</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( lci , pop_seq , <span class="at">xpd=</span><span class="cn">TRUE</span> , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="dv">2</span>,<span class="fl">0.3</span>) )</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="fu">identify</span>( d<span class="sc">$</span>population , d<span class="sc">$</span>total_tools , d<span class="sc">$</span>culture )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>number of effective parameters penalty shows how well the model performs after you drop individual data points</p>
 <ul>
 <li>therefore models with more parameters often have lower effective parameters</li>
 </ul></li>
-<li><p>gamma-Poisson is the appropriate analog to a student t-test - wider tails</p></li>
+<li><p>gamma-Poisson is the appropriate analog to a student t-test - wider tails and more robust</p></li>
+<li><p>improve <em>scientific</em> model</p>
+<ul>
+<li><p>people produce innovations so population and contact both innovate but there is also loss</p></li>
+<li><p><span class="math display">\[
+\Delta T = \alpha_C P^{\beta_C} - \gamma T
+\]</span></p></li>
+<li><p><span class="math inline">\(\Delta T\)</span> = change in tools</p></li>
+<li><p><span class="math inline">\(\alpha\)</span> = innovation rate</p></li>
+<li><p><span class="math inline">\(\beta\)</span> = diminishing returns</p></li>
+<li><p><span class="math inline">\(\gamma\)</span> = loss</p></li>
+<li><p>T = number of tools</p></li>
+<li><p>C = contact</p></li>
+</ul></li>
+<li><p>set equation to 0 and solve for T then insert into your model</p>
+<ul>
+<li><p><span class="math display">\[
+\hat{T} = \frac {\alpha_C P^{\beta_C}} {\gamma}
+\\
+T_i \sim Poisson (\lambda_i)
+\\
+\lambda_i = \hat{T}
+\]</span></p></li>
+<li><p>must constrain all parameters to be positive</p></li>
+</ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># innovation/loss model</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>dat2 <span class="ot">&lt;-</span> <span class="fu">list</span>( <span class="at">T=</span>d<span class="sc">$</span>total_tools, <span class="at">P=</span>d<span class="sc">$</span>population, <span class="at">C=</span>d<span class="sc">$</span>contact_id )</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>m11<span class="fl">.11</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>( lambda ),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        lambda <span class="ot">&lt;-</span> <span class="fu">exp</span>(a[C])<span class="sc">*</span>P<span class="sc">^</span>b[C]<span class="sc">/</span>g,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        a[C] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        b[C] <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        g <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat2 , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> , <span class="at">log_lik=</span><span class="cn">TRUE</span> )</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m11<span class="fl">.11</span>,<span class="dv">2</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( d<span class="sc">$</span>population , d<span class="sc">$</span>total_tools , <span class="at">xlab=</span><span class="st">"population"</span> , <span class="at">ylab=</span><span class="st">"total tools"</span> ,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">col=</span><span class="fu">ifelse</span>( dat<span class="sc">$</span>C<span class="sc">==</span><span class="dv">1</span> , <span class="dv">4</span> , <span class="dv">2</span> ) , <span class="at">lwd=</span><span class="dv">4</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span><span class="fu">normalize</span>(k) ,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>) , <span class="at">cex=</span><span class="dv">1</span><span class="sc">+</span><span class="fu">normalize</span>(k) )</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>P_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="dv">5</span> , <span class="at">to=</span><span class="dv">3</span> , <span class="at">length.out=</span><span class="dv">100</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># innovation/loss model</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dat2 <span class="ot">&lt;-</span> <span class="fu">list</span>( <span class="at">T=</span>d<span class="sc">$</span>total_tools, <span class="at">P=</span>d<span class="sc">$</span>population, <span class="at">C=</span>d<span class="sc">$</span>contact_id )</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>m11<span class="fl">.11</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">alist</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        T <span class="sc">~</span> <span class="fu">dpois</span>( lambda ),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        lambda <span class="ot">&lt;-</span> <span class="fu">exp</span>(a[C])<span class="sc">*</span>P<span class="sc">^</span>b[C]<span class="sc">/</span>g,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        a[C] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        b[C] <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        g <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>dat2 , <span class="at">chains=</span><span class="dv">4</span> , <span class="at">cores=</span><span class="dv">4</span> , <span class="at">log_lik=</span><span class="cn">TRUE</span> )</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m11<span class="fl">.11</span>,<span class="dv">2</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( d<span class="sc">$</span>population , d<span class="sc">$</span>total_tools , <span class="at">xlab=</span><span class="st">"population"</span> , <span class="at">ylab=</span><span class="st">"total tools"</span> ,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">col=</span><span class="fu">ifelse</span>( dat<span class="sc">$</span>C<span class="sc">==</span><span class="dv">1</span> , <span class="dv">4</span> , <span class="dv">2</span> ) , <span class="at">lwd=</span><span class="dv">4</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span><span class="fu">normalize</span>(k) ,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>) , <span class="at">cex=</span><span class="dv">1</span><span class="sc">+</span><span class="fu">normalize</span>(k) )</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>P_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="dv">5</span> , <span class="at">to=</span><span class="dv">3</span> , <span class="at">length.out=</span><span class="dv">100</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>still need to deal with location as confound</li>
+</ul>
 </section>
 <section id="count-glms" class="level2">
 <h2 class="anchored" data-anchor-id="count-glms">Count GLMs</h2>
@@ -664,6 +820,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>distributions from constraints</p></li>
 <li><p>maximum entropy priors: binomial, Poisson, and extensions</p></li>
 <li><p>robust regressions: beta-binomial, gamma-Poisson</p></li>
+</ul>
+</section>
+<section id="simpsons-paradox" class="level2">
+<h2 class="anchored" data-anchor-id="simpsons-paradox">Simpson’s Paradox</h2>
+<ul>
+<li><p>reversal of an association when groups are combined or separated within the dataset</p></li>
+<li><p>the reversal is purely statistical - no way to understand it without causal assumptions</p></li>
+<li><p>non-linear haunting</p>
+<ul>
+<li><p>there’s a positive effect in both groups but it cannot be estimated from this sample</p></li>
+<li><p>just because your distribution overlaps zero, doesn’t mean the effect is null</p></li>
+</ul></li>
 </ul>
 
 

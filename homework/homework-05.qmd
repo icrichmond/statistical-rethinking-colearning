@@ -1,0 +1,175 @@
+---
+title: "Homework - Week 05"
+author: "Isabella C. Richmond"
+format: html
+---
+
+```{r}
+#| label: setup
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+library(rethinking)
+library(ggplot2)
+library(ggdag)
+library(dplyr)
+library(targets)
+library(tidybayes)
+library(emmeans)
+library(brms)
+
+data(NWOGrants)
+```
+
+## Q1
+
+> The data in data(NWOGrants) are outcomes for scientific funding applications for the Netherlands Organization for Scientific Research (NWO) from 2010–2012 (see van der Lee and Ellemers doi:10.1073/pnas.1510159112). These data have a structure similar to the UCBAdmit data discussed in Chapter 11 and in lecture. There are applications and each has an associated gender (of the lead researcher). But instead of departments, there are disciplines. Draw a DAG for this sample. Then use the backdoor criterion and a binomial GLM to estimate the TOTAL causal effect of gender on grant awards.
+
+```{r}
+#| label: DAG-q1
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+dagified <- dagify(
+    # outline relationships between your variables
+    G_p ~ G,
+    D ~ G,
+    A ~ G_p + D + R,
+   # assign exposure and outcome
+    exposure = 'G_p',
+    outcome = 'A', 
+   # assign coordinates so they aren't randomly assigned
+    coords = list(x = c(G = -1, G_p = 0, D = 0, A = 1, R = 1.5),
+                  y = c(A = 0, G = 0, G_p = -1, D = 1, R = -1))) %>%
+    # tidy_dagitty makes dag into tidy table format
+    tidy_dagitty() %>%
+    # add column that assigns variables to groups that you want to colour code
+    mutate(status = case_when(name == "G_p" ~ 'exposure',
+                              name == "A" ~ 'outcome',
+                              .default = 'NA'))
+
+  ggplot(dagified, aes(x = x, y = y, xend = xend, yend = yend)) +
+    theme_dag() +
+    # colour nodes by the column you made in previous step
+    geom_dag_point(aes(color = status)) +
+    # add labels so you can have more readable variable names
+    geom_dag_label_repel(aes(label = name, fill = status),
+                         color = "white", fontface = "bold") +
+    # adding geom_dag_edges here so that the arrows will go over the labels
+    geom_dag_edges() +
+    # assign the colours that you want
+    scale_fill_manual(values = c('darkseagreen', 'grey', 'lightblue')) +
+    scale_colour_manual(values = c('darkseagreen', 'grey', 'lightblue')) +
+   # removing colour legend here
+    theme(legend.position = 'none')
+
+```
+
+Total causal effect of gender requires no adjustment sets, although we could add referee ID to the model to help it fit better, as it is additional information in the system that is not connected through backdoor paths. I will model as: 
+
+$$
+Awards_i | Applications_i \sim Binomial(N_i, p_i)
+\\
+logit(p_i) = \alpha[G_i]
+\\
+\alpha = [\alpha _f, \alpha_m]
+\\
+\alpha \sim Normal(0, 1.5)
+\\
+\beta \sim Normal(0, 0.5)
+
+$$
+*question:* why do we use binomial and he uses Bernoulli?
+
+```{r}
+#| label: q1
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+mod1 <- tar_read(h05_q1_brms_sample)
+
+# plot predicted draws for each group using modelled dataset
+epred <- mod1 %>% 
+  predicted_draws(newdata = NWOGrants)
+
+ggplot(epred, aes(x = .prediction, fill = gender)) +
+  stat_halfeye(alpha = 0.7) +
+  labs(x = "Awards", y = "Density", fill = "Gender") +
+  theme_classic() +
+  theme(legend.position = "top")
+
+
+# calculate contrast using emmeans 
+total_gender_effect <- mod1 %>% 
+  emmeans(~ gender,
+          # undo link transformation
+          regrid = 'response') %>% 
+  contrast(method = "pairwise") %>% 
+  gather_emmeans_draws()
+
+ggplot(total_gender_effect, aes(x = .value)) +
+  stat_halfeye() +
+  labs(x = "Total causal effect of gender (female - male)", y = "Density") +
+  theme_classic() +
+  theme(legend.position = "bottom")
+```
+
+
+## Q2
+
+> Now estimate the DIRECT causal effect of gender on grant awards. Use the same DAG as above to justify one or more binomial models. Compute the average direct causal effect of gender, weighting each discipline in proportion to the number of applications in the sample. Refer to the marginal effect example in Lecture 9 for help.
+
+To calculate the direct causal effect of gender on grant awards, add discipline to the model. 
+
+
+$$
+Awards_i | Applications_i \sim Binomial(N_i, p_i)
+\\
+logit(p_i) = \alpha[G_i, D_i]
+\\
+\alpha \sim Normal(0, 1.5)
+\\
+\beta \sim Normal(0, 0.5)
+
+$$
+
+```{r}
+#| label: q2
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+mod2 <- tar_read(h05_q2_brms_sample)
+
+# calculate contrast using emmeans 
+direct_gender_effect <- mod2 %>% 
+  emmeans(~ gender|discipline,
+          # undo link transformation
+          regrid = 'response') %>% 
+  contrast(method = "pairwise") %>% 
+  gather_emmeans_draws()
+
+ggplot(direct_gender_effect, aes(x = .value, fill = discipline)) +
+  stat_halfeye(alpha = 0.5) +
+  labs(x = "Direct causal effect of gender (female - male)", y = "Density", fill = "") +
+  theme_classic() +
+  theme(legend.position = "top")
+```
+Weight the sample based on number of applications (post-stratification): 
+
+```{r}
+#| label: q2-strat
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+
+
+```
+
+## Q3 (optional)
+
+> The data in data(UFClefties) are the outcomes of 205 Ultimate Fighting Championship (UFC) matches (see ?UFClefties for details). It is widely believed that left-handed fighters (aka “Southpaws”) have an advantage against right-handed fighters, and left-handed men are indeed over-represented among fighters (and fencers and tennis players) compared to the general population. Estimate the average advantage, if any, that a left-handed fighter has against right-handed fighters. Based upon your estimate, why do you think left-handers are over-represented among UFC fighters?
