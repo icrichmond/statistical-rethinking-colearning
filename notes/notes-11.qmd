@@ -1,7 +1,7 @@
 ---
 title: "Lecture 11 - Ordered Categories"
 author: Isabella C. Richmond
-date: Apr 05, 2023
+date: Apr 09, 2023
 format: html
 ---
 
