@@ -1,0 +1,241 @@
+---
+title: "Homework - Week 06"
+author: "Isabella C. Richmond"
+format: html
+---
+
+```{r}
+#| label: setup
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+library(rethinking)
+library(ggplot2)
+library(ggdag)
+library(dplyr)
+library(targets)
+library(tidybayes)
+library(emmeans)
+library(brms)
+
+data("reedfrogs")
+```
+
+## Q1
+
+> Conduct a prior predictive simulation for the Reedfrog model. By this I mean to simulate the prior distribution of tank survival probabilities αj. Start by using this prior:
+
+
+$$
+
+\alpha_j \sim Normal(\bar{\alpha}, \sigma)
+
+\\
+
+\bar{\alpha} \sim Normal(0, 1)
+
+\\
+
+\sigma \sim Exponential(1)
+
+$$
+
+
+> Be sure to transform the αj values to the probability scale for plotting and summary. How does increasing the width of the prior on σ change the prior distribution of αj? You might try Exponential(10) and Exponential(0.1) for example.
+
+
+```{r}
+#| label: q1
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+r <- reedfrogs %>% 
+  mutate(tank = 1:nrow(reedfrogs))
+
+exp1 <- tar_read(h06_q1_a)
+exp10 <- tar_read(h06_q1_b)
+exp0.1 <- tar_read(h06_q1_c)
+
+# Prior Predictive Simulation 1 
+exp1 %>% 
+  add_predicted_draws(newdata = r,
+                  re_formula = NA) %>% 
+  ggplot() + 
+  stat_pointinterval(aes(tank, .prediction/density), .width = 0.95) + 
+  geom_point(aes(x = tank, y = surv/density), colour = 'red') + 
+  geom_hline(yintercept = 0.8, linetype = 2, linewidth = 1/4) +
+  geom_vline(xintercept = c(16.5, 32.5), linewidth = 1/4, color = "grey25") + 
+  labs(y = 'Prior predicted survival rate', x = 'Tank') + 
+  ggtitle("sigma = 1") + 
+  theme_classic()
+
+
+# Prior Predictive Simulation 2
+exp10 %>% 
+  predicted_draws(newdata = r,
+                  re_formula = NA) %>%
+  ggplot() + 
+  stat_pointinterval(aes(tank, .prediction/density), .width = 0.95) + 
+  geom_point(aes(x = tank, y = surv/density), colour = 'red') + 
+  geom_hline(yintercept = 0.8, linetype = 2, linewidth = 1/4) +
+  geom_vline(xintercept = c(16.5, 32.5), linewidth = 1/4, color = "grey25") + 
+  labs(y = 'Prior predicted survival rate', x = 'Tank') + 
+  ggtitle("sigma = 10") + 
+  theme_classic()
+
+# Prior Predictive Simulation 3
+exp0.1 %>% 
+  predicted_draws(newdata = r,
+                  re_formula = NA) %>% 
+  ggplot() + 
+  stat_pointinterval(aes(tank, .prediction/density), .width = 0.95) + 
+  geom_point(aes(x = tank, y = surv/density), colour = 'red') + 
+  geom_hline(yintercept = 0.8, linetype = 2, linewidth = 1/4) +
+  geom_vline(xintercept = c(16.5, 32.5), linewidth = 1/4, color = "grey25") +
+  labs(y = 'Prior predicted survival rate', x = 'Tank') + 
+  ggtitle("sigma = 0.1") + 
+  theme_classic()
+
+```
+
+NOTE: did this wrong!! This is not $\alpha_j$, this is $\bar{\alpha}$ . Checked Richard's answers and I should be visualizing the pooled individual effects - going to attempt this here: 
+
+```{r}
+#| label: q1-correct
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+exp1 %>% 
+  add_predicted_draws(newdata = r,
+                  re_formula = NA) %>% 
+  ggplot() +
+  stat_histinterval(aes(x = .prediction/density)) + 
+  labs(x = "Prior predicted survival", y = "Density") + 
+  ggtitle(label = "Sigma = 1") + 
+  theme_classic()
+
+exp10 %>% 
+  add_predicted_draws(newdata = r) %>% 
+  ggplot() +
+  stat_histinterval(aes(x = .prediction/density)) + 
+  labs(x = "Prior predicted survival", y = "Density") + 
+  ggtitle(label = "Sigma = 10") + 
+  theme_classic()
+
+exp0.1 %>% 
+  add_predicted_draws(newdata = r) %>% 
+  ggplot() +
+  stat_histinterval(aes(x = .prediction/density)) + 
+  labs(x = "Prior predicted survival", y = "Density") + 
+  ggtitle(label = "Sigma = 0.1") + 
+  theme_classic()
+
+```
+
+Increasing sigma evens out the probability distribution instead of having it bunched in two extremes like we see at 0.1 
+
+
+Here I am looking at response instead of the parameters - to plot the parameter distribution I can use `mcmc_areas`.
+
+
+## Q2
+
+> Revisit the Reedfrog survival data, `data(reedfrogs)`. Start with the varying effects model from the book and lecture. Then modify it to estimate the causal effects of the treatment variables pred and size, including how size might modify the effect of predation. An easy approach is to estimate an effect for each combination of pred and size. Justify your model with a DAG of this experiment.
+
+The DAG presented in the lecture appears as: 
+```{r}
+#| label: DAG-q2
+#| echo: FALSE
+#| eval: TRUE
+#| warning: FALSE
+
+dagify(
+    # outline relationships between your variables
+    S ~ T + G + D + P,
+   # assign coordinates so they aren't randomly assigned
+    coords = list(x = c(S = 0, T = -1, D = -1, G = 0, P = 1),
+                  y = c(S  = 0, T = 0, D = -1, G = -1, P = -1))) %>%
+  ggdag() + 
+  theme_dag()
+
+```
+I mostly agree with this, although I think that in a natural setting the DAG would look different and there would be confounds. In this case, we can add everything to the model and independently examine the effects (total and direct are the same) of each variable. However, in Richard's answers he has an interaction between predation (P) and size (G) - which makes sense. Larger individuals are more likely to be noticed and predated upon.
+
+So my model looks like: 
+
+```{r}
+#| label: q2-model
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+m <- tar_read(h06_q2_brms_sample)
+
+print(m$formula)
+prior_summary(m)
+
+summary(m)
+
+```
+
+`brms` eats the comparative levels, so we need to push them out (and make figures anyways!)
+
+```{r}
+#| label: q2-model-figs
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+m %>% 
+  add_epred_draws(newdata = r, 
+                  re_formula = NA) %>% 
+  rowwise() %>% 
+  mutate(interaction = paste0(pred,"+", size)) %>% 
+  ggplot() + 
+  stat_halfeye(aes(y = interaction, x = .epred/density,)) + 
+  theme_classic() + 
+  labs(y = "", x = "Survival Rate")
+
+
+```
+We see that size doesn't matter in the absence of predators. Predators predictably decrease survival rate, but decrease survival rate for big tadpoles the most.
+
+*Ineractions are not in DAGs (always???)*
+
+Can also use `emmeans` here to do an easier visualization since the interaction is in the models
+
+
+## Q3 (optional)
+
+> Return to the Trolley data, data(Trolley), from Chapter 12. Define and fit a varying intercepts model for these data. By this I mean to add an intercept parameter for the individual participants to the linear model. Cluster the varying intercepts on individual participants, as indicated by the unique values in the id variable. Include action, intention, and contact as treatment effects of interest. Compare the varying intercepts model and a model that ignores individuals. What is the impact of individual variation in these data?
+
+```{r}
+#| label: q3
+#| echo: TRUE
+#| eval: TRUE
+#| warning: FALSE
+
+data(Trolley)
+
+
+trolley <- Trolley %>% 
+  mutate(contact = as.factor(contact),
+         action = as.factor(action),
+         intention = as.factor(intention))
+
+mod_naive <- tar_read(h06_q3b)
+mod_ind <- tar_read(h06_q3)
+
+
+summary(mod_naive)
+summary(mod_ind)
+
+waic(mod_naive)
+waic(mod_ind)
+
+pp_check(mod_naive)
+pp_check(mod_ind)
+```

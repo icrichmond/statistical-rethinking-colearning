@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* extremely relevant
+*Rose:*
 
-*Thorn:* ahhhh how to actually do it
+*Thorn:*
 
 ## Trolley Problems
 
@@ -39,6 +39,8 @@ source("R/packages.R")
 -   anchor points are common (defaults when we are not sure/feeling meh)
     -   not everyone shares the same anchor points
 -   need to think of outcomes as cumulative distribution -\> i.e., 5 is everything 5 and under added together
+    -   the probability of 5 is actually the probability of 5 or less
+
     -   build log-odds parameters that correspond to this (log(probability of thing / probability of thing not happening))
 
     -   logit link models
@@ -57,13 +59,15 @@ source("R/packages.R")
 
     -   R~i~ \~ OrderedLogit($\phi_i , \alpha$)
 
-    -   $\phi_i$ = $\beta x_i$
+    -   $\phi_i$ = $\beta x_i$ (linear model)
 
     -   $\alpha$ = cutpoint
 
     -   there is no intercept in phi because the intercept is already accounted for with cutpoints
 
     -   Bigger phis give you smaller average responses and smaller phis give you larger average responses (if phi is subtracted - double check software)
+
+        -   avoid interpreting coefficients - double check you know what is happening
 -   Example:
     -   $R_i \sim OrderedLogit(\phi_i , \alpha)$
     -   $\phi_i = \beta_A A_i + \beta_C C_i + \beta_I I_i$
@@ -136,7 +140,7 @@ mtext(concat("A=",vals[1],", I=",vals[2],", C=",vals[3],", G=",vals[4]))
 
     -   participation is implicitly conditioned on - it is a **collider**
 
-    -   because all our covarying effects of interest are already stratified by the collider participation, it is impossible to get the causal effect of gender BUT we can get direct effect of gender (if we stratify appropriately)
+    -   because all our covarying effects of interest are already stratified by the collider participation, it is impossible to get the total causal effect of gender BUT we can get direct effect of gender (if we stratify appropriately)
 
     ```{r, echo=FALSE}
     dag <- dagify(
@@ -168,6 +172,8 @@ mtext(concat("A=",vals[1],", I=",vals[2],", C=",vals[3],", G=",vals[4]))
 -   Dirichlet
 
     -   distribution for distributions
+
+    -   when you sample from a Dirichlet distribution, you get a probability distribution
 
     -   vector that sums to 1
 
@@ -258,7 +264,7 @@ precis(mRXEYGt,2)
 
 ## Complex Causal Effects
 
--   causal effects (predicted consequences of intervention) require marginalization
+-   causal effects (predicted consequences of intervention) require marginalization aka post-stratification
 
 -   causal effect of education requires distribution of age and gender to average over
 
@@ -301,7 +307,7 @@ precis(mRXEYGt,2)
 
     -   post-stratification requires causal model of reasons sample differs from population
 
--   selection nodes
+-   selection nodes indicate why the sample is unrepresentative of the population
 
     -   \[S\] indicates what the sample is being selected by (e.g., age -\> different ages are less likely to respond to a survey)
 

@@ -1,5 +1,6 @@
 # _targets.R
 ```{r}
 #| echo: false
+library(rmarkdown)
 writeLines(readLines('_targets.R'))
 ```

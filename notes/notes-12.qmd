@@ -11,9 +11,9 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* helpful but confusing (because so far from what we are taught) way to discuss random effects
+*Rose:*
 
-*Thorn:* how tf does this translate to "normal" R packages
+*Thorn:*
 
 ## Repeat Observations
 
@@ -35,6 +35,8 @@ source("R/packages.R")
 -   multilevel models with memory learn faster, better AND models with memory resist overfitting
 
 -   multilevel models use every observation to inform predictions about other cafes and the population of cafes
+
+-   prior for next individual is the posterior of the previous one
 
 ## Regularization
 
@@ -130,6 +132,12 @@ compare( mST , mSTnomem , func=WAIC )
 
 -   when you are working with multilevel models, when you add treatment variables, the variation among means is going to shrink because you are *accounting for the variation* with the different treatments
 
+-   multilevel models often have lower neff than non-multilevel counterparts with more parameters because the parameters are hierarchically imbedded and operate more efficiently -- it is the structure that matters not the absolute number of parameters
+
+    -   adding parameters to a mlm doesn't necessarily result in overfitting because of this fact, they are resistant to overfitting
+
+-   more evidence results in more accurate modelling - however individuals furthest from the mean have results that have the most discrepancy because the model is skeptical of extreme events
+
 -   stratify mean by predators:
 
     -   $S_i \sim Binomial(D_i, p_i)$
@@ -166,9 +174,10 @@ dens( post$bP , lwd=4 , col=2 , xlab="bP (effect of predators)" )
 
     -   because alphas can learn the behaviours of each tank without an explanation (ie predators)
 
--   BUT the variation between tanks is very different between models
+-   BUT the variation that the model learns between tanks is very different between models
 
     -   predator model has much lower variation in sigma
+    -   its not variation among the tanks, its the variation among parameters, net all the other effects in the model
 
 ## Multilevel Tadpoles
 
