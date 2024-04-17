@@ -24,6 +24,8 @@ data(Oxboys)
 data(foxes)
 data(Dinosaurs)
 data(NWOGrants)
+data(reedfrogs)
+data(Trolley)
 
 marriage <- sim_happiness(seed = 1977, N_years = 1000) %>%
   filter(age > 17) %>%
@@ -34,6 +36,24 @@ lagged_obs <- Dinosaurs %>%
   mutate(time_diff = age - lag(age),
          sizelast = lag(mass)) %>%
   slice(-1)
+
+trolley <- Trolley %>% 
+  mutate(contact = as.factor(contact),
+         action = as.factor(action),
+         intention = as.factor(intention))
+
+
+# Initial Values ----------------------------------------------------------
+
+
+inits <- list(`Intercept[1]` = -2,
+              `Intercept[2]` = -1,
+              `Intercept[3]` = 0,
+              `Intercept[4]` = 1,
+              `Intercept[5]` = 2,
+              `Intercept[6]` = 2.5)
+
+inits_list <- list(inits, inits, inits, inits)
 
 
 # Targets: homework   -----------------------------------------------------
@@ -63,6 +83,13 @@ targets_homework <- c(
              weight_s = scale(weight),
              groupsize_s = scale(groupsize))
   ),
+  
+  tar_target(
+    r,
+    reedfrogs %>%
+      mutate(tank = 1:nrow(reedfrogs))
+  ),
+  
   
   tar_target(
     h02_mAW_prior,
@@ -285,8 +312,8 @@ targets_homework <- c(
   zar_brms(
     h05_q1,
     formula = awards | trials(applications) ~ gender,
-    family = 'binomial',
     data = NWOGrants,
+    family = 'binomial',
     prior = c(
       prior(normal(0, 1.5), class = "Intercept"),
       prior(normal(0, 0.5), class = "b"))
@@ -295,13 +322,79 @@ targets_homework <- c(
   zar_brms(
     h05_q2,
     formula = awards | trials(applications) ~ gender*discipline,
-    family = 'binomial',
     data = NWOGrants,
+    family = 'binomial',
     prior = c(
       prior(normal(0, 1.5), class = "Intercept"),
       prior(normal(0, 0.5), class = "b"))
-  )
+  ),
   
+  tar_target(
+    h06_q1_a,
+    brm(formula = surv | trials(density) ~ 1 + (1 | tank),
+        family = 'binomial', 
+        sample_prior = 'only',
+        data = r,
+        prior = c(prior(normal(0, 1.5), class = "Intercept"),
+                  prior(exponential(1), class = "sd")))
+  ),
+  
+  tar_target(
+    h06_q1_b,
+    brm(formula = surv | trials(density) ~ 1 + (1 | tank),
+        family = 'binomial', 
+        sample_prior = 'only',
+        data = r,
+        prior = c(prior(normal(0, 1.5), class = "Intercept"),
+                  prior(exponential(10), class = "sd")))
+  ),
+  
+  tar_target(
+    h06_q1_c,
+    brm(formula = surv | trials(density) ~ 1 + (1 | tank),
+        family = 'binomial', 
+        sample_prior = 'only',
+        data = r,
+        prior = c(prior(normal(0, 1.5), class = "Intercept"),
+                  prior(exponential(0.1), class = "sd")))
+  ),
+  
+  zar_brms(
+    h06_q2, 
+    formula = surv | trials(density) ~ 1 + pred*size + (1 | tank),
+    family = 'binomial',
+    data = r, 
+    prior = c(prior(normal(0, 1.5), class = "Intercept"),
+              prior(exponential(0.1), class = "sd"),
+              prior(normal(0, 1), class = "b"))
+  ),
+  
+  tar_target(
+    h06_q3, 
+    brm(formula = response ~ 1 + action + contact + intention +  (1 | id),
+    family = 'cumulative',
+    data = trolley, 
+    prior = c(prior(normal(0, 1.5), class = "Intercept"),
+              prior(exponential(1), class = "sd"),
+              prior(normal(0, 1), class = "b")),
+    inits = inits_list,
+    chains = 4,
+    cores = 2,
+    iter = 2000)
+  ),
+  
+  tar_target(
+    h06_q3b, 
+    brm(formula = response ~ 1 + action + contact + intention,
+        family = 'cumulative',
+        data = trolley, 
+        prior = c(prior(normal(0, 1.5), class = "Intercept"),
+                  prior(normal(0, 1), class = "b")),
+        inits = inits_list,
+        chains = 4,
+        cores = 2,
+        iter = 2000)
+  )
   
 )
 
