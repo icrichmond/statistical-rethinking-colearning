@@ -1,7 +1,7 @@
 ---
 title: "Lecture 14 - Correlated Features"
 author: Isabella C. Richmond
-date: Apr 19, 2023
+date: Apr 17, 2024
 format: html
 ---
 
@@ -23,11 +23,49 @@ source("R/packages.R")
 
     -   one feature: one dimensional distribution (varying intercepts)
 
+        -   $\alpha_j \sim Normal(\bar{\alpha}, \sigma)$
+
     -   two features: two-D distribution (often use multivariate normal distribution - have mean and variation but also correlation between the parameters)
+
+        -   $[\alpha_j, \beta_j] \sim MVNormal([\bar{\alpha}, \bar{\beta}], \Sigma)$
 
     -   N features: N-dimensional distribution
 
--   hard part: learning associations
+        -   $\alpha_{j, 1..N} \sim MVNormal(A, \Sigma)$
+
+-   hard part: learning associations, requires more data than learning means or standard deviations
+
+## Multivariate Prior 
+
+-   $C_i \sim Bernoulli(p_i)$
+
+-   $logit(p_i) = \alpha_{D[i]} + \beta_{D[i]}U_i$
+
+-   $\alpha_j \sim Normal(\bar{\alpha}, \sigma)$
+
+-   $\beta_j \sim Normal(\bar{\beta}, \tau)$
+
+-   $\bar{\alpha}, \bar{\beta} \sim Normal(0, 1)$
+
+-   $\sigma, \tau \sim Exponential(1)$
+
+-   if we collapse the two hyperparameters we can explore the correlation between them - multivariate
+
+-   $[\alpha_j, \beta_j]  \sim MVNormal([\bar{\alpha}, \bar{\beta}], R, [\sigma, \tau])$
+
+-   vector of features for cluster j
+
+-   vector of means the same length of the number of features
+
+-   correlation matrix (R)
+
+-   vector of standard deviations, one for each feature
+
+-   $R \sim LKJCorr(4)$
+
+-   LKJ is a prior specifically for correlation matrices
+
+    -   bigger values are more skeptical
 
 ```{r, eval=FALSE}
 
@@ -87,7 +125,7 @@ mCDUcov <- ulam(
 
     -   centered = priors of priors (parameters inside the priors)
 
-    -   non-centered = changing model to not have hyper-priors (but be mathematically equivalent) to have increased efficiencies
+    -   non-centered = changing model to not have hyper-priors (but be mathematically equivalent) to have increased efficiencies -- using z scores
 
 ```{r, eval=FALSE}
 # covariance - non-centered
@@ -116,9 +154,11 @@ mCDUcov_nc <- ulam(
 
 -   correlated varying effects models are easier to fit in Bayesian framework
 
--   priors learn correlation structure
+-   priors learn correlation structure - sometimes the research question is about this
 
 -   varying effects can be correlated even if the prior doesn't learn the correlations
+
+    -   if you don't account for it you just won't have a parameter for it and thus partial pooling for it
 
 ## Inconvenient Posteriors
 
@@ -133,3 +173,5 @@ mCDUcov_nc <- ulam(
     -   centered: lots of data in each cluster (data probability dominant)
 
     -   non-centered: many clusters, sparse evidence (prior dominant)
+
+-   
