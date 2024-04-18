@@ -26,17 +26,17 @@ data("reedfrogs")
 
 > Conduct a prior predictive simulation for the Reedfrog model. By this I mean to simulate the prior distribution of tank survival probabilities αj. Start by using this prior:
 
-
 $$
 
 \alpha_j \sim Normal(\bar{\alpha}, \sigma)
 
-\\
-
+$$
+$$
 \bar{\alpha} \sim Normal(0, 1)
 
-\\
+$$
 
+$$
 \sigma \sim Exponential(1)
 
 $$
