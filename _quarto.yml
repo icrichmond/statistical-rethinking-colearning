@@ -7,7 +7,7 @@ project:
 
 website:
   title: "Statistical Rethinking colearning 2024 - Bella"
-  repo-url: https://github.com/robitalec/statistical-rethinking-colearning-2024
+  repo-url: https://github.com/icrichmond/statistical-rethinking-colearning
   repo-actions: [edit, issue]
 
   sidebar:
@@ -22,7 +22,7 @@ website:
           - auto: "homework/*"
     tools:
       - icon: github
-        href: https://github.com/robitalec/statistical-rethinking-colearning-2024
+        href: https://github.com/icrichmond/statistical-rethinking-colearning
 
      
 format:
