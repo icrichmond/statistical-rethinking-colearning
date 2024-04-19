@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.2.237">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -18,12 +18,11 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -48,13 +47,43 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -82,13 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -97,42 +120,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -140,16 +133,11 @@ window.Quarto = {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../homework/homework-01.html">Homework</a></li><li class="breadcrumb-item"><a href="../homework/homework-06a.html">Homework - Week 06</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Homework - Week 06</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
       </button>
     </div>
   </nav>
@@ -157,185 +145,159 @@ window.Quarto = {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Statistical Rethinking colearning 2024 - Bella</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/icrichmond/statistical-rethinking-colearning" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+    <a href="https://github.com/icrichmond/statistical-rethinking-colearning" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
       </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
+      <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-        </div>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Home</span></a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Home</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Notes</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Notes</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 01 - The Golem of Prague</span></a>
+  <a href="../notes/notes-01.html" class="sidebar-item-text sidebar-link">Lecture 01 - The Golem of Prague</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 02 - The Garden of Forking Data</span></a>
+  <a href="../notes/notes-02.html" class="sidebar-item-text sidebar-link">Lecture 02 - The Garden of Forking Data</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 03 - Geocentric Models</span></a>
+  <a href="../notes/notes-03.html" class="sidebar-item-text sidebar-link">Lecture 03 - Geocentric Models</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 04 - Categories &amp; Curves</span></a>
+  <a href="../notes/notes-04.html" class="sidebar-item-text sidebar-link">Lecture 04 - Categories &amp; Curves</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-05.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 05 - Elemental Confounds</span></a>
+  <a href="../notes/notes-05.html" class="sidebar-item-text sidebar-link">Lecture 05 - Elemental Confounds</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 06 - Good &amp; Bad Controls</span></a>
+  <a href="../notes/notes-06.html" class="sidebar-item-text sidebar-link">Lecture 06 - Good &amp; Bad Controls</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 07 - Fitting Over &amp; Under</span></a>
+  <a href="../notes/notes-07.html" class="sidebar-item-text sidebar-link">Lecture 07 - Fitting Over &amp; Under</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-08.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 08 - Markov chain Monte Carlo</span></a>
+  <a href="../notes/notes-08.html" class="sidebar-item-text sidebar-link">Lecture 08 - Markov chain Monte Carlo</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-09.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 09 - Modeling Events</span></a>
+  <a href="../notes/notes-09.html" class="sidebar-item-text sidebar-link">Lecture 09 - Modeling Events</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 10 - Counts &amp; Hidden Confounds</span></a>
+  <a href="../notes/notes-10.html" class="sidebar-item-text sidebar-link">Lecture 10 - Counts &amp; Hidden Confounds</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-11.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 11 - Ordered Categories</span></a>
+  <a href="../notes/notes-11.html" class="sidebar-item-text sidebar-link">Lecture 11 - Ordered Categories</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-12.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 12 - Multilevel Models</span></a>
+  <a href="../notes/notes-12.html" class="sidebar-item-text sidebar-link">Lecture 12 - Multilevel Models</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 13 - Multilevel Adventures</span></a>
+  <a href="../notes/notes-13.html" class="sidebar-item-text sidebar-link">Lecture 13 - Multilevel Adventures</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 14 - Correlated Features</span></a>
+  <a href="../notes/notes-14.html" class="sidebar-item-text sidebar-link">Lecture 14 - Correlated Features</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-17.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 17 - Measurement &amp; Misclassification</span></a>
+  <a href="../notes/notes-17.html" class="sidebar-item-text sidebar-link">Lecture 17 - Measurement &amp; Misclassification</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes-18.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Lecture 18 - Missing Data</span></a>
+  <a href="../notes/notes-18.html" class="sidebar-item-text sidebar-link">Lecture 18 - Missing Data</a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
- <span class="menu-text">Homework</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Homework</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Homework - Week 01</span></a>
+  <a href="../homework/targets.html" class="sidebar-item-text sidebar-link">_targets.R</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Homework - Week 02</span></a>
+  <a href="../homework/homework-01.html" class="sidebar-item-text sidebar-link">Homework - Week 01</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Homework - Week 03</span></a>
+  <a href="../homework/homework-02.html" class="sidebar-item-text sidebar-link">Homework - Week 02</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Homework - Week 04</span></a>
+  <a href="../homework/homework-03.html" class="sidebar-item-text sidebar-link">Homework - Week 03</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-05.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Homework - Week 05</span></a>
+  <a href="../homework/homework-04.html" class="sidebar-item-text sidebar-link">Homework - Week 04</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/homework-06a.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Homework - Week 06</span></a>
+  <a href="../homework/homework-05.html" class="sidebar-item-text sidebar-link">Homework - Week 05</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../homework/targets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">_targets.R</span></a>
+  <a href="../homework/homework-06a.html" class="sidebar-item-text sidebar-link active">Homework - Week 06</a>
   </div>
 </li>
       </ul>
@@ -343,7 +305,6 @@ window.Quarto = {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -354,14 +315,14 @@ window.Quarto = {
   <li><a href="#q2" id="toc-q2" class="nav-link" data-scroll-target="#q2">Q2</a></li>
   <li><a href="#q3-optional" id="toc-q3-optional" class="nav-link" data-scroll-target="#q3-optional">Q3 (optional)</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/icrichmond/statistical-rethinking-colearning/edit/main/homework/homework-06a.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/icrichmond/statistical-rethinking-colearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/icrichmond/statistical-rethinking-colearning/edit/main/homework/homework-06a.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/icrichmond/statistical-rethinking-colearning/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../homework/homework-01.html">Homework</a></li><li class="breadcrumb-item"><a href="../homework/homework-06a.html">Homework - Week 06</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Homework - Week 06</h1>
+<h1 class="title d-none d-lg-block">Homework - Week 06</h1>
 </div>
 
 
@@ -380,10 +341,11 @@ window.Quarto = {
   </div>
   
 
-
 </header>
 
+<div class="cell">
 
+</div>
 <section id="q1" class="level2">
 <h2 class="anchored" data-anchor-id="q1">Q1</h2>
 <blockquote class="blockquote">
@@ -420,11 +382,7 @@ window.Quarto = {
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"sigma = 1"</span>) <span class="sc">+</span> </span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q1-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior Predictive Simulation 2</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>exp10 <span class="sc">%&gt;%</span> </span>
@@ -439,11 +397,7 @@ window.Quarto = {
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"sigma = 10"</span>) <span class="sc">+</span> </span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q1-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q1-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior Predictive Simulation 3</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>exp0<span class="fl">.1</span> <span class="sc">%&gt;%</span> </span>
@@ -458,11 +412,7 @@ window.Quarto = {
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"sigma = 0.1"</span>) <span class="sc">+</span> </span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q1-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q1-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>NOTE: did this wrong!! This is not <span class="math inline">\(\alpha_j\)</span>, this is <span class="math inline">\(\bar{\alpha}\)</span> . Checked Richard’s answers and I should be visualizing the pooled individual effects - going to attempt this here:</p>
@@ -476,11 +426,7 @@ window.Quarto = {
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="at">label =</span> <span class="st">"Sigma = 1"</span>) <span class="sc">+</span> </span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q1-correct-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q1-correct-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>exp10 <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_predicted_draws</span>(<span class="at">newdata =</span> r) <span class="sc">%&gt;%</span> </span>
@@ -490,11 +436,7 @@ window.Quarto = {
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="at">label =</span> <span class="st">"Sigma = 10"</span>) <span class="sc">+</span> </span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q1-correct-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q1-correct-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>exp0<span class="fl">.1</span> <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_predicted_draws</span>(<span class="at">newdata =</span> r) <span class="sc">%&gt;%</span> </span>
@@ -504,11 +446,7 @@ window.Quarto = {
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="at">label =</span> <span class="st">"Sigma = 0.1"</span>) <span class="sc">+</span> </span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q1-correct-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q1-correct-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Increasing sigma evens out the probability distribution instead of having it bunched in two extremes like we see at 0.1</p>
@@ -522,11 +460,7 @@ window.Quarto = {
 <p>The DAG presented in the lecture appears as:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/DAG-q2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/DAG-q2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>I mostly agree with this, although I think that in a natural setting the DAG would look different and there would be confounds. In this case, we can add everything to the model and independently examine the effects (total and direct are the same) of each variable. However, in Richard’s answers he has an interaction between predation (P) and size (G) - which makes sense. Larger individuals are more likely to be noticed and predated upon.</p>
@@ -571,14 +505,14 @@ Formula: surv | trials(density) ~ 1 + pred * size + (1 | tank)
 Group-Level Effects: 
 ~tank (Number of levels: 48) 
               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sd(Intercept)     0.78      0.15     0.50     1.11 1.00     1512     2066
+sd(Intercept)     0.78      0.15     0.52     1.12 1.00     1651     2249
 
 Population-Level Effects: 
                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept              2.44      0.29     1.86     3.02 1.00     2272     2986
-predpred              -2.67      0.37    -3.40    -1.93 1.00     1569     1713
-sizesmall              0.20      0.40    -0.57     0.98 1.00     2213     2849
-predpred:sizesmall     0.47      0.49    -0.51     1.40 1.00     1380     2027
+Intercept              2.44      0.30     1.86     3.02 1.00     1979     2776
+predpred              -2.67      0.38    -3.38    -1.89 1.00     1370     1974
+sizesmall              0.20      0.39    -0.56     0.94 1.00     2160     2645
+predpred:sizesmall     0.47      0.49    -0.50     1.43 1.00     1609     2093
 
 Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
 and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -597,11 +531,7 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"Survival Rate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q2-model-figs-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q2-model-figs-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We see that size doesn’t matter in the absence of predators. Predators predictably decrease survival rate, but decrease survival rate for big tadpoles the most.</p>
@@ -637,15 +567,15 @@ Formula: response ~ 1 + action + contact + intention
 
 Population-Level Effects: 
              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept[1]    -2.84      0.05    -2.93    -2.74 1.00     2640     2621
-Intercept[2]    -2.15      0.04    -2.24    -2.07 1.00     3227     2793
-Intercept[3]    -1.57      0.04    -1.65    -1.49 1.00     3450     2606
-Intercept[4]    -0.55      0.04    -0.62    -0.48 1.00     3907     3366
-Intercept[5]     0.12      0.04     0.05     0.19 1.00     4140     3459
-Intercept[6]     1.03      0.04     0.95     1.10 1.00     4386     3545
-action1         -0.71      0.04    -0.79    -0.63 1.00     4304     3303
-contact1        -0.96      0.05    -1.05    -0.86 1.00     4283     3133
-intention1      -0.72      0.04    -0.79    -0.65 1.00     4511     2904
+Intercept[1]    -2.83      0.05    -2.93    -2.74 1.00     2463     2494
+Intercept[2]    -2.15      0.04    -2.24    -2.07 1.00     2808     2806
+Intercept[3]    -1.57      0.04    -1.65    -1.49 1.00     2903     3179
+Intercept[4]    -0.55      0.04    -0.62    -0.48 1.00     3079     3048
+Intercept[5]     0.12      0.04     0.05     0.19 1.00     3421     3249
+Intercept[6]     1.03      0.04     0.95     1.10 1.00     3774     3291
+action1         -0.71      0.04    -0.79    -0.63 1.00     3393     3035
+contact1        -0.96      0.05    -1.06    -0.86 1.00     3752     3051
+intention1      -0.72      0.04    -0.79    -0.65 1.00     4429     2916
 
 Family Specific Parameters: 
      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
@@ -667,19 +597,19 @@ Formula: response ~ 1 + action + contact + intention + (1 | id)
 Group-Level Effects: 
 ~id (Number of levels: 331) 
               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sd(Intercept)     1.89      0.08     1.74     2.05 1.00      674     1184
+sd(Intercept)     1.88      0.08     1.73     2.06 1.01      627     1000
 
 Population-Level Effects: 
              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept[1]    -3.98      0.12    -4.21    -3.75 1.02      248      742
-Intercept[2]    -3.06      0.11    -3.28    -2.84 1.02      246      689
-Intercept[3]    -2.28      0.11    -2.50    -2.06 1.02      235      823
-Intercept[4]    -0.81      0.11    -1.03    -0.59 1.02      229      711
-Intercept[5]     0.23      0.11     0.02     0.45 1.02      219      651
-Intercept[6]     1.64      0.11     1.42     1.86 1.02      234      668
-action1         -0.96      0.04    -1.04    -0.87 1.00     7278     3112
-contact1        -1.27      0.05    -1.38    -1.17 1.00     7290     3557
-intention1      -0.96      0.04    -1.03    -0.88 1.00     9004     2777
+Intercept[1]    -3.98      0.12    -4.22    -3.76 1.01      414      816
+Intercept[2]    -3.06      0.11    -3.29    -2.85 1.01      382      895
+Intercept[3]    -2.28      0.11    -2.51    -2.07 1.01      369      860
+Intercept[4]    -0.81      0.11    -1.03    -0.60 1.01      347      726
+Intercept[5]     0.23      0.11     0.01     0.44 1.01      336      765
+Intercept[6]     1.63      0.11     1.41     1.85 1.01      353      845
+action1         -0.96      0.04    -1.04    -0.87 1.00     7343     3107
+contact1        -1.27      0.05    -1.38    -1.17 1.00     6954     3194
+intention1      -0.96      0.04    -1.03    -0.88 1.00     8860     2961
 
 Family Specific Parameters: 
      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
@@ -692,40 +622,32 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">waic</span>(mod_naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 9930 log-likelihood matrix.
+Computed from 4000 by 9930 log-likelihood matrix
 
           Estimate   SE
-elpd_waic -18545.0 38.1
-p_waic         9.0  0.0
-waic       37089.9 76.2</code></pre>
+elpd_waic -18545.1 38.1
+p_waic         9.2  0.0
+waic       37090.2 76.2</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">waic</span>(mod_ind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Computed from 4000 by 9930 log-likelihood matrix.
+Computed from 4000 by 9930 log-likelihood matrix
 
           Estimate    SE
-elpd_waic -15670.3  88.8
-p_waic       355.9   4.6
-waic       31340.5 177.6
+elpd_waic -15669.7  88.8
+p_waic       354.8   4.6
+waic       31339.3 177.6
 
 1 (0.0%) p_waic estimates greater than 0.4. We recommend trying loo instead. </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(mod_naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q3-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(mod_ind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="homework-06a_files/figure-html/q3-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="homework-06a_files/figure-html/q3-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
@@ -774,33 +696,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -869,15 +764,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  let localAlternateSentinel = 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -904,23 +797,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -956,9 +835,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -968,17 +848,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -993,238 +864,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1268,5 +907,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/icrichmond/statistical-rethinking-colearning/edit/main/homework/homework-06a.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/icrichmond/statistical-rethinking-colearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+</body></html>
