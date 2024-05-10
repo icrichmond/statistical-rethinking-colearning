@@ -214,3 +214,5 @@ for (i in 1:N_dyads){
 -   ignores uncertainty and assumes a fixed relationship when you should just estimate
 
 -   do not use model predictions (residuals) as data
+
+-   MODEL WHAT YOU MEASURE!
