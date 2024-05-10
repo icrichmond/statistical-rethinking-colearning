@@ -1,0 +1,216 @@
+---
+title: "Lecture 15 - Social Networks"
+author: Isabella C. Richmond
+date: May 10, 2024
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:*
+
+*Thorn:*
+
+## What Motivates Sharing?
+
+-   how much sharing is explained by reciprocity? How much by generalized giving?
+-   scatterplots of dyad giving is not an appropriate way to address these data
+-   household status (location, wealth, etc) influences giving
+-   social tie represents something other than the households themselves that leads to giving (unobservable)
+    -   ties are directional because they don't have to be symmetric (someone can be your friend but you are not theirs)
+-   social network: pattern of directed exchange
+    -   abstractions, not data
+-   null hypothesis social networks do not really work
+    -   there is no unique way to permute a network
+
+```{r, eval = T, echo = F}
+data(KosterLeckie)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    Gab ~ Ha + Hb + Tab + Tba,
+    Tab ~ Ha + Hb,
+    Tba ~ Ha + Hb)
+    
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   how do social ties influence transfers/gift giving?
+
+-   complicated enough that we need to simplify in order to start (looping between generative and statistical model)
+
+    -   remove backdoor paths from DAG to begin
+
+```{r, echo = T, eval = F}
+N <- 25
+dyads <- t(combn(N, 2))
+N_dyads <- nrow(dyads)
+
+# friendships where ties are shared 
+f <- rbern(N_dyads, 0.1) # 10% of dyads are friends 
+
+# now simulate directed ties for all individuals 
+# there can be ties that are not reciprocal
+alpha <- (-3) # base rate of ties; -3 ~ = 0.05
+y <- matrix(NA, N, N) # matrix of ties
+
+for (i in 1:N) for (j in 1:N) {
+  if (i != j) {
+    # directed tie from i to j
+    ids <- sort(c(i, j))
+    the_dyad <- which(dyads[,1]== ids[1] & dyads[,2]==ids[2])
+    p_tie <- f[the_dyad] + (1-f[the_dyad]*inv_logit(alpha))
+    y[i,j] <- rbern(1, p_tie)
+  }
+}#ij
+
+# simulate gifts
+giftsAB <- rep(NA, N_dyads)
+giftsBA <- rep(NA, N_dyads)
+lambda <- log(c(0.5,2))
+for (i in 1:N_dyads){
+  A <- dyads[i, 1]
+  B <- dyads[i, 2]
+  giftsAB[i] <- rpois(1, exp(lambda[1+y[A, B]]))
+  giftsBA[i] <- rpois(1, exp(lambda[1+y[B, A]]))
+}
+
+# draw network 
+library(igraph)
+sng <- graph_from_adjacency_matrix(y)
+lx <- layout_nicely(sng)
+plot(sng, layout=lx)
+```
+
+-   develop the statistical model to test the first layer of the statistical model with the simple generative model
+
+-   Gifts A to B
+
+-   $G_{AB} \sim Poisson(\lambda _{AB})$
+
+-   $log(\lambda_{AB}) = \alpha + T_{AB}$
+
+-   Poisson because it is a count where we don't approach maximum
+
+-   $G_{BA} \sim Poisson(\lambda _{BA})$
+
+-   $log(\lambda_{BA}) = \alpha + T_{BA}$
+
+-   we want to measure the extent to which the ties are shared because we are interested in reciprocity
+
+-   $(\frac{TAB}{TBA}) \sim MVNormal \pmatrix{\pmatrix{0 \\0}, \pmatrix{\sigma^2 \ \rho\sigma^2 \\ \rho\sigma^2 \ \sigma^2}}$
+
+-   covariance within dyads $\rho\sigma^2$
+
+-   variance among ties $\sigma^2$
+
+-   $\rho \sim LKJCorr(2)$
+
+-   $\sigma \sim Exponential(1)$
+
+-   $\alpha \sim Normal(0,1)$
+
+-   we now have partial pooling for network ties
+
+-    code for the model is wild -- check if brms does this unique matrix type
+
+## Backdoor Paths
+
+-   generalized household traits can influence giving independent of social relationships
+
+-   add wealth
+
+```{r, eval = F, echo = T}
+# simulate wealth 
+W <- rnorm(N) # standardized relative welath in community 
+bWG <- 0.5 # effect of wealth on giving - rich give more
+bWR <- (-1) # effect of wealth on receiving - rich get less
+
+# simulate gifts
+giftsAB <- rep(NA, N_dyads)
+giftsBA <- rep(NA, N_dyads)
+lambda <- log(c(0.5,2))
+for (i in 1:N_dyads){
+  A <- dyads[i, 1]
+  B <- dyads[i, 2]
+  giftsAB[i] <- rpois(1, exp(lambda[1+y[A, B]]) + bWG*W[A] + bWR*W[B])
+  giftsBA[i] <- rpois(1, exp(lambda[1+y[B, A]]) + bWG*W[B] + bWR*W[A])
+}
+
+```
+
+-   $G_{AB} \sim Poisson(\lambda _{AB})$
+
+-   $log(\lambda_{AB}) = \alpha + T_{AB} + G_A + R_B$
+
+-   $G_{BA} \sim Poisson(\lambda _{BA})$
+
+-   $log(\lambda_{BA}) = \alpha + T_{BA} + G_B + R_A$
+
+    -   $G_A$ is generalized giving -- some households just give a lot because they're nice
+
+    -   $R_B$ is generalized receiving - some households receive a lot because everyone likes them
+
+-   $(\frac{TAB}{TBA}) \sim MVNormal \pmatrix{\pmatrix{0 \\0}, \pmatrix{\sigma^2 \ \rho\sigma^2 \\ \rho\sigma^2 \ \sigma^2}}$
+
+-   $\sigma \sim Exponential(1)$
+
+-   $\alpha \sim Normal(0,1)$
+
+-   $\pmatrix{G_A \\ R_A} \sim MVNormal \pmatrix{\pmatrix{0 \\0}, R_{GR}, S_{GR}}$
+
+-   $R_{GR} \sim LKJCorr(2)$
+
+    -   correlation matrix
+
+-   $S_{GR} \sim Exponential(1)$
+
+    -   standard deviations
+
+-   clusters are now households, not dyads
+
+-   network is uncertain and iterations are returned in the posterior
+
+    -   therefore all network statistics should incorporate all iterations
+
+## Social Networks Don't Exist
+
+-   can model network ties
+
+-   can model giving/receiving
+
+-   relationships can cause other relationships
+
+## Additional Structure: Triangles
+
+-   relationships tend to come in triangles
+
+## Varying effects 
+
+-   social networks try to express regularities of observations
+
+-   inferred social network is regularized
+
+## Bonus: Bad Outcome Variables
+
+-   building outcome variables to "control" for a variable by dividing a different index by it (e.g., BMI mass/height) -- this is NOT true
+
+-   rates/ratios are often bad as outcome variables
+
+-   differences are also a bad idea
+
+    -   e.g., change over time, difference from reference
+
+-   dividing by population does not mean you have stratified by population
+
+    -   arithmetic is not stratification
+
+-   ignores uncertainty and assumes a fixed relationship when you should just estimate
+
+-   do not use model predictions (residuals) as data

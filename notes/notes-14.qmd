@@ -35,7 +35,7 @@ source("R/packages.R")
 
 -   hard part: learning associations, requires more data than learning means or standard deviations
 
-## Multivariate Prior 
+## Multivariate Prior
 
 -   $C_i \sim Bernoulli(p_i)$
 
@@ -51,7 +51,7 @@ source("R/packages.R")
 
 -   if we collapse the two hyperparameters we can explore the correlation between them - multivariate
 
--   $[\alpha_j, \beta_j]  \sim MVNormal([\bar{\alpha}, \bar{\beta}], R, [\sigma, \tau])$
+-   $[\alpha_j, \beta_j] \sim MVNormal([\bar{\alpha}, \bar{\beta}], R, [\sigma, \tau])$
 
 -   vector of features for cluster j
 
