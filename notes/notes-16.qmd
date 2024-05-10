@@ -1,0 +1,55 @@
+---
+title: "Lecture 16 - Gaussian Processes"
+author: Isabella C. Richmond
+date: May 10, 2024
+format: html
+---
+
+```{r, echo = F, warning = F, message = F}
+source("R/packages.R")
+```
+
+## Rose / Thorn
+
+*Rose:*
+
+*Thorn:*
+
+## Oceanic Technology
+
+-   number of tool types associated with population size
+
+-   spatial covariation: islands close together share unobserved confounds and innovations
+
+-   $\Delta T = \alpha P^\beta - \gamma T
+    $
+
+-   $T_i \sim Poisson(\lambda_i)$
+
+-   $\lambda _i =  \hat{T}$
+
+-   $\hat{T} = \frac{\alpha P^\beta}{\gamma}$
+
+-   $\Delta T$ = change in tools
+
+-   $\alpha$ = innovation rate
+
+-   $\beta$ = diminishing returns
+
+-   $\gamma$ = rate of loss
+
+-   how do we add space into this?
+
+    -   spatial covariation: islands close together share unobserved confounds and innocations
+
+    -   effect of U is to make closer islands have more similar T
+
+-   going to start by modelling spatial covariation among islands
+
+    -   going to be varying intercept model
+
+    -   $T_i \sim Poisson(\lambda_i)$
+
+    -   $log \lambda_i = \bar{\alpha} + \alpha_{S[i]}$
+
+    -   
