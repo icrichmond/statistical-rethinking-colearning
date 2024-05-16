@@ -118,7 +118,7 @@ plot(sng, layout=lx)
 
 -   we now have partial pooling for network ties
 
--    code for the model is wild -- check if brms does this unique matrix type
+-   code for the model is wild -- check if brms does this unique matrix type
 
 ## Backdoor Paths
 
@@ -191,7 +191,7 @@ for (i in 1:N_dyads){
 
 -   relationships tend to come in triangles
 
-## Varying effects 
+## Varying effects
 
 -   social networks try to express regularities of observations
 

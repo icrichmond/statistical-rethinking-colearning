@@ -21,12 +21,11 @@ source("R/packages.R")
 
 -   spatial covariation: islands close together share unobserved confounds and innovations
 
--   $\Delta T = \alpha P^\beta - \gamma T
-    $
+-   $\Delta T = \alpha P^\beta - \gamma T$
 
 -   $T_i \sim Poisson(\lambda_i)$
 
--   $\lambda _i =  \hat{T}$
+-   $\lambda _i = \hat{T}$
 
 -   $\hat{T} = \frac{\alpha P^\beta}{\gamma}$
 
@@ -44,12 +43,287 @@ source("R/packages.R")
 
     -   effect of U is to make closer islands have more similar T
 
--   going to start by modelling spatial covariation among islands
+-   going to start by modelling spatial covariation among islands ignoring population
 
-    -   going to be varying intercept model
+    -   going to be varying intercept model - but prior on intercepts is going to be different
 
     -   $T_i \sim Poisson(\lambda_i)$
 
     -   $log \lambda_i = \bar{\alpha} + \alpha_{S[i]}$
 
-    -   
+    -   $\pmatrix{\alpha_1 \\ \alpha_2 \\ . \\ . \\ . \\ \alpha_{10}} \sim MVNormal \pmatrix{\pmatrix{0 \\ 0 \\ . \\ . \\ . \\ 0}, K}$
+
+    -   going to model the covariance among the intercepts (similar to modelling the covariance among features)
+
+    -   K = kernel (covariance matrix)
+
+    -   unique covariance between every pair of islands - don't need to estimate independently of each other because we think that space determines this
+
+## Gaussian Processes
+
+-   instead of using a conventional covariance matrix, use a kernel function that generalizes to infinite dimensions/observations/predictions
+
+    -   some function that determines the entries in the covariance matrix using a small number of parameters + predictor variable
+
+    -   infinite because then you can predict for any new value (e.g., new island)
+
+-   we are going to use distance to produce covariance between any pair of points
+
+    -   doesn't have to be distance - can be difference, space, time, etc
+
+-   continuous ordered categories (distance, time, etc)
+
+-   we want to do partial pooling but we want points closer together to pool more with each other
+
+-   lower covariance leads to more regularization
+
+-   by adjusting the parameters of the covariance kernel you can get many different shapes
+
+    -   in reality we learn the covariance kernel from the sample
+
+-   Different types of kernels
+
+    -   Quadratic (L2)
+
+    -   Ornstein-Uhlenbeck
+
+    -   Periodic (e.g., tod)
+
+## Island Tools Ct'd
+
+-   Insert K into model
+
+    -   $K_{i,j} = n^2 exp(- \rho^2 d^2_{i,j})$
+
+    -   d = distance
+
+    -   $\bar{\alpha} \sim Normal(3, 0.5)$
+
+    -   $n^2 \sim Exponential(2)$
+
+    -   $\rho^2 \sim Exponential(0.5)$
+
+-   priors are not intuitive - simulate
+
+```{r, echo = T, eval = F}
+data(Kline2)
+d <- Kline2
+data(islandsDistMatrix)
+
+dat_list <- list(
+  T = d$total_tools,
+  S = 1:10,
+  D = islandsDistMatrix
+)
+
+mTdist <- ulam(
+  alist(
+    T ~ dpois(lambda),
+    log(lambda) <- abar + a[S],
+    vector[10]:a ~ multi_normal(0, K),
+    matrix(10, 10):K <- cov_GPL2(D, etasq, rhosq, 0.01),
+    abar ~ normal(3, 0.5),
+    etasq ~ dexp(2), 
+    rhosq ~ dexp(0.5)
+  ), data = dat_list, chains = 4, cores = 4, iter = 4000
+)
+```
+
+-   summary table not interpretable for these models
+
+-   want to compare prior to posterior for covariance kernels (make sure posterior has learned something)
+
+-   just looking at description now - how similar are islands' toolkit similarities as a function of space
+
+-   now we want to stratify by population size
+
+```{r, echo = T, eval = F}
+data(Kline2)
+d <- Kline2
+data(islandsDistMatrix)
+
+dat_list <- list(
+  T = d$total_tools,
+  S = 1:10,
+  D = islandsDistMatrix
+)
+
+mTdist <- ulam(
+  alist(
+    T ~ dpois(lambda),
+    log(lambda) <- (abar*P^b/g) * exp(a[S]),
+    vector[10]:a ~ multi_normal(0, K),
+    matrix(10, 10):K <- cov_GPL2(D, etasq, rhosq, 0.01),
+    c(abar, b, g) ~ dexp(1),
+    etasq ~ dexp(2), 
+    rhosq ~ dexp(0.5)
+  ), data = dat_list, chains = 4, cores = 4, iter = 4000
+)
+```
+
+-   if $\alpha_S$ is 0, then exp($\alpha_S$) = 1, then the island is as expected and it does not change anything
+
+-   the model still thinks there is residual similarity among neighbouring islands even when we account for population size
+
+## Phylogenetic Trees
+
+-   What is the relationship between size of social groups and size of brains?
+
+-   Social group size is a cause of size of brains -- that is the hypothesis
+
+-   "controlling for phylogeny" is often done mindlessly
+
+```{r, eval = T, echo = F}
+dagified <- dagify(
+    # outline relationships between your variables
+    G ~ M, 
+    B ~ M + G)
+    
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   we have to assume there is unobserved confounds that influence all 3 of the variables in the DAG
+
+    -   history of shared environments/stressors/descent points into all unobserved variables
+
+-   Q1: what is the history (phylogeny)?
+
+    -   huge uncertainty
+
+    -   no one phylogeny correct for all traits - different parts of the genome can have different evolutionary histories
+
+-   phylogenies don't exist! trying to do regularization with data for interpretation
+
+-   Q2: how to use history to model causes?
+
+    -   no universally correct approach
+
+    -   typical approach is Gaussian process to use distances between species
+
+$$
+B_i \sim Normal(\mu_i, \sigma)
+\\
+\mu_i = \alpha + \beta_GG_i + \beta_MM_i
+\\
+\alpha \sim Normal(0, 1)
+\\
+\beta_G, \beta_M \sim Normal(0, 0.5)
+\\
+\sigma \sim Exponential(1)
+$$
+
+-   typical linear regression approach where we forget about phylogeny (above)
+
+-   can always re-express/translate to have multivariate normal distribution
+
+$$
+B \sim MVNormal(\mu, K)
+\\
+\mu_i = \alpha + \beta_GG_i + \beta_MM_i
+\\
+\\
+K = I\sigma^2 
+\\
+\alpha \sim Normal(0, 1)
+\\
+\beta_G, \beta_M \sim Normal(0, 0.5)
+\\
+\sigma \sim Exponential(1)
+$$
+
+-   B/mu instead of B~i~/mu~i~ because applies to every species/whole vector
+
+-   mu = vector means
+
+-   K = covariance matrix
+
+-   I = identity matrix (matrix version of number 1)
+
+$$
+B \sim MVNormal(\mu, K)
+\\
+\mu_i = \alpha + \beta_GG_i + \beta_MM_i + u_i
+\\
+\\
+K = I\sigma^2 
+\\
+\alpha \sim Normal(0, 1)
+\\
+\beta_G, \beta_M \sim Normal(0, 0.5)
+\\
+\sigma \sim Exponential(1)
+$$
+
+-   unobserved confounds are $u_i$
+
+-   $u_i$ hypothesized to be influenced by phylogenetic history so we want phylogenetic distance to be included in covariance matrix
+
+## From Mode to Kernel
+
+-   evolutionary model + tree structure = pattern of covariation at tips
+
+-   covariance declines with phylogenetic distance
+
+-   so use tree to measure phylogenetic distance (branch length from one species to another)
+
+-   then need to assume rates of change
+
+    -   Brownian motion
+
+    -   Ornstein-Uhlenbeck
+
+$$
+B \sim MVNormal(\mu, K)
+\\
+\mu_i = \alpha + \beta_GG_i + \beta_MM_i
+\\
+\\
+K = n^2 exp(-\rho d_{i,j})
+\\
+\alpha \sim Normal(0, 1)
+\\
+\beta_G, \beta_M \sim Normal(0, 0.5)
+\\
+n^2 \sim HalfNormal(1, 0.25)
+\\
+\rho \sim HalfNormal(3, 0.25)
+$$
+
+-   Use Ornstein-Uhlenbeck model and add phylogenetic distance to model
+
+-   $n^2$ = maximum covariance prior
+
+-   $\rho$ = rate prior
+
+-   start with a model without predictors:
+
+$$
+B \sim MVNormal(\mu, K)
+\\
+\mu_i = \alpha =
+\\
+\\
+K = n^2 exp(-\rho d_{i,j})
+\\
+\alpha \sim Normal(0, 1)
+\\
+\beta_G, \beta_M \sim Normal(0, 0.5)
+\\
+n^2 \sim HalfNormal(1, 0.25)
+\\
+\rho \sim HalfNormal(3, 0.25)
+$$
+
+-   just have intercept (average brain size) in model, $\alpha$
+
+## Summary
+
+-   partial pooling for continuous categories
+
+-   sensitive to priors
+
+-   possible to have multiple distance dimensions
+
+-   multi-output: able to use multiple traits as correlated outcomes
