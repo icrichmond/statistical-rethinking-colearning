@@ -1,7 +1,7 @@
 ---
 title: "Lecture 18 - Missing Data"
 author: Isabella C. Richmond
-date: May 5, 2023
+date: May 22, 2024
 format: html
 ---
 
@@ -17,17 +17,75 @@ source("R/packages.R")
 
 ## Missing Data
 
--   observed data is a special case - we trick ourselves into believing there is no error
+-   observed variable with no data is a special case - we trick ourselves into believing there is no error
 -   missing data = some cases unobserved
--   not totally missing - they have constraints and relationships to other variables
+    -   not totally missing - we know constraints of the variable and relationships to other variables (through the DAG)
+-   things that are totally missing are often relegated as sampling issues
 
 ## Workflow
 
 -   dropping cases with missing values is sometimes justifiable
--   right thing to do depends upon causal assumptions
--   imputation is often beneficial/necessary
--   Bayesian imputation: compute posterior probability distribution of missing values
+    -   can only be justified through drawing causal assumptions
+-   imputation is often beneficial/necessary and allows you to make use of the present values (also justified through causal assumption)
+-   We need to draw a DAG to assess if there are biasing paths connecting the outcome to the cause of interest
+    -   if competing causes are random and not connected to cause of interest, there are usually no biasing paths (okay to drop incomplete cases, will result in a loss of efficiency)
+
+```{r, eval = T, echo = F}
+library(ggdag)
+library(ggplot2)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    H_true ~ S,
+    H_obs ~ H_true + D
+    )
+    
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   However, when there is a biasing path there is a connection between a competing cause and the cause of interest - conditional on cause (should correctly condition on cause)
+
+```{r, eval = T, echo = F}
+library(ggdag)
+library(ggplot2)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    H_true ~ S,
+    H_obs ~ H_true + D,
+    D ~ S
+    )
+    
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   There are worse biasing paths that sometimes cannot be closed (extremely difficult - need to be able to model competing cause):
+
+```{r, eval = T, echo = F}
+library(ggdag)
+library(ggplot2)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    H_true ~ S,
+    H_obs ~ H_true + D,
+    D ~ H_true
+    )
+    
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   In all these cases we need to use imputation or marginalization
+-   Bayesian imputation: compute posterior probability distribution for each of the missing values
 -   Marginalizing unknowns: averaging over distribution of missing values
+    -   don't necessarily care about the posterior distribution for all missing values
+    -   average over missing values using the posteriors of other values
 
 ## Bayesian Imputation
 
@@ -35,20 +93,155 @@ source("R/packages.R")
 
 -   sometimes imputation is unnecessary, e.g., discrete parameters
 
--   sometimes imputation is easier, e.g., censored observations
+-   sometimes imputation is easier than marginalization, e.g., censored observations in survival analysis
 
 ## Imputing Primates
 
--   missing values already have probability distributions
+-   Lots of potential in the phylogenetic example for confounding
+
+-   Key idea: missing values already have probability distributions
+
+    -   because of relationships among observed values
+
+    -   let's us leverage all the data we have observed
+
+-   the stats model does not change that much - imputation is inherent
+
+    -   because there is little distinction between observed data and parameters in Bayes
+
+    -   unobserved data is parameter, observed data is data
 
 -   express causal model for each partially-observed variable
 
 -   replace each missing value with a parameter
 
+```{r, eval = T, echo = F}
+library(ggdag)
+library(ggplot2)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    G_obs ~ G_true + m_G,
+    B ~ M + G_true + u,
+    G_true ~ M + u,
+    M ~ u, 
+    u ~ h
+    )
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   whatever assumption you make, need a causal model to infer probability distribution of each missing value
+
+    -   lay out assumptions via a DAG and then move forward
+
+-   uncertainty in each missing value cascades through the entire model
+
+-   all observed values actually have measurement error:
+
+```{r, eval = T, echo = F}
+library(ggdag)
+library(ggplot2)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    G_obs ~ G_true + m_G,
+    B_obs ~ B_true + m_B,
+    M_obs ~ M_true + m_M,
+    B_true ~ M_true + G_true + u,
+    G_true ~ M_true + u,
+    M ~ u, 
+    u ~ h
+    )
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+$$
+B \sim MVNormal(\mu, K)
+\\
+\mu_i = \alpha + \beta_GG_i + \beta_MM_i
+\\
+K = n^2exp(-\rho d_{i,j})
+\\
+\alpha \sim Normal(0, 1)
+\\
+\beta_G, \beta_M \sim Normal(0, 0.5)
+\\
+n^2 \sim HalfNormal(1, 0.25)
+\\
+\rho \sim HalfNormal(3, 0.25)
+$$
+
+-   above model works if we assume that all missing data is completely random (how does group size affect brain size with body mass and evolutionary history as adjusted confounds)
+
+-   to do imputation, we often need to include the entire graph - not just the part that answers our question directly
+
+    -   such as how body mass affects group size confounded by evolutionary history
+
+    -   $$
+        B \sim MVNormal(v, K_G)
+        \\
+        v_i = \alpha_G + \beta_{MG}M_i
+        \\
+        K_G = n^2_Gexp(-\rho_G d_{i,j})
+        \\
+        \alpha_G \sim Normal(0, 1)
+        \\
+        \beta_{MG} \sim Normal(0, 0.5)
+        \\
+        n^2_G \sim HalfNormal(1, 0.25)
+        \\
+        \rho_G \sim HalfNormal(3, 0.25)
+        $$
+
+    -   also how evolutionary history affects body mass
+
+    -   $$
+        M \sim MVNormal(0, K_M)
+        \\
+        K_M = n^2_M exp(-\rho_M d_{i,j})
+        \\
+        n^2_M \sim HalfNormal(1, 0.25)
+        \\
+        \rho_M \sim HalfNormal(3, 0.25)
+        $$
+
+-   if we run all these models at the same time allows Bayesian imputation
+
 -   not the same as non-Bayesian imputation
 
-    -   that generates datasets and runs the model multiple times
+    -   does not involve assigning probability distributions to missing values
 
-    -   this estimates probability distributions using other parameters and relationships
+    -   involves creating datasets and then running the analysis multiple times
 
+        -   this estimates probability distributions using other parameters and relationships
+
+-   test each step of building these models
+
+    -   first we ignore cases with missing B values
+
+    -   then impute G and M ignoring models for each
+
+    -   then impute G using model
+
+    -   then impute B, G, M using model
+
+-   when imputing G and M ignoring models, we assign $G_i$ and $M_i$ as normal distributions
+
+    -   when $G_i$ is observed, its a likelihood for standardized variable / when $G_i$ is unobserved, its a prior
+
+    -   the relationship between M and G is not modelled so the imputed G values do not follow the regression relationship
+
+## Summary
+
+-   **missing values already have probability distributions**
+
+```{=html}
+<!-- -->
+```
 -   imputation without relationships among predictors is risky
+
+-   we need to do this even if it doesn't change our result

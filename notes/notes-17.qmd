@@ -1,7 +1,7 @@
 ---
 title: "Lecture 17 - Measurement & Misclassification"
 author: Isabella C. Richmond
-date: May 5, 2023
+date: May 22, 2024
 format: html
 ---
 
@@ -11,15 +11,18 @@ source("R/packages.R")
 
 ## Rose / Thorn
 
-*Rose:* feels extremely relevant
+*Rose:*
 
-*Thorn:* weird log functions
+*Thorn:*
 
 ## Measurement Error
 
 -   many variables are proxies of the cause of interest
+    -   proxies are descendants of the things we wish we could measure
+    -   often they are measured with error
 -   don't consider how things are measured
--   measurement error can have many effects on estimates
+-   measurement error can have many effects on estimates - reduce or increase effect estimates
+-   no general rule about what measurement error will do to an estimate
 
 ## Modeling Measurement
 
@@ -27,14 +30,99 @@ source("R/packages.R")
 
     -   imbalance in evidence quality
 
-    -   potential confounding through measurement error
+    -   potential confounding through measurement error because measurement error is associated with other variables (e.g., population size)
 
 -   states with larger populations have less uncertainty/higher quality data
 
 -   confounding because measurement is influenced by population size but then effects such as divorce rate can also be influenced by population size
 
+```{r, eval = T, echo = F}
+library(ggdag)
+library(ggplot2)
+
+dagified <- dagify(
+    # outline relationships between your variables
+    M_obs ~ e_M + M_act + A_act,
+    A_obs ~ e_A + A_act,
+    D_act ~ M_act + A_act,
+    D_obs ~ D_act + e_D,
+    e_M ~ P,
+    e_A ~ P,
+    e_D ~ P
+    )
+    
+
+ggplot(dagified) +
+    theme_dag()
+```
+
+-   think like a graph!
+
+    -   how do I model the network of causes? ie full luxury bayes
+
+-   In this dag there is a model for D_act, model for D_obs, model for M_act
+
+-   D_act
+
+    -   $D_i \sim Normal(\mu_i, \sigma)$
+
+    -   $\mu_i = \alpha + \beta_A A_i + \beta_M M_i$
+
+-   D_obs
+
+    -   $D^*_i = D_i + e_{D,i}$
+
+    -   $e_{D,i} \sim Normal(0, S_i)$
+
+    -   $D^*_i \sim Normal(D_i, S_i)$
+
+```{r, eval = F}
+m15.1 <- ulam(
+  alist(
+    # model for D* (observed)
+    D_obs ~ dnorm(D_true, D_sd),
+    
+    # model for D (unobserved)
+    vector[N]:D_true ~ dnorm(mu, sigma),
+    mu <- a + bA*A + bM*M,
+    a ~ dnorm(0, 0.2),
+    bA~ dnorm(0, 0.5),
+    bM ~ dnorm(0,0,5), 
+    sigma ~ dexp(1)
+  ), data = dlist, chains = 4, cores = 4
+)
+```
+
+-   can also add marriage rate in the same way
+
+-   Full luxury bayes allows models to share information with each other
+
 ## Misclassification
 
 -   categorical version of measurement error
 
+-   if effect size is small, the effect may be on the same order of magnitude as the error rates
+
+-   $X_i \sim Bernoulli(p_i)$
+
+-   Generative model
+
+    -   $X_i \sim Bernoulli(p_i)$
+
+    -   $logit(p_i) = \alpha + \mu_{M[i]} + \delta_{D[i]}$
+
+    -   M = mom, D = dyad
+
+-   doing things on the log scale avoids underflowing to 0 or overflowing to 1 in probability space
+
+    -   log is the solution to this
+
 -   related models: hurdle models and occupancy models
+
+-   related questions: rating and assessment
+
+## Floating Point Monsters
+
+-   changing probability statements to logarithms is what is done automatically in stan
+
+-   when p is small, use convenience functions
